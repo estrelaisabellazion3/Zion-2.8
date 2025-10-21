@@ -1,0 +1,8 @@
+{
+  "address": "ZION_DD77774CB3B6F9AEA9DE851F14DF32A9F82437B1",
+  "public_key_hex": "1d30704ff56d03b87c9f552a2e35be09c5c9f4bff365f44522071dbfe92d92fda8a8ef7709babe89e4b53f9748ab99bd1b8769d26b27a42112c6ca20b3b81e3d",
+  "encrypted_private_key": "gAAAAABo7YKj4onzEJVIFsu4Ua0BAy4pmWcm9T8vWO0oDFTA8AyDXlK65C4kkXFoR-CkBI3CXFeoqxC8FVlzrLk7DcZM8AN3ctkhe-EZidFk2IYDY8jrDfl_BHHi796kqFwxmzYtHiK3OCC65KINgUNknOHiEcN9hteJTf8QSC3_2bZyFYlHOVg=",
+  "salt": "Rr6AUAaGiyvrjeH5ZcAVlDreS7VEnhQdjq8NjMfhKis=",
+  "iterations": 600000,
+  "version": "2.8.0"
+}

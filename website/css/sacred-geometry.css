@@ -1,0 +1,544 @@
+/* ========================================
+   SACRED GEOMETRY STYLES
+   Flower of Life, Metatron's Cube, etc.
+   ======================================== */
+
+.sacred-geometry-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Flower of Life Pattern */
+.flower-of-life {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    opacity: 0.1;
+    animation: rotate-slow 60s linear infinite;
+}
+
+@keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Metatron's Cube */
+.metatrons-cube {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    opacity: 0.08;
+    animation: pulse-geometry 5s ease-in-out infinite;
+}
+
+@keyframes pulse-geometry {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.08;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.15;
+    }
+}
+
+/* Merkaba (Star Tetrahedron) */
+.merkaba {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    opacity: 0.12;
+    animation: rotate-3d 20s linear infinite;
+}
+
+@keyframes rotate-3d {
+    from {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    to {
+        transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+    }
+}
+
+/* Sri Yantra */
+.sri-yantra {
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    opacity: 0.1;
+    background: radial-gradient(
+        circle,
+        transparent 40%,
+        var(--sacred-gold) 40%,
+        var(--sacred-gold) 41%,
+        transparent 41%,
+        transparent 60%,
+        var(--sacred-purple) 60%,
+        var(--sacred-purple) 61%,
+        transparent 61%
+    );
+    animation: sacred-pulse 8s ease-in-out infinite;
+}
+
+/* Seed of Life */
+.seed-of-life {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.seed-circle {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--matrix-green);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+/* Golden Spiral (Fibonacci) */
+.golden-spiral {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    opacity: 0.1;
+}
+
+.spiral-segment {
+    position: absolute;
+    border: 2px solid var(--sacred-gold);
+    border-radius: 50%;
+    animation: expand-spiral 10s ease-in-out infinite;
+}
+
+@keyframes expand-spiral {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.2;
+    }
+}
+
+/* Torus Field */
+.torus-field {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 30%,
+        var(--sacred-cyan) 50%,
+        transparent 70%
+    );
+    opacity: 0.05;
+    animation: torus-flow 15s ease-in-out infinite;
+}
+
+@keyframes torus-flow {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        transform: scale(1.3) rotate(180deg);
+    }
+}
+
+/* Vesica Piscis */
+.vesica-piscis {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.vesica-circle {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border: 2px solid var(--matrix-green);
+    border-radius: 50%;
+    opacity: 0.2;
+}
+
+.vesica-circle:first-child {
+    left: 0;
+}
+
+.vesica-circle:last-child {
+    right: 0;
+}
+
+/* Platonic Solids */
+.platonic-solid {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    opacity: 0.1;
+    border: 2px solid var(--sacred-purple);
+    animation: rotate-platonic 25s linear infinite;
+}
+
+@keyframes rotate-platonic {
+    from {
+        transform: rotateX(0deg) rotateY(0deg);
+    }
+    to {
+        transform: rotateX(360deg) rotateY(360deg);
+    }
+}
+
+/* Dodecahedron */
+.dodecahedron {
+    clip-path: polygon(
+        50% 0%,
+        80% 10%,
+        100% 35%,
+        100% 65%,
+        80% 90%,
+        50% 100%,
+        20% 90%,
+        0% 65%,
+        0% 35%,
+        20% 10%
+    );
+}
+
+/* Sacred Ratio Lines (Phi φ = 1.618) */
+.phi-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.05;
+}
+
+.phi-line {
+    position: absolute;
+    background: var(--sacred-gold);
+    animation: phi-pulse 6s ease-in-out infinite;
+}
+
+.phi-line.horizontal {
+    width: 100%;
+    height: 1px;
+}
+
+.phi-line.vertical {
+    width: 1px;
+    height: 100%;
+}
+
+@keyframes phi-pulse {
+    0%, 100% {
+        opacity: 0.05;
+        box-shadow: 0 0 5px var(--sacred-gold);
+    }
+    50% {
+        opacity: 0.15;
+        box-shadow: 0 0 15px var(--sacred-gold);
+    }
+}
+
+/* Tree of Life (Kabbalah) */
+.tree-of-life {
+    position: absolute;
+    width: 300px;
+    height: 500px;
+    opacity: 0.1;
+}
+
+.sephirah {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: var(--matrix-green);
+    border-radius: 50%;
+    border: 2px solid var(--matrix-green-light);
+    opacity: 0.2;
+    animation: sephirah-glow 4s ease-in-out infinite;
+}
+
+@keyframes sephirah-glow {
+    0%, 100% {
+        box-shadow: 0 0 10px var(--matrix-green-glow);
+    }
+    50% {
+        box-shadow: 0 0 30px var(--matrix-green-glow);
+    }
+}
+
+/* Infinity Symbol */
+.infinity {
+    position: absolute;
+    width: 300px;
+    height: 150px;
+    opacity: 0.15;
+}
+
+.infinity-loop {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--sacred-cyan);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.infinity-loop:first-child {
+    left: 0;
+    animation: pulse-left 3s ease-in-out infinite;
+}
+
+.infinity-loop:last-child {
+    right: 0;
+    animation: pulse-right 3s ease-in-out infinite;
+}
+
+@keyframes pulse-left {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes pulse-right {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.9);
+    }
+}
+
+/* Cosmic Eye */
+.cosmic-eye {
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    opacity: 0.2;
+}
+
+.eye-outer {
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    border: 2px solid var(--sacred-purple);
+    border-radius: 50%;
+    animation: eye-blink 5s ease-in-out infinite;
+}
+
+.eye-pupil {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: var(--sacred-purple);
+    border-radius: 50%;
+    animation: pupil-dilate 3s ease-in-out infinite;
+}
+
+@keyframes eye-blink {
+    0%, 90%, 100% {
+        opacity: 1;
+    }
+    95% {
+        opacity: 0.1;
+    }
+}
+
+@keyframes pupil-dilate {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+}
+
+/* Sacred Particles */
+.sacred-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--matrix-green);
+    border-radius: 50%;
+    opacity: 0;
+    animation: particle-float 10s ease-in-out infinite;
+}
+
+@keyframes particle-float {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Chakra Wheel */
+.chakra-wheel {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    border: 3px solid var(--sacred-gold);
+    opacity: 0.15;
+    animation: chakra-spin 30s linear infinite;
+}
+
+@keyframes chakra-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.chakra-petal {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, var(--sacred-pink), transparent);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+/* Yin Yang */
+.yin-yang {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--matrix-black) 50%, var(--matrix-green) 50%);
+    border: 3px solid var(--border-color);
+    opacity: 0.2;
+    animation: yin-yang-rotate 15s linear infinite;
+}
+
+@keyframes yin-yang-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mandala Pattern */
+.mandala {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    opacity: 0.08;
+    background: repeating-conic-gradient(
+        from 0deg,
+        var(--matrix-green) 0deg 10deg,
+        transparent 10deg 20deg
+    );
+    border-radius: 50%;
+    animation: mandala-rotate 40s linear infinite;
+}
+
+@keyframes mandala-rotate {
+    from {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
+    to {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+/* Om Symbol */
+.om-symbol {
+    position: absolute;
+    font-size: 150px;
+    color: var(--sacred-gold);
+    opacity: 0.1;
+    font-family: serif;
+    animation: om-vibrate 3s ease-in-out infinite;
+}
+
+@keyframes om-vibrate {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 0 0 10px var(--sacred-gold);
+    }
+    50% {
+        transform: scale(1.05);
+        text-shadow: 0 0 30px var(--sacred-gold);
+    }
+}
+
+/* Crystal Lattice */
+.crystal-lattice {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    opacity: 0.05;
+    background-image: 
+        linear-gradient(45deg, var(--sacred-cyan) 1px, transparent 1px),
+        linear-gradient(-45deg, var(--sacred-cyan) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: lattice-shift 20s linear infinite;
+}
+
+@keyframes lattice-shift {
+    from {
+        background-position: 0 0, 0 0;
+    }
+    to {
+        background-position: 50px 50px, -50px 50px;
+    }
+}
+
+/* Portal Effect */
+.portal {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        var(--sacred-cyan) 0%,
+        var(--sacred-purple) 30%,
+        transparent 70%
+    );
+    opacity: 0.15;
+    animation: portal-pulse 4s ease-in-out infinite;
+}
+
+@keyframes portal-pulse {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.15;
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 0.3;
+    }
+}

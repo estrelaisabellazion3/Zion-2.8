@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ZION - První consciousness-based blockchain s duchovním řízením a 20-letým přechodem na DAO governance">
+    <meta name="keywords" content="ZION, blockchain, consciousness mining, DAO, Maitreya Buddha, cryptocurrency, sacred technology">
+    <title>ZION - Consciousness Blockchain | Matrix of Divine Technology</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/matrix-style.css">
+    <link rel="stylesheet" href="css/sacred-geometry.css">
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-rain"></canvas>
+    
+    <!-- Sacred Geometry Background Layer -->
+    <div class="sacred-geometry-bg"></div>
+    
+    <!-- Navigation -->
+    <nav class="matrix-nav">
+        <div class="container">
+            <div class="nav-logo">
+                <span class="logo-text">ZION</span>
+                <span class="logo-subtitle">consciousness blockchain</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#mining">Mining</a></li>
+                <li><a href="#dao">DAO</a></li>
+                <li><a href="wiki/">Wiki</a></li>
+                <li><a href="#stats" class="stats-link">Pool Stats</a></li>
+                <li><a href="#download" class="cta-button">Download</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title glitch" data-text="ZION BLOCKCHAIN">ZION BLOCKCHAIN</h1>
+                <p class="hero-tagline">The World's First Consciousness-Based Blockchain</p>
+                <p class="hero-description">
+                    Sacred technology powered by spiritual evolution<br>
+                    144 billion ZION over 50 years | 1x-15x consciousness multipliers<br>
+                    20-year transition to full DAO governance
+                </p>
+                
+                <div class="hero-stats">
+                    <div class="stat-box">
+                        <div class="stat-number" id="current-height">0</div>
+                        <div class="stat-label">Block Height</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="network-hashrate">0 H/s</div>
+                        <div class="stat-label">Network Hashrate</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="active-miners">0</div>
+                        <div class="stat-label">Active Miners</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">87.67%</div>
+                        <div class="stat-label">Miner Rewards</div>
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="#mining" class="btn btn-primary">Start Mining</a>
+                    <a href="wiki/" class="btn btn-secondary">Explore Wiki</a>
+                    <a href="#whitepaper" class="btn btn-outline">Whitepaper</a>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="consciousness-sphere"></div>
+                <div class="orbit-ring"></div>
+                <div class="particle-field"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2 class="section-title">Revolutionary Features</h2>
+            <div class="features-grid">
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🧘</div>
+                    <h3>Consciousness Mining</h3>
+                    <p>Earn up to 15x rewards through spiritual development. 9 consciousness levels from Physical to ON_THE_STAR.</p>
+                    <div class="feature-stats">
+                        <span>1x → 15x multipliers</span>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🏛️</div>
+                    <h3>DAO Governance</h3>
+                    <p>20-year transition from centralized spiritual leadership to full community governance.</p>
+                    <div class="feature-stats">
+                        <span>2025 → 2045 transition</span>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💎</div>
+                    <h3>Fair Economics</h3>
+                    <p>144B total supply, 5,479.45 ZION/block, 87.67% to miners, 10% humanitarian, 1% dev, 0.33% genesis, 1% pool admin.</p>
+                    <div class="feature-stats">
+                        <span>12.33% total fees</span>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🥚</div>
+                    <h3>Golden Egg Quest</h3>
+                    <p>HIRANYAGARBHA - Find the hidden cosmic egg and win 1B ZION + DAO governance seat!</p>
+                    <div class="feature-stats">
+                        <span>1.5B ZION prize pool</span>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Humanitarian Focus</h3>
+                    <p>10% of all rewards support children's education and global welfare.</p>
+                    <div class="feature-stats">
+                        <span>Children Future Fund</span>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Advanced Mining</h3>
+                    <p>Yescrypt + Argon2 hybrid PoW with quantum-inspired optimizations.</p>
+                    <div class="feature-stats">
+                        <span>CPU + GPU friendly</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Consciousness Levels Section -->
+    <section id="consciousness" class="consciousness-section">
+        <div class="container">
+            <h2 class="section-title">Consciousness Evolution Path</h2>
+            <div class="consciousness-timeline">
+                
+                <div class="level-card" data-level="1">
+                    <div class="level-number">L1</div>
+                    <h3>PHYSICAL</h3>
+                    <div class="multiplier">1.0x</div>
+                    <p>Starting point - physical mining</p>
+                </div>
+
+                <div class="level-card" data-level="3">
+                    <div class="level-number">L3</div>
+                    <h3>EMOTIONAL</h3>
+                    <div class="multiplier">2.0x</div>
+                    <p>Emotional awareness unlocked</p>
+                </div>
+
+                <div class="level-card" data-level="5">
+                    <div class="level-number">L5</div>
+                    <h3>MENTAL</h3>
+                    <div class="multiplier">4.0x</div>
+                    <p>Mental clarity achieved</p>
+                </div>
+
+                <div class="level-card" data-level="7">
+                    <div class="level-number">L7</div>
+                    <h3>SPIRITUAL</h3>
+                    <div class="multiplier">8.0x</div>
+                    <p>Spiritual awakening</p>
+                </div>
+
+                <div class="level-card" data-level="9">
+                    <div class="level-number">L9</div>
+                    <h3>ON_THE_STAR</h3>
+                    <div class="multiplier">15.0x</div>
+                    <p>Cosmic consciousness</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Mining Section -->
+    <section id="mining" class="mining-section">
+        <div class="container">
+            <h2 class="section-title">Start Mining ZION</h2>
+            
+            <div class="mining-grid">
+                <div class="mining-method">
+                    <h3>💻 CPU Mining</h3>
+                    <p>Mine with your processor using XMRig</p>
+                    <pre class="code-block">xmrig -o stratum+tcp://pool.zion-blockchain.org:3335 \
+-u YOUR_ZION_ADDRESS \
+-p x \
+--coin zion</pre>
+                    <a href="wiki/mining/cpu-guide" class="btn btn-secondary">CPU Guide</a>
+                </div>
+
+                <div class="mining-method">
+                    <h3>🎮 GPU Mining</h3>
+                    <p>Maximize hashrate with GPU power</p>
+                    <pre class="code-block">srbminer-multi --algorithm yescrypt \
+--pool pool.zion-blockchain.org:3335 \
+--wallet YOUR_ZION_ADDRESS</pre>
+                    <a href="wiki/mining/gpu-guide" class="btn btn-secondary">GPU Guide</a>
+                </div>
+            </div>
+
+            <div class="pool-info">
+                <h3>Official Mining Pool</h3>
+                <div class="pool-details">
+                    <div class="detail-item">
+                        <span class="label">Pool Address:</span>
+                        <span class="value">stratum+tcp://pool.zion-blockchain.org:3335</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Algorithm:</span>
+                        <span class="value">Yescrypt + Argon2</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Fee:</span>
+                        <span class="value">12.33% (10% humanitarian + 1% dev + 0.33% genesis + 1% pool admin)</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Min Payout:</span>
+                        <span class="value">100 ZION</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DAO Section -->
+    <section id="dao" class="dao-section">
+        <div class="container">
+            <h2 class="section-title">DAO Governance</h2>
+            
+            <div class="dao-timeline">
+                <div class="dao-phase active">
+                    <h3>Phase 1: 2025-2030</h3>
+                    <div class="voting-split">
+                        <div class="vote-bar maitreya" style="width: 100%">
+                            <span>Maitreya Buddha: 100%</span>
+                        </div>
+                    </div>
+                    <p>Centralized spiritual leadership ensures network stability</p>
+                </div>
+
+                <div class="dao-phase">
+                    <h3>Phase 2: 2030-2035</h3>
+                    <div class="voting-split">
+                        <div class="vote-bar maitreya" style="width: 70%">
+                            <span>Maitreya: 70%</span>
+                        </div>
+                        <div class="vote-bar winners" style="width: 30%">
+                            <span>Winners: 30%</span>
+                        </div>
+                    </div>
+                    <p>Top 3 winners join governance (Year 10: 2035)</p>
+                </div>
+
+                <div class="dao-phase">
+                    <h3>Phase 3: 2035-2045</h3>
+                    <div class="voting-split">
+                        <div class="vote-bar maitreya" style="width: 25%">
+                            <span>25%</span>
+                        </div>
+                        <div class="vote-bar community" style="width: 75%">
+                            <span>Community: 75%</span>
+                        </div>
+                    </div>
+                    <p>Gradual transition to community governance</p>
+                </div>
+
+                <div class="dao-phase">
+                    <h3>Phase 4: 2045+</h3>
+                    <div class="voting-split">
+                        <div class="vote-bar community" style="width: 100%">
+                            <span>Community: 100%</span>
+                        </div>
+                    </div>
+                    <p>Full decentralized DAO governance achieved</p>
+                </div>
+            </div>
+
+            <div class="dao-winners">
+                <h3>🏆 DAO Governance Seats (Unlocked 2035)</h3>
+                <div class="winners-grid">
+                    <div class="winner-card gold">
+                        <div class="winner-icon">🥇</div>
+                        <h4>1st Place</h4>
+                        <p class="winner-title">Chief Enlightenment Officer</p>
+                        <div class="winner-prize">1B ZION + 15% voting</div>
+                        <p class="winner-desc">Find HIRANYAGARBHA Golden Egg</p>
+                    </div>
+
+                    <div class="winner-card silver">
+                        <div class="winner-icon">🥈</div>
+                        <h4>2nd Place</h4>
+                        <p class="winner-title">Chief Consciousness Officer</p>
+                        <div class="winner-prize">500M ZION + 10% voting</div>
+                        <p class="winner-desc">XP Leaderboard #1</p>
+                    </div>
+
+                    <div class="winner-card bronze">
+                        <div class="winner-icon">🥉</div>
+                        <h4>3rd Place</h4>
+                        <p class="winner-title">Chief Awakening Officer</p>
+                        <div class="winner-prize">250M ZION + 5% voting</div>
+                        <p class="winner-desc">XP Leaderboard #2</p>
+                    </div>
+
+                    <div class="winner-card admin">
+                        <div class="winner-icon">👑</div>
+                        <h4>Genesis Creator</h4>
+                        <p class="winner-title">DAO Admin (Maitreya Buddha)</p>
+                        <div class="winner-prize">1B ZION + 70% voting</div>
+                        <p class="winner-desc">Declines to 0% by 2045</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="stats" class="stats-section">
+        <div class="container">
+            <h2 class="section-title">Live Network Statistics</h2>
+            
+            <div class="stats-dashboard">
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-value" id="stat-blocks">Loading...</div>
+                    <div class="stat-label">Total Blocks</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⛏️</div>
+                    <div class="stat-value" id="stat-miners">Loading...</div>
+                    <div class="stat-label">Active Miners</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="stat-supply">14.34B</div>
+                    <div class="stat-label">Circulating Supply</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🌟</div>
+                    <div class="stat-value" id="stat-consciousness">Loading...</div>
+                    <div class="stat-label">Avg Consciousness</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="stat-difficulty">Loading...</div>
+                    <div class="stat-label">Network Difficulty</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-value" id="stat-hashrate-total">Loading...</div>
+                    <div class="stat-label">Total Hashrate</div>
+                </div>
+            </div>
+
+            <div class="recent-blocks">
+                <h3>Recent Blocks</h3>
+                <div id="blocks-list" class="blocks-list">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="download-section">
+        <div class="container">
+            <h2 class="section-title">Download ZION</h2>
+            
+            <div class="download-grid">
+                <div class="download-card">
+                    <h3>🖥️ Desktop Wallet</h3>
+                    <p>Full node with GUI wallet</p>
+                    <div class="download-buttons">
+                        <a href="#" class="btn btn-download">Windows</a>
+                        <a href="#" class="btn btn-download">macOS</a>
+                        <a href="#" class="btn btn-download">Linux</a>
+                    </div>
+                </div>
+
+                <div class="download-card">
+                    <h3>📱 Mobile Wallet</h3>
+                    <p>Mining on the go</p>
+                    <div class="download-buttons">
+                        <a href="#" class="btn btn-download">Android</a>
+                        <a href="#" class="btn btn-download">iOS</a>
+                    </div>
+                </div>
+
+                <div class="download-card">
+                    <h3>⛏️ Mining Software</h3>
+                    <p>Optimized miners</p>
+                    <div class="download-buttons">
+                        <a href="#" class="btn btn-download">XMRig</a>
+                        <a href="#" class="btn btn-download">SRBMiner</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="matrix-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>ZION Blockchain</h3>
+                    <p>Consciousness-based blockchain for spiritual evolution and global peace.</p>
+                    <div class="social-links">
+                        <a href="#" title="Twitter"><span>𝕏</span></a>
+                        <a href="#" title="Telegram"><span>✈</span></a>
+                        <a href="#" title="Discord"><span>💬</span></a>
+                        <a href="#" title="GitHub"><span>🐙</span></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="wiki/">Wiki & Documentation</a></li>
+                        <li><a href="wiki/whitepaper">Whitepaper</a></li>
+                        <li><a href="wiki/api">API Documentation</a></li>
+                        <li><a href="wiki/roadmap">Roadmap</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Mining</h3>
+                    <ul>
+                        <li><a href="wiki/mining/cpu-guide">CPU Mining Guide</a></li>
+                        <li><a href="wiki/mining/gpu-guide">GPU Mining Guide</a></li>
+                        <li><a href="wiki/mining/pools">Mining Pools</a></li>
+                        <li><a href="wiki/mining/calculator">Mining Calculator</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Community</h3>
+                    <ul>
+                        <li><a href="wiki/dao">DAO Governance</a></li>
+                        <li><a href="wiki/consciousness">Consciousness Levels</a></li>
+                        <li><a href="wiki/hiranyagarbha">Golden Egg Quest</a></li>
+                        <li><a href="wiki/humanitarian">Humanitarian Fund</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 ZION Blockchain | Created by Yeshuae Amon Ra & Maitreya Buddha</p>
+                <p class="sacred-quote">"Technology in service of consciousness, consciousness in service of all beings"</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/matrix-rain.js"></script>
+    <script src="js/sacred-geometry.js"></script>
+    <script src="js/stats-updater.js"></script>
+    <script src="js/animations.js"></script>
+</body>
+</html>

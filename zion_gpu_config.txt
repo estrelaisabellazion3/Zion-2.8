@@ -1,0 +1,24 @@
+# ZION GPU Mining Configuration for SRBMiner-MULTI
+# Optimized for ZION 2.7 RandomX algorithm
+
+--disable-gpu-watchdog
+--gpu-boost 3
+--gpu-platform 0
+--gpu-intensity 0
+--gpu-worksize 8
+--gpu-threads 1
+--gpu-affinity 0xFFFFFFFF
+--gpu-temp-limit 85
+--gpu-temp-resume 75
+--gpu-target-fan 80
+--log-file zion_gpu_miner.log
+--api-enable
+--api-port 3336
+--api-rig-name ZION-GPU-Miner
+--pool localhost:3335!test_wallet!x
+--algorithm randomx
+--cpu-affinity 0x0
+--disable-cpu
+--gpu-auto-tune 1
+--gpu-tune-step 0.5
+--gpu-tune-interval 30

@@ -1,0 +1,129 @@
+{
+    "autosave": true,
+    "cpu": {
+        "enabled": true,
+        "huge-page-size": 2,
+        "max-threads-hint": 100,
+        "priority": null,
+        "memory-pool": true,
+        "yield": false,
+        "asm": "auto",
+        "argon2-impl": null,
+        "cn": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "cn-heavy": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "cn-lite": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "cn-pico": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "cn/upx2": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "rx": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "rx/wow": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "rx/loki": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "rx/arq": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "rx/graft": [
+            [
+                "rx/0",
+                0,
+                false
+            ]
+        ],
+        "kawpow": [
+            [
+                "kawpow",
+                0,
+                false
+            ]
+        ]
+    },
+    "opencl": {
+        "enabled": true,
+        "cache": true,
+        "loader": null,
+        "platform": "AMD",
+        "adl": true,
+        "cn/0": false,
+        "cn-lite/0": false
+    },
+    "cuda": {
+        "enabled": true,
+        "loader": null,
+        "nvml": true,
+        "cn/0": false,
+        "cn-lite/0": false
+    },
+    "pools": [
+        {
+            "coin": "ZION",
+            "algorithm": "randomx",
+            "url": "localhost:3335",
+            "user": "test_wallet",
+            "pass": "x",
+            "tls": false,
+            "keepalive": true,
+            "nicehash": false
+        }
+    ],
+    "print-time": 60,
+    "health-print-time": 60,
+    "retries": 5,
+    "retry-pause": 5,
+    "syslog": false,
+    "log-file": null,
+    "background": false,
+    "api": {
+        "id": null,
+        "worker-id": null
+    }
+}

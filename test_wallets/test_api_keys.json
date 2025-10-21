@@ -1,0 +1,57 @@
+{
+  "d00715a23e019bf71491ac46fb290a550be1f6efe705590d4a25c68b72505d81": {
+    "key_hash": "d00715a23e019bf71491ac46fb290a550be1f6efe705590d4a25c68b72505d81",
+    "name": "admin",
+    "role": "admin",
+    "created_at": "2025-10-14T00:56:45.347898",
+    "last_used": "2025-10-14T00:56:45.347908",
+    "request_count": 0,
+    "rate_limit_per_minute": 1000,
+    "enabled": true,
+    "expires_at": null
+  },
+  "86a2da6e88069d2767aacae346d45cdaa3e80e505900cc7cd7fe68de71f8dfbb": {
+    "key_hash": "86a2da6e88069d2767aacae346d45cdaa3e80e505900cc7cd7fe68de71f8dfbb",
+    "name": "test_admin",
+    "role": "admin",
+    "created_at": "2025-10-14T00:56:45.349259",
+    "last_used": "2025-10-14T00:56:45.350378",
+    "request_count": 1,
+    "rate_limit_per_minute": 1000,
+    "enabled": true,
+    "expires_at": null
+  },
+  "3b4fc47dc2372503fb76a840b851bea6904ff3c97c98f0b8fcae6382a942915b": {
+    "key_hash": "3b4fc47dc2372503fb76a840b851bea6904ff3c97c98f0b8fcae6382a942915b",
+    "name": "test_user",
+    "role": "user",
+    "created_at": "2025-10-14T00:56:45.349795",
+    "last_used": "2025-10-14T00:56:45.350388",
+    "request_count": 1,
+    "rate_limit_per_minute": 100,
+    "enabled": false,
+    "expires_at": null
+  },
+  "f4d57e42dbf0e9977746a4e11f0e9bc7c7ca52076e41e8a54fba859e82e156b6": {
+    "key_hash": "f4d57e42dbf0e9977746a4e11f0e9bc7c7ca52076e41e8a54fba859e82e156b6",
+    "name": "test_readonly",
+    "role": "read-only",
+    "created_at": "2025-10-14T00:56:45.350163",
+    "last_used": "2025-10-14T00:56:45.350394",
+    "request_count": 1,
+    "rate_limit_per_minute": 50,
+    "enabled": true,
+    "expires_at": null
+  },
+  "eb89c1e6f3a756478fbb00dff8d26264dc7b814516efa0f10df5226afe9b1a6a": {
+    "key_hash": "eb89c1e6f3a756478fbb00dff8d26264dc7b814516efa0f10df5226afe9b1a6a",
+    "name": "test_expiry",
+    "role": "user",
+    "created_at": "2025-10-14T00:56:45.350905",
+    "last_used": "2025-10-14T00:56:45.350906",
+    "request_count": 0,
+    "rate_limit_per_minute": 100,
+    "enabled": true,
+    "expires_at": "2025-10-15T00:56:45.350898"
+  }
+}

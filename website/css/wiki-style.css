@@ -1,0 +1,617 @@
+/**
+ * ZION Wiki - Wiki-specific styles
+ */
+
+/* ============================
+   WIKI LAYOUT
+   ============================ */
+
+.wiki-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 220px;
+    gap: 2rem;
+    max-width: 1600px;
+    margin: 100px auto 0;
+    padding: 2rem;
+    min-height: calc(100vh - 100px);
+}
+
+/* ============================
+   SIDEBAR NAVIGATION
+   ============================ */
+
+.wiki-sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.sidebar-search {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.sidebar-search input {
+    flex: 1;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-white);
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar-search input:focus {
+    outline: none;
+    border-color: var(--matrix-green);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+.sidebar-search button {
+    background: var(--matrix-green);
+    border: none;
+    color: var(--bg-dark);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar-search button:hover {
+    background: var(--text-white);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+}
+
+.sidebar-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.category-group {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+.category-group:last-child {
+    border-bottom: none;
+}
+
+.category-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.category-title:hover {
+    background: var(--bg-dark);
+    color: var(--matrix-green);
+}
+
+.category-title.active {
+    background: var(--bg-dark);
+    color: var(--matrix-green);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+}
+
+.category-title .icon {
+    font-size: 1.2rem;
+}
+
+.category-items {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.category-items li a {
+    display: block;
+    color: var(--text-white);
+    text-decoration: none;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.category-items li a::before {
+    content: '▸';
+    position: absolute;
+    left: 1rem;
+    color: var(--matrix-green);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.category-items li a:hover {
+    background: var(--bg-dark);
+    color: var(--matrix-green);
+    transform: translateX(5px);
+}
+
+.category-items li a:hover::before {
+    opacity: 1;
+}
+
+.category-items li a.active {
+    background: var(--bg-dark);
+    color: var(--matrix-green);
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+}
+
+.category-items li a.active::before {
+    opacity: 1;
+}
+
+/* ============================
+   MAIN CONTENT AREA
+   ============================ */
+
+.wiki-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2.5rem;
+    min-height: 600px;
+}
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.breadcrumbs .crumb {
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.breadcrumbs .crumb:not(.current):hover {
+    color: var(--matrix-green);
+    cursor: pointer;
+}
+
+.breadcrumbs .crumb.current {
+    color: var(--matrix-green);
+}
+
+.breadcrumbs .separator {
+    color: var(--border-color);
+}
+
+.page-title {
+    font-size: 3rem;
+    color: var(--matrix-green);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+/* ============================
+   WELCOME CARDS GRID
+   ============================ */
+
+.welcome-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.welcome-card {
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.welcome-card:hover {
+    border-color: var(--matrix-green);
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+    transform: translateY(-5px);
+}
+
+.welcome-card .card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-card h2 {
+    color: var(--matrix-green);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-card p {
+    color: var(--text-white);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.welcome-card .btn-primary {
+    display: inline-block;
+    background: transparent;
+    color: var(--matrix-green);
+    border: 1px solid var(--matrix-green);
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.welcome-card .btn-primary:hover {
+    background: var(--matrix-green);
+    color: var(--bg-dark);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+}
+
+/* ============================
+   QUOTE CONTAINER
+   ============================ */
+
+.quote-container {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: var(--bg-dark);
+    border-left: 4px solid var(--matrix-green);
+    border-radius: 8px;
+}
+
+.sacred-quote {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text-white);
+    line-height: 1.8;
+    margin: 0;
+}
+
+.sacred-quote cite {
+    display: block;
+    margin-top: 1rem;
+    color: var(--matrix-green);
+    font-style: normal;
+    font-size: 1rem;
+}
+
+/* ============================
+   WIKI ARTICLE CONTENT
+   ============================ */
+
+#wiki-article {
+    color: var(--text-white);
+    line-height: 1.8;
+}
+
+#wiki-article h1 {
+    font-size: 2.5rem;
+    color: var(--matrix-green);
+    margin: 2rem 0 1rem;
+    text-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+#wiki-article h2 {
+    font-size: 2rem;
+    color: var(--matrix-green);
+    margin: 1.8rem 0 1rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+#wiki-article h3 {
+    font-size: 1.5rem;
+    color: var(--text-white);
+    margin: 1.5rem 0 0.8rem;
+}
+
+#wiki-article h4 {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin: 1.2rem 0 0.6rem;
+}
+
+#wiki-article p {
+    margin-bottom: 1rem;
+    color: var(--text-white);
+}
+
+#wiki-article ul,
+#wiki-article ol {
+    margin: 1rem 0 1rem 2rem;
+    color: var(--text-white);
+}
+
+#wiki-article li {
+    margin-bottom: 0.5rem;
+}
+
+#wiki-article code {
+    background: var(--bg-dark);
+    color: var(--matrix-green);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9em;
+}
+
+#wiki-article pre {
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+#wiki-article pre code {
+    background: transparent;
+    padding: 0;
+}
+
+#wiki-article blockquote {
+    border-left: 4px solid var(--matrix-green);
+    background: var(--bg-dark);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+#wiki-article a {
+    color: var(--matrix-green);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+#wiki-article a:hover {
+    border-bottom-color: var(--matrix-green);
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+#wiki-article table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+#wiki-article th,
+#wiki-article td {
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+#wiki-article th {
+    background: var(--bg-dark);
+    color: var(--matrix-green);
+    font-weight: 700;
+}
+
+#wiki-article tr:hover {
+    background: var(--bg-dark);
+}
+
+/* ============================
+   TABLE OF CONTENTS SIDEBAR
+   ============================ */
+
+.toc-sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.toc-sidebar h3 {
+    color: var(--matrix-green);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+#toc-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#toc-nav a {
+    color: var(--text-white);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    border-left: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+#toc-nav a:hover {
+    color: var(--matrix-green);
+    border-left-color: var(--matrix-green);
+    padding-left: 1.2rem;
+}
+
+#toc-nav a.active {
+    color: var(--matrix-green);
+    border-left-color: var(--matrix-green);
+    font-weight: 700;
+}
+
+/* Nested TOC items */
+#toc-nav a[data-level="3"] {
+    padding-left: 1.5rem;
+    font-size: 0.85rem;
+}
+
+#toc-nav a[data-level="4"] {
+    padding-left: 2rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ============================
+   BOOK VIEWER STYLES
+   ============================ */
+
+.book-header {
+    background: linear-gradient(135deg, var(--bg-dark) 0%, rgba(0, 255, 65, 0.1) 100%);
+    border: 1px solid var(--matrix-green);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.book-title {
+    font-size: 2.5rem;
+    color: var(--matrix-green);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+}
+
+.book-author {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.book-description {
+    color: var(--text-white);
+    line-height: 1.6;
+}
+
+.book-meta {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.book-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.book-content {
+    margin-top: 2rem;
+}
+
+.chapter {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.chapter:last-child {
+    border-bottom: none;
+}
+
+.chapter-title {
+    color: var(--matrix-green);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.chapter-text {
+    color: var(--text-white);
+    line-height: 1.8;
+    text-align: justify;
+}
+
+/* ============================
+   RESPONSIVE DESIGN
+   ============================ */
+
+@media (max-width: 1200px) {
+    .wiki-layout {
+        grid-template-columns: 250px 1fr;
+    }
+    
+    .toc-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .wiki-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .wiki-sidebar {
+        position: static;
+        max-height: none;
+        margin-bottom: 2rem;
+    }
+    
+    .wiki-content {
+        padding: 1.5rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .welcome-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .wiki-content {
+        padding: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+    }
+    
+    .page-subtitle {
+        font-size: 1rem;
+    }
+    
+    .welcome-card {
+        padding: 1.5rem;
+    }
+}

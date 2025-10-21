@@ -1,0 +1,13 @@
+{
+  "version": "2.7.1",
+  "addresses": [
+    {
+      "address": "ZION_DC39375B5683629ADA5FC0819737EAD9",
+      "public_key": "274b6d4a8e6c8341ca7defd72b32e0578f26a20c31cfb8f4b2c7915505450b96",
+      "private_key": "gAAAAABo7YcPocVfAqm5UC6VwGBUXiTBddjUOiMoG2p-uHFZ8EoNKbmYm-HXz9j0n2L-xZXJetuqegbQAEuerbH_K6axqZAm6F6U9DTexZPCYoJL5bSfX4N-ZAesSS_kTiAcWkf8h3veaX-dnRsZyb4TDLUjpbJ6i1kjgdmDH26i6cuqb4YRaOA=",
+      "created_at": "2025-10-14T01:11:11.600584",
+      "label": "Default Address",
+      "encrypted": true
+    }
+  ]
+}

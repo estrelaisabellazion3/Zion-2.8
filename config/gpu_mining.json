@@ -1,0 +1,26 @@
+{
+  "gpu_mining": {
+    "enabled": false,
+    "algorithm": "kawpow",
+    "pool_url": "stratum+tcp://pool.zion.io:4444",
+    "wallet_address": "ZixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXX",
+    "intensity": 20,
+    "worker_name": "gpu_worker_001",
+    "temperature_limit": 85,
+    "power_limit": 250,
+    "memory_clock": 0,
+    "core_clock": 0
+  },
+  "monitoring": {
+    "update_interval": 5,
+    "temperature_monitoring": true,
+    "hashrate_monitoring": true,
+    "power_monitoring": true
+  },
+  "safety": {
+    "auto_shutdown_temp": 90,
+    "auto_reduce_intensity_temp": 80,
+    "restart_on_crash": true,
+    "max_restart_attempts": 3
+  }
+}

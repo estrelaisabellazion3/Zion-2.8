@@ -1,0 +1,98 @@
+{
+  "miner": {
+    "name": "ZION Universal AI Miner",
+    "version": "2.8",
+    "author": "ZION Team"
+  },
+  
+  "pool": {
+    "url": "stratum+tcp://91.98.122.165:3333",
+    "wallet": "Z32f72f93c095d78fc8a2fe01c0f97fd4a7f6d1bcd9b251f73b18b5625be654e84",
+    "worker": "zion_universal_ai_miner",
+    "password": "x"
+  },
+  
+  "mining": {
+    "mode": "hybrid",
+    "algorithm": "autolykos2",
+    "algorithms_supported": [
+      "autolykos2",
+      "ethash",
+      "kawpow",
+      "randomx",
+      "yescrypt"
+    ]
+  },
+  
+  "cpu": {
+    "enabled": true,
+    "algorithm": "randomx",
+    "threads": "auto",
+    "threads_min": 2,
+    "threads_max": 16,
+    "priority": "normal",
+    "affinity": null,
+    "randomx_mode": "fast"
+  },
+  
+  "gpu": {
+    "enabled": true,
+    "algorithm": "autolykos2",
+    "devices": "auto",
+    "intensity": "auto",
+    "memory_pool": "1gb",
+    "power_limit": "150w",
+    "fan_speed": "auto",
+    "boost": 3,
+    "clocks_core": null,
+    "clocks_memory": null
+  },
+  
+  "ai": {
+    "enabled": true,
+    "auto_optimize": true,
+    "performance_threshold": 0.8,
+    "adapt_algorithm": true,
+    "predict_efficiency": true,
+    "learning_period_seconds": 300
+  },
+  
+  "monitoring": {
+    "enabled": true,
+    "update_interval": 5,
+    "log_level": "INFO",
+    "log_file": "zion_miner.log",
+    "store_history": true,
+    "history_size": 100
+  },
+  
+  "advanced": {
+    "external_miners": {
+      "xmrig_path": null,
+      "srbminer_path": null,
+      "use_external": false
+    },
+    "donation": 0,
+    "api_port": 4444,
+    "watchdog_enabled": true,
+    "watchdog_check_interval": 60,
+    "auto_restart_on_crash": true
+  },
+  
+  "autolykos_v2": {
+    "description": "Ergo blockchain GPU mining algorithm",
+    "gpu_types": ["AMD", "NVIDIA"],
+    "min_vram": "6gb",
+    "optimal_vram": "8gb",
+    "power_consumption": "100-150w",
+    "expected_hashrate": "30-50 MH/s"
+  },
+  
+  "notes": {
+    "randomx": "CPU mining - Best for multi-core processors",
+    "autolykos2": "GPU mining - AMD/NVIDIA Autolykos v2",
+    "ethash": "GPU mining - Legacy Ethereum algorithm",
+    "kawpow": "GPU mining - Ravencoin algorithm",
+    "yescrypt": "CPU mining - Energy efficient alternative"
+  }
+}

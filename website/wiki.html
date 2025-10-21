@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZION Wiki - Sacred Knowledge Library</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/matrix-style.css">
+    <link rel="stylesheet" href="css/sacred-geometry.css">
+    <link rel="stylesheet" href="css/wiki-style.css">
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-rain"></canvas>
+    
+    <!-- Sacred Geometry Background -->
+    <div class="sacred-geometry-bg"></div>
+    
+    <!-- Navigation -->
+    <nav class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="brand-icon">⬡</span>
+                <span class="brand-text">ZION</span>
+                <span class="brand-subtitle">Wiki</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="#sacred-books">Sacred Books</a>
+                <a href="#mining">Mining</a>
+                <a href="#dao">DAO</a>
+                <a href="#technical">Technical</a>
+                <a href="#consciousness">Consciousness</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Wiki Layout -->
+    <div class="wiki-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="wiki-sidebar">
+            <div class="sidebar-search">
+                <input type="text" id="wiki-search" placeholder="Search wiki..." />
+                <button id="search-btn">🔍</button>
+            </div>
+            
+            <div class="sidebar-categories">
+                <!-- Sacred Books Section -->
+                <div class="category-group">
+                    <h3 class="category-title active" data-category="sacred-books">
+                        <span class="icon">📚</span>
+                        Sacred Books
+                    </h3>
+                    <ul class="category-items" id="sacred-books-list">
+                        <li><a href="#smaragdove-desky" data-book="smaragdove-desky">Smaragdové Desky</a></li>
+                        <li><a href="#trinity-one-love" data-book="trinity-one-love">Trinity One Love</a></li>
+                        <li><a href="#starobyly-sip" data-book="starobyly-sip">Starožitný Šíp</a></li>
+                        <li><a href="#tajemstvi-amenti" data-book="tajemstvi-amenti">Tajemství Amenti</a></li>
+                        <li><a href="#dohrmanovo-proroctvi" data-book="dohrmanovo-proroctvi">Dohrmanovo Proroctví</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Mining Section -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="mining">
+                        <span class="icon">⛏️</span>
+                        Mining
+                    </h3>
+                    <ul class="category-items" id="mining-list" style="display: none;">
+                        <li><a href="#cpu-mining">CPU Mining (XMRig)</a></li>
+                        <li><a href="#gpu-mining" data-doc="AMD_GPU_SETUP_LOG">GPU Mining (AMD)</a></li>
+                        <li><a href="#pool-setup">Pool Configuration</a></li>
+                        <li><a href="#mining-ssh" data-doc="MINING_SSH_SETUP">SSH Mining Setup</a></li>
+                        <li><a href="#distributed-mining" data-doc="DISTRIBUTED_MINING_FUTURE_PLAN">Distributed Mining</a></li>
+                        <li><a href="#troubleshooting">Troubleshooting</a></li>
+                    </ul>
+                </div>
+                
+                <!-- DAO Governance -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="dao">
+                        <span class="icon">🏛️</span>
+                        DAO Governance
+                    </h3>
+                    <ul class="category-items" id="dao-list" style="display: none;">
+                        <li><a href="#voting-process">Voting Process</a></li>
+                        <li><a href="#proposal-submission">Proposal Submission</a></li>
+                        <li><a href="#treasury">Treasury Management</a></li>
+                        <li><a href="#transition-timeline">Transition Timeline</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Technical Specs -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="technical">
+                        <span class="icon">⚙️</span>
+                        Technical
+                    </h3>
+                    <ul class="category-items" id="technical-list" style="display: none;">
+                        <li><a href="#blockchain-params" data-doc="CONSENSUS_PARAMS">Blockchain Parameters</a></li>
+                        <li><a href="#multi-algo" data-doc="MULTI_ALGO_SUPPORT">Multi-Algorithm Support</a></li>
+                        <li><a href="#address-spec" data-doc="ADDRESS_SPEC">Address Specification</a></li>
+                        <li><a href="#project-architecture" data-doc="PROJECT_ARCHITECTURE_OVERVIEW">Project Architecture</a></li>
+                        <li><a href="#security" data-doc="SECURITY_WHITELIST">Security & Whitelist</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Documentation -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="documentation">
+                        <span class="icon">📖</span>
+                        Documentation
+                    </h3>
+                    <ul class="category-items" id="documentation-list" style="display: none;">
+                        <li><a href="#whitepaper-cz" data-doc="ZION_COSMIC_DHARMA_WHITEPAPER_2025_CZ">Whitepaper (CZ)</a></li>
+                        <li><a href="#whitepaper-en" data-doc="ZION_COSMIC_DHARMA_WHITEPAPER_2025">Whitepaper (EN)</a></li>
+                        <li><a href="#mainnet-launch" data-doc="MAINNET_LAUNCH">MainNet Launch</a></li>
+                        <li><a href="#release-notes" data-doc="RELEASE_NOTES">Release Notes</a></li>
+                        <li><a href="#changelog" data-doc="CHANGELOG">Changelog</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Deployment -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="deployment">
+                        <span class="icon">🚀</span>
+                        Deployment
+                    </h3>
+                    <ul class="category-items" id="deployment-list" style="display: none;">
+                        <li><a href="#docker-workflow" data-doc="DOCKER_WORKFLOW_GUIDE">Docker Workflow</a></li>
+                        <li><a href="#node-installer" data-doc="NODE_INSTALLER">Node Installer</a></li>
+                        <li><a href="#global-deployment" data-doc="GLOBAL-DEPLOYMENT-STRATEGY">Global Deployment</a></li>
+                        <li><a href="#hetzner-setup" data-doc="hetzner-setup">Hetzner Setup</a></li>
+                        <li><a href="#ssh-mining" data-doc="SSH_MINING_DEPLOYMENT">SSH Mining</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Vision & Strategy -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="vision">
+                        <span class="icon">✨</span>
+                        Vision & Strategy
+                    </h3>
+                    <ul class="category-items" id="vision-list" style="display: none;">
+                        <li><a href="#liberation-manifesto" data-doc="LIBERATION-MANIFESTO">Liberation Manifesto</a></li>
+                        <li><a href="#new-jerusalem" data-doc="NEW-JERUSALEM-MASTER-PLAN">New Jerusalem Plan</a></li>
+                        <li><a href="#strategic-vision" data-doc="STRATEGIC_VISION_EXPANSION">Strategic Vision</a></li>
+                        <li><a href="#business-model" data-doc="BUSINESS_MODEL_ANALYSIS">Business Model</a></li>
+                        <li><a href="#portugal-hub" data-doc="PORTUGAL_HUB_STRATEGY">Portugal Hub</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Consciousness Game -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="consciousness">
+                        <span class="icon">🧘</span>
+                        Consciousness
+                    </h3>
+                    <ul class="category-items" id="consciousness-list" style="display: none;">
+                        <li><a href="#level-system">Level System (L1-L9)</a></li>
+                        <li><a href="#xp-progression">XP Progression</a></li>
+                        <li><a href="#golden-egg">Golden Egg Quest</a></li>
+                        <li><a href="#achievements">Achievements</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="wiki-content">
+            <div class="breadcrumbs">
+                <span class="crumb">Wiki</span>
+                <span class="separator">></span>
+                <span class="crumb current" id="current-category">Sacred Books</span>
+                <span class="separator" id="page-separator" style="display: none;">></span>
+                <span class="crumb current" id="current-page" style="display: none;"></span>
+            </div>
+            
+            <article id="wiki-article">
+                <!-- Default Landing Page -->
+                <div id="wiki-home" class="wiki-page">
+                    <h1 class="page-title glitch" data-text="ZION Wiki">ZION Wiki</h1>
+                    <p class="page-subtitle">Sacred Knowledge Library • Consciousness Mining • Cosmic Wisdom</p>
+                    
+                    <div class="welcome-grid">
+                        <div class="welcome-card">
+                            <div class="card-icon">📚</div>
+                            <h2>Sacred Books</h2>
+                            <p>Ancient wisdom texts: Smaragdové Desky (Thoth), Trinity One Love, Starožitný Šíp (WingMakers), Tajemství Amenti, Dohrmanovo Proroctví</p>
+                            <a href="#sacred-books" class="btn-primary">Explore →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">⛏️</div>
+                            <h2>Mining Guides</h2>
+                            <p>Complete setup guides for CPU (XMRig) and GPU (SRBMiner) mining, pool configuration, optimization tips</p>
+                            <a href="#cpu-mining" class="btn-primary">Start Mining →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">🏛️</div>
+                            <h2>DAO Governance</h2>
+                            <p>Decentralized governance system, voting process, treasury management, 20-year transition timeline</p>
+                            <a href="#voting-process" class="btn-primary">Learn More →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">⚙️</div>
+                            <h2>Technical Docs</h2>
+                            <p>Blockchain parameters, Yescrypt/Argon2 algorithms, consensus rules, RPC API reference</p>
+                            <a href="#blockchain-params" class="btn-primary">View Specs →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">🧘</div>
+                            <h2>Consciousness System</h2>
+                            <p>9 levels of consciousness (L1 Physical → L9 ON_THE_STAR), XP progression, Golden Egg quest</p>
+                            <a href="#level-system" class="btn-primary">Ascend →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">💎</div>
+                            <h2>Economic Model</h2>
+                            <p>144B supply, 5,479.45 ZION/block, 50-year emission, fee structure, premine distribution</p>
+                            <a href="#blockchain-params" class="btn-primary">Economics →</a>
+                        </div>
+                    </div>
+                    
+                    <div class="quote-container">
+                        <blockquote class="sacred-quote">
+                            "We are not human beings having a spiritual experience. We are spiritual beings having a human experience."
+                            <cite>— Pierre Teilhard de Chardin</cite>
+                        </blockquote>
+                    </div>
+                </div>
+                
+                <!-- Dynamic content loaded here by wiki-engine.js -->
+            </article>
+            
+            <!-- Table of Contents (for longer articles) -->
+            <aside class="toc-sidebar">
+                <h3>On This Page</h3>
+                <nav id="toc-nav">
+                    <!-- Auto-generated from article headings -->
+                </nav>
+            </aside>
+        </main>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <a href="#sacred-books">Sacred Books</a>
+                    <a href="index.html#mining">Mining</a>
+                    <a href="index.html#dao">DAO</a>
+                    <a href="#technical">Technical Docs</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <a href="#">Discord</a>
+                    <a href="#">Telegram</a>
+                    <a href="#">Reddit</a>
+                    <a href="#">Forum</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Development</h4>
+                    <a href="https://github.com/estrelaisabellazion3/Zion-TestNet-2.7.5">GitHub</a>
+                    <a href="#api-reference">API Docs</a>
+                    <a href="#">Block Explorer</a>
+                    <a href="#">Source Code</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Social</h4>
+                    <a href="#">Twitter</a>
+                    <a href="#">YouTube</a>
+                    <a href="#">Medium</a>
+                    <a href="#">LinkedIn</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 ZION Blockchain. Sacred Technology for Conscious Evolution.</p>
+                <p class="sacred-quote">"As above, so below. As within, so without."</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="js/matrix-rain.js"></script>
+    <script src="js/sacred-geometry.js"></script>
+    <script src="js/wiki-engine.js"></script>
+</body>
+</html>
