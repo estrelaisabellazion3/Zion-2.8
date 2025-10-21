@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 # Pool info
 pool_info = Info('zion_pool_info', 'ZION Mining Pool Information')
 pool_info.info({
-    'version': '2.7.5',
+    'version': '2.8.0',
     'name': 'ZION Universal Pool',
     'consciousness_mining': 'enabled'
 })
@@ -428,7 +428,7 @@ class ZIONPoolAPIHandler(BaseHTTPRequestHandler):
         """Send general pool information"""
         info = {
             'name': 'ZION Universal Mining Pool',
-            'version': '2.7.1',
+            'version': '2.8.0',
             'algorithms': ['randomx', 'yescrypt', 'autolykos_v2'],
             'ports': {
                 'stratum': self.pool.port,
