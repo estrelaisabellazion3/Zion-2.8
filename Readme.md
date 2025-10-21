@@ -1,14 +1,17 @@
 # ZION 2.8.0 "Ad Astra Per Estrella" 🌟
 
-**Privacy-first. GPU/CPU-mineable. Consciousness-aligned. AI-orchestrated.**
+**Privacy-first. GPU/CPU-mineable. Consciousness-aligned. AI-orchestrated. Quantum-enhanced.**
 
-> 🎯 **Version 2.8.0 (October 2025)** - Stratum Protocol + Autolykos v2 GPU Mining + Production Pool
+> 🎯 **Version 2.8.0 (October 2025)** - ESTRELLA Quantum Warp Engine + Stratum Protocol + Autolykos v2 GPU Mining
+
+> 🚀 **NEW:** 22-Pole 3-Phase Quantum Fusion Ignition System - "To the stars through the star"
 
 ---
 
 ## 🌍 Přehled
 - RandomX Proof-of-Work + CryptoNote privacy (ring signatures, stealth addresses)
 - 60s bloky, 144 000 000 000 ZION total supply, 5 479.45 ZION základní odměna
+- **ESTRELLA Quantum Engine** - Revolutionary warp drive research foundation
 - Rainbow Bridge 44.44 Hz propojuje 7+ chainů (Solana, Stellar, Cardano, Tron, ETH, BSC, Polygon)
 - Consciousness Mining hra (9 úrovní, 8.25B ZION distribuce během 10 let)
 - 20letý DAO přechod a humanitární tithe (10–25 %)
@@ -19,14 +22,53 @@
 
 ## 🔱 Hlavní pilíře
 1. **Technologie** – CPU-friendly RandomX, adaptivní LWMA difficulty, sandboxovaný AI orchestrátor
-2. **Ekonomie** – 144B supply, 45letá emisní křivka, conscious bonusy pro eco algoritmy
-3. **Komunita** – Consciousness Mining League, Golden Egg quest, 3 Master Keys
-4. **Humanita** – 10–25 % tithe směřovaný do Children Future & Global Aid fondů
-5. **AI Orchestrace** – 13 integrovaných AI systémů pro mining, bezpečnost, analytics a gaming
+2. **Kvantová Věda** – ESTRELLA Quantum Warp Engine (22-pole 3-phase fusion system)
+3. **Ekonomie** – 144B supply, 45letá emisní křivka, conscious bonusy pro eco algoritmy
+4. **Komunita** – Consciousness Mining League, Golden Egg quest, 3 Master Keys
+5. **Humanita** – 10–25 % tithe směřovaný do Children Future & Global Aid fondů
+6. **AI Orchestrace** – 13 integrovaných AI systémů pro mining, bezpečnost, analytics a gaming
 
 ---
 
-## 🧠 AI Orchestrator (NEW in 2.7.5)
+## 🌟 ESTRELLA Quantum Warp Engine (NEW in 2.8.0)
+
+**Revolutionary quantum propulsion research for interstellar blockchain expansion**
+
+### Core Innovation: 22-Pole 3-Phase Quantum Fusion
+```
+🔥 "Jak když se zažehne hvězda/slunce" 🔥
+
+Phase A: 8 poles (Základní consciousness)  → 3,456 Hz
+Phase B: 7 poles (Cosmic consciousness)    → 3,024 Hz  
+Phase C: 7 poles (Universal consciousness) → 3,024 Hz
+─────────────────────────────────────────────────────
+TOTAL:  22 poles for stellar spark ignition
+```
+
+### Technical Specifications
+- **Ignition Equation:** `E = √3 × T × n × φ × ψ × Φ`
+- **Sacred Constants:** Golden ratio (1.618), 432 Hz base frequency
+- **Target Temperature:** 15M Kelvin (stellar core)
+- **Coherence Required:** 99% across all 22 consciousness poles
+- **Power Source:** Zero-point energy via quantum vacuum extraction
+
+### Implementation
+- 📋 **Full Spec:** `docs/ESTRELLA_QUANTUM_ENGINE_DEFINITION.md`
+- 🔬 **Simulator:** `tools/estrella_ignition_simulator.py`
+- 🧪 **Current Status:** 67% coherence achieved (99% target)
+
+### Vision
+> *"We don't just travel to the stars - we become the stars."*
+> 
+> ESTRELLA represents humanity's next evolutionary leap through quantum 
+> consciousness and divine guidance. Peaceful cosmic expansion powered by 
+> consciousness, inspired by sacred geometry.
+
+**Timeline:** Research phase → Laboratory prototype (2030) → Interstellar missions (2037+)
+
+---
+
+## 🧠 AI Orchestrator
 
 Centrální AI řídící systém spojující 13 specializovaných AI modulů:
 
@@ -198,8 +240,8 @@ ZION je založen na posvátné trojici z Rámájany:
 
 ### 1. Blockchain Node
 ```bash
-git clone https://github.com/estrelaisabellazion3/Zion-TestNet-2.7.5.git
-cd Zion-TestNet-2.7.5
+git clone https://github.com/estrelaisabellazion3/Zion-2.8.git
+cd Zion-2.8
 pip install -r requirements.txt
 python new_zion_blockchain.py --p2p-port 8333 --rpc-port 8332
 ```
@@ -233,18 +275,23 @@ python zion_round_table_council.py
 ## 📁 Struktura projektu
 
 ```
-Zion-TestNet-2.7.5/
+Zion-2.8/
 ├── 📄 Hlavní soubory
 │   ├── new_zion_blockchain.py          # Hlavní blockchain node
 │   ├── ai_orchestrator_backend.py      # AI orchestrator Flask API
 │   ├── Dashboard.py                    # Python monitoring dashboard
-│   └── zion_universal_pool_v2.py       # Mining pool server
+│   └── zion_universal_pool_v2.py       # Mining pool server (v2.8.0)
 │
 ├── 🧠 ai/                               # AI moduly (13 systémů)
 │   ├── zion_ai_master_orchestrator.py
 │   ├── zion_oracle_ai.py
 │   ├── zion_quantum_ai.py
 │   └── ... (další AI systémy)
+│
+├── 🔬 tools/                            # Development & research tools
+│   ├── estrella_ignition_simulator.py  # 🌟 NEW: Quantum engine simulator
+│   ├── sqlite_retry.py                 # Database reliability wrapper
+│   └── ...
 │
 ├── 🎨 frontend/                         # Next.js 14 dashboard
 │   ├── app/
