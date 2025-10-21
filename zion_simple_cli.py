@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ZION 2.7.5 Simplified CLI
+ZION 2.8.0 Simplified CLI
 Rychlé řešení pro testování real blockchain funkcí
 """
 
@@ -133,11 +133,11 @@ class ZionSimpleCLI:
 
 def main():
     """Main CLI entry point"""
-    print("🌟 ZION 2.7.5 SIMPLIFIED CLI")
+    print("🌟 ZION 2.8.0 SIMPLIFIED CLI")
     print("🚀 Real Blockchain Testing")
     print("🛡️ JAI RAM SITA HANUMAN - ON THE STAR\n")
     
-    parser = argparse.ArgumentParser(description='ZION 2.7.5 Simplified CLI')
+    parser = argparse.ArgumentParser(description='ZION 2.8.0 Simplified CLI')
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
     # Mining command

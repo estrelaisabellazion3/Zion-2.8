@@ -257,7 +257,7 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
         <!DOCTYPE html>
         <html>
         <head>
-            <title>ZION 2.7.4 RPC Interface</title>
+            <title>ZION 2.8.0 RPC Interface</title>
             <style>
                 body { font-family: Arial, sans-serif; margin: 40px; }
                 h1 { color: #2c3e50; }
@@ -266,7 +266,7 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
             </style>
         </head>
         <body>
-            <h1>🚀 ZION 2.7.4 RPC Interface</h1>
+            <h1>🚀 ZION 2.8.0 RPC Interface</h1>
             <p>Real blockchain s humanitarian tithe systémem</p>
 
             <h2>API Endpoints</h2>
