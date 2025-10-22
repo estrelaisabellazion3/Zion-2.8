@@ -386,14 +386,14 @@ XP System:
 
 Rewards Per Level:
   - Level 1: 1.0x base reward
-  - Level 2: 1.1x multiplier
-  - Level 3: 1.2x
-  - Level 4: 1.5x
-  - Level 5: 2.0x
-  - Level 6: 3.0x
-  - Level 7: 5.0x
-  - Level 8: 10.0x
-  - Level 9: 20.0x (Buddha bonus!)
+  - Level 2: 1.05x multiplier
+  - Level 3: 1.1x
+  - Level 4: 1.25x
+  - Level 5: 1.5x
+  - Level 6: 2.0x
+  - Level 7: 3.0x
+  - Level 8: 5.0x
+  - Level 9: 10.0x (Buddha bonus!)
 ```
 
 #### AI Challenges
