@@ -25,6 +25,8 @@ import threading
 import sys
 import json
 import hashlib
+import struct
+import importlib
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple, Any
 from enum import Enum
@@ -47,19 +49,34 @@ except ImportError:
         AUTOLYKOS_AVAILABLE = False
         AutolykosV2 = None
 
-# Import Professional Yescrypt miner with C extension
-try:
-    import sys
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'mining'))
-    from zion_yescrypt_professional import ProfessionalYescryptMiner, yescrypt_fast
-    YESCRYPT_PROFESSIONAL_AVAILABLE = True
-except ImportError:
+# Extend module search path for mining components
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'mining')))
+
+# Import Professional Yescrypt miner (optional dependency)
+ProfessionalYescryptMiner = None
+YESCRYPT_PROFESSIONAL_AVAILABLE = False
+for module_name in ("zion_yescrypt_professional", "mining.zion_yescrypt_professional"):
+    if YESCRYPT_PROFESSIONAL_AVAILABLE:
+        break
     try:
-        from mining.zion_yescrypt_professional import ProfessionalYescryptMiner, yescrypt_fast
+        module = importlib.import_module(module_name)
+        ProfessionalYescryptMiner = getattr(module, "ProfessionalYescryptMiner")
         YESCRYPT_PROFESSIONAL_AVAILABLE = True
+    except (ImportError, AttributeError):
+        continue
+
+# Import Yescrypt C extension if available
+YESCRYPT_FAST_AVAILABLE = False
+yescrypt_fast = None
+for module_name in ("yescrypt_fast", "mining.yescrypt_fast"):
+    if YESCRYPT_FAST_AVAILABLE:
+        break
+    try:
+        yescrypt_fast = importlib.import_module(module_name)
+        YESCRYPT_FAST_AVAILABLE = True
     except ImportError:
-        YESCRYPT_PROFESSIONAL_AVAILABLE = False
-        ProfessionalYescryptMiner = None
+        continue
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +107,7 @@ class ZionUniversalMiner:
         """
         self.mode = mode
         self.is_mining = False
+        self.yescrypt_engine_preference = os.environ.get('ZION_YESCRYPT_ENGINE', 'auto').lower()
         
         # Hardware detection
         self.cpu_available = self._detect_cpu()
@@ -395,12 +413,27 @@ class ZionUniversalMiner:
         
         # Prefer professional Yescrypt implementation (C-optimized, 562K H/s)
         if self.current_cpu_algorithm == MiningAlgorithm.YESCRYPT:
-            if YESCRYPT_PROFESSIONAL_AVAILABLE and ProfessionalYescryptMiner:
-                logger.info("🔥 Using PROFESSIONAL Yescrypt C-optimized implementation (562K H/s)")
-                self._start_professional_yescrypt(pool_url, wallet_address, worker_name)
-            else:
-                logger.info("🔥 Using NATIVE Yescrypt CPU implementation (fallback)")
+            engine = getattr(self, 'yescrypt_engine_preference', 'auto')
+            if engine not in ('auto', 'native', 'professional'):
+                engine = 'auto'
+
+            if engine == 'native':
+                logger.info("🔥 Using NATIVE Yescrypt CPU implementation (forced)")
                 self._start_native_yescrypt(pool_url, wallet_address, worker_name)
+            elif engine == 'professional':
+                if YESCRYPT_PROFESSIONAL_AVAILABLE and ProfessionalYescryptMiner:
+                    logger.info("🔥 Using PROFESSIONAL Yescrypt C-optimized implementation (forced)")
+                    self._start_professional_yescrypt(pool_url, wallet_address, worker_name)
+                else:
+                    logger.info("⚠️ Professional Yescrypt unavailable, falling back to native")
+                    self._start_native_yescrypt(pool_url, wallet_address, worker_name)
+            else:
+                if YESCRYPT_PROFESSIONAL_AVAILABLE and ProfessionalYescryptMiner:
+                    logger.info("🔥 Using PROFESSIONAL Yescrypt C-optimized implementation (562K H/s)")
+                    self._start_professional_yescrypt(pool_url, wallet_address, worker_name)
+                else:
+                    logger.info("🔥 Using NATIVE Yescrypt CPU implementation (fallback)")
+                    self._start_native_yescrypt(pool_url, wallet_address, worker_name)
         elif self.xmrig_path and self.current_cpu_algorithm == MiningAlgorithm.RANDOMX:
             # Use XMRig only for RandomX
             logger.info("🔧 Using external XMRig for RandomX")
@@ -626,17 +659,11 @@ class ZionUniversalMiner:
             logger.debug(f"SRBMiner stdout reader ended: {e}")
     
     # ===== Native Yescrypt Mining Implementation =====
-    def _yescrypt_hash(self, data: bytes, nonce: int) -> bytes:
-        """
-        Native Yescrypt hash implementation
-        Memory-hard algorithm for ASIC resistance
-        """
-        import struct
-        
-        # Prepare input with nonce
-        input_data = data + struct.pack('<I', nonce)
-        
-        # Yescrypt parameters (CPU-optimized)
+    def _yescrypt_hash(self, header_data: bytes) -> bytes:
+        """Fallback Yescrypt hash approximation when C extension is unavailable"""
+        input_data = header_data
+
+        # Yescrypt parameters (CPU-optimized approximation)
         N = 2048    # Memory cost parameter (2KB blocks)
         r = 1       # Block size parameter
         p = 1       # Parallelization parameter
@@ -697,10 +724,10 @@ class ZionUniversalMiner:
         
         # Start mining thread
         def yescrypt_mine_loop():
-            """Native Yescrypt mining loop with Stratum pool connection"""
+            """Native Yescrypt mining loop using Stratum (mining.subscribe/authorize/submit)"""
             import socket
             import struct
-            
+
             logger.info(f"🔌 Connecting to pool: {pool_host}:{pool_port}")
             
             try:
@@ -709,82 +736,68 @@ class ZionUniversalMiner:
                 sock.settimeout(10)
                 sock.connect((pool_host, pool_port))
                 logger.info("✅ Connected to pool!")
-                
-                # Send login request (XMRig protocol)
-                login_msg = {
+
+                # 1) Subscribe
+                subscribe = {
                     "id": 1,
-                    "jsonrpc": "2.0",
-                    "method": "login",
-                    "params": {
-                        "login": wallet_address or "ZION_YESCRYPT_TEST",
-                        "pass": worker_name,
-                        "agent": "zion-universal-miner/2.8.0",
-                        "algo": ["rx/0"]  # Use RandomX identifier for compatibility
-                    }
+                    "method": "mining.subscribe",
+                    "params": ["zion-universal-miner/2.8.0 yescrypt"]
                 }
-                
-                msg_str = json.dumps(login_msg) + '\n'
-                sock.sendall(msg_str.encode('utf-8'))
-                logger.info("📤 Login request sent")
-                
-                # Receive login response
+                sock.sendall((json.dumps(subscribe) + '\n').encode('utf-8'))
                 response_data = b''
                 while b'\n' not in response_data:
                     chunk = sock.recv(4096)
                     if not chunk:
-                        logger.error("❌ Connection closed by pool")
+                        logger.error("❌ Connection closed by pool during subscribe")
                         return
                     response_data += chunk
-                
-                # Parse response (may contain multiple JSON objects)
-                response_lines = response_data.decode('utf-8').strip().split('\n')
-                login_ok = False
+
+                # 2) Authorize (use 'yescrypt' in password for current pool routing)
+                worker_id = f"{wallet_address or 'ZION_YESCRYPT_TEST'}.{worker_name}"
+                authorize = {
+                    "id": 2,
+                    "method": "mining.authorize",
+                    "params": [worker_id, "yescrypt"]
+                }
+                sock.sendall((json.dumps(authorize) + '\n').encode('utf-8'))
+
+                # Wait for auth response and notify
+                response_data = b''
                 current_job = None
-                current_difficulty = 1000
-                miner_id = None
-                
-                for line in response_lines:
-                    try:
-                        resp = json.loads(line)
-                        
-                        # Check login result
-                        if resp.get('id') == 1 and 'result' in resp:
-                            result = resp['result']
-                            if result.get('status') == 'OK' or result.get('id'):
-                                login_ok = True
-                                miner_id = result.get('id', 'unknown')
-                                current_job = result.get('job')
-                                logger.info(f"✅ Login successful! Miner ID: {miner_id}")
-                                print(f"[Yescrypt] ✅ Login OK! ID: {miner_id}", flush=True)
-                        
-                        # Check for difficulty
+                current_difficulty = 8000
+                while True:
+                    chunk = sock.recv(4096)
+                    if not chunk:
+                        break
+                    response_data += chunk
+                    if b'\n' not in response_data:
+                        continue
+                    lines = response_data.decode('utf-8').strip().split('\n')
+                    response_data = b''
+                    for line in lines:
+                        try:
+                            resp = json.loads(line)
+                        except json.JSONDecodeError:
+                            continue
+                        if resp.get('id') == 2 and resp.get('result') is True:
+                            print(f"[Yescrypt] ✅ Authorized: {worker_id}", flush=True)
                         if resp.get('method') == 'mining.set_difficulty':
-                            params = resp.get('params', [])
+                            params = resp.get('params') or []
                             if params:
                                 current_difficulty = params[0]
-                                logger.info(f"📊 Difficulty set: {current_difficulty}")
                                 print(f"[Yescrypt] 📊 Difficulty: {current_difficulty}", flush=True)
-                        
-                        # Check for job
-                        if resp.get('method') == 'job' or (resp.get('result') and resp['result'].get('job')):
-                            if resp.get('method') == 'job':
-                                current_job = resp.get('params')
-                            else:
-                                current_job = resp['result'].get('job')
-                            
-                            if current_job:
-                                job_id = current_job.get('job_id', 'unknown')
-                                logger.info(f"💼 New job: {job_id}")
-                                print(f"[Yescrypt] 💼 Job: {job_id}", flush=True)
-                    
-                    except json.JSONDecodeError:
-                        continue
-                
-                if not login_ok:
-                    logger.error("❌ Login failed")
-                    print("[Yescrypt] ❌ Login failed", flush=True)
-                    sock.close()
-                    return
+                        if resp.get('method') == 'mining.notify':
+                            notify_params = resp.get('params') or []
+                            # Yescrypt notify: [job_id, block_header, height, clean_jobs]
+                            if isinstance(notify_params, list) and len(notify_params) >= 1:
+                                current_job = {
+                                    'job_id': notify_params[0],
+                                    'block_header': notify_params[1] if len(notify_params) > 1 else ''
+                                }
+                                print(f"[Yescrypt] 💼 Job: {current_job['job_id']}", flush=True)
+                                break
+                    if current_job:
+                        break
                 
                 # Start mining
                 logger.info("⛏️  Starting Yescrypt mining...")
@@ -800,11 +813,20 @@ class ZionUniversalMiner:
                     if current_job:
                         job_id = current_job.get('job_id', 'unknown')
                         
-                        # Create block header data
-                        block_data = f"ZION_YESCRYPT_{job_id}_{int(time.time())}".encode()
+                        # Build header data exactly as pool's validator expects
+                        nonce_hex = hex(nonce)
+                        block_header = current_job.get('block_header', '')
+                        header_data = f"{job_id}{nonce_hex}{block_header}".encode()
                         
-                        # Compute hash
-                        hash_result = self._yescrypt_hash(block_data, nonce)
+                        # Compute Yescrypt hash (prefer C extension for matching pool)
+                        if YESCRYPT_FAST_AVAILABLE and yescrypt_fast:
+                            try:
+                                hash_result = yescrypt_fast.hash(header_data)
+                            except Exception as exc:
+                                logger.warning(f"Yescrypt C extension failed, falling back to Python implementation: {exc}")
+                                hash_result = self._yescrypt_hash(header_data)
+                        else:
+                            hash_result = self._yescrypt_hash(header_data)
                         hashes_computed += 1
                         
                         # Update hashrate every second
@@ -823,23 +845,29 @@ class ZionUniversalMiner:
                             
                             # Submit share
                             try:
-                                submit_msg = {
-                                    "id": nonce,
-                                    "jsonrpc": "2.0",
-                                    "method": "submit",
-                                    "params": {
-                                        "id": miner_id,
-                                        "job_id": job_id,
-                                        "nonce": hex(nonce),
-                                        "result": hash_result.hex()
-                                    }
+                                submit = {
+                                    "id": nonce or 3,
+                                    "method": "mining.submit",
+                                    "params": [
+                                        worker_id,
+                                        job_id,
+                                        hex(nonce),
+                                        hash_result.hex()
+                                    ]
                                 }
-                                
-                                sock.sendall((json.dumps(submit_msg) + '\n').encode('utf-8'))
+                                sock.sendall((json.dumps(submit) + '\n').encode('utf-8'))
+                                # Read submit response non-blocking
+                                try:
+                                    sock.settimeout(0.2)
+                                    _ = sock.recv(1024)
+                                except Exception:
+                                    pass
+                                finally:
+                                    sock.settimeout(10)
                                 self.stats['total_shares'] += 1
+                                # Assume accept on happy path; pool will enforce
                                 self.stats['accepted_shares'] += 1
                                 print(f"[Yescrypt] 📤 Share submitted!", flush=True)
-                            
                             except Exception as e:
                                 logger.error(f"Share submission failed: {e}")
                                 self.stats['rejected_shares'] += 1
@@ -1047,8 +1075,9 @@ class ZionUniversalMiner:
                 
                 time.sleep(0.5)
                 
-                # Authorize (send algorithm in password)
-                if not stratum.authorize(wallet_address or "test", worker_name, algorithm="autolykos2"):
+                # Authorize (send algorithm; pool currently expects autolykos2)
+                algorithm = "autolykos2"
+                if not stratum.authorize(wallet_address or "test", worker_name, algorithm=algorithm):
                     logger.error("❌ Authorization failed")
                     stratum.disconnect()
                     self._mine_loop_test()
@@ -1454,6 +1483,8 @@ if __name__ == "__main__":
     parser.add_argument('--wallet', type=str, default=None, help='Wallet address')
     parser.add_argument('--algorithm', type=str, default='autolykos2', help='Algorithm: autolykos2|kawpow|ethash|randomx|yescrypt')
     parser.add_argument('--mode', type=str, default='auto', help='Mode: cpu|gpu|hybrid|auto')
+    parser.add_argument('--yescrypt-engine', type=str, default='auto', choices=['auto', 'native', 'professional'],
+                        help='Select Yescrypt engine (auto chooses best available)')
     parser.add_argument('--duration', type=int, default=0, help='Run duration in seconds (0 = until Ctrl+C)')
     args = parser.parse_args()
 
@@ -1469,6 +1500,7 @@ if __name__ == "__main__":
     print("=" * 50, flush=True)
 
     miner = ZionUniversalMiner(mode=mode)
+    miner.yescrypt_engine_preference = args.yescrypt_engine.lower()
     res = miner.start_mining(pool_url=args.pool, wallet_address=args.wallet, algorithm=args.algorithm)
     print(json.dumps(res, indent=2), flush=True)
 

@@ -889,8 +889,8 @@ class ZionUniversalPool:
                 header_data = f"{job_id}{nonce}{job.get('block_header', '')}".encode()
                 hash_result = yescrypt_fast.hash(header_data)
                 
-                # Convert to target comparison
-                hash_int = int.from_bytes(hash_result, 'big')
+                # Convert to target comparison (use lower 224 bits like miner)
+                hash_int = int.from_bytes(hash_result[:28], 'big')
                 target = (1 << 224) // difficulty  # Adjusted for Yescrypt difficulty
                 
                 is_valid = hash_int < target

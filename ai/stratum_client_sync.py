@@ -45,6 +45,8 @@ class StratumClientSync:
         self._submitted_shares: Dict[str, Set[int]] = defaultdict(set)
         self._job_cache_max_age = 300  # 5 minutes TTL
         self._job_cache_timestamps: Dict[str, float] = {}
+        # Selected algorithm for this client session (e.g., 'randomx', 'yescrypt', 'autolykos_v2')
+        self.algorithm: Optional[str] = None
     
     def _cleanup_old_jobs(self):
         """Remove stale job entries from duplicate cache"""
@@ -140,8 +142,11 @@ class StratumClientSync:
             self.worker_id = f"{wallet}.{worker}"
             self.request_id += 1
             
-            # Password obsahuje algoritmus pro pool!
+            # Historically we overloaded password with algorithm for pool routing.
+            # Keep this for backward-compatibility with current pool while also storing locally.
             password = algorithm  # e.g., "autolykos2", "randomx", "yescrypt"
+            # Store selected algorithm locally
+            self.algorithm = (algorithm or "").lower()
             
             request = {
                 "id": self.request_id,
@@ -153,7 +158,7 @@ class StratumClientSync:
             
             if response and response.get("result") is True:
                 self.authenticated = True
-                logger.info(f"✅ Authorized: {self.worker_id} (algorithm: {algorithm})")
+                logger.info(f"✅ Authorized: {self.worker_id} (algorithm: {self.algorithm})")
                 self.poll_notifications()
                 return True
             else:

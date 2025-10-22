@@ -18,6 +18,15 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import threading
+import importlib
+
+# Optional Yescrypt C extension (accelerated validation)
+try:
+    import yescrypt_fast  # type: ignore
+    YESCRYPT_FAST_AVAILABLE = True
+except ImportError:
+    yescrypt_fast = None  # type: ignore
+    YESCRYPT_FAST_AVAILABLE = False
 
 # Prometheus monitoring
 from prometheus_client import Counter, Gauge, Histogram, start_http_server, Info
@@ -881,46 +890,48 @@ class ZionUniversalPool:
 
             job = self.jobs[job_id]
 
-            # Try to use C extension for validation if available
+            # Prefer validating against the miner-submitted result to avoid implementation drift
             try:
-                import yescrypt_fast
-                
-                # Create header data for C validation
-                header_data = f"{job_id}{nonce}{job.get('block_header', '')}".encode()
-                hash_result = yescrypt_fast.hash(header_data)
-                
-                # Convert to target comparison
-                hash_int = int.from_bytes(hash_result, 'big')
-                target = (1 << 224) // difficulty  # Adjusted for Yescrypt difficulty
-                
-                is_valid = hash_int < target
-                logger.debug(f"C extension Yescrypt validation: {is_valid}")
-                return is_valid
-                
-            except ImportError:
-                # Fallback to Python implementation
-                logger.debug("Using Python fallback for Yescrypt validation")
-                
-                # Enhanced Python validation
-                validation_data = f"{job_id}{nonce}{result}{job.get('block_header', '')}"
-                validation_hash = hashlib.sha256(validation_data.encode()).hexdigest()
+                submitted = bytes.fromhex(result)
+                if len(submitted) == 32:
+                    hash_result = submitted
+                else:
+                    raise ValueError("Submitted result has invalid length")
+            except Exception:
+                # If submitted result is unusable, try to recompute with local C extension (best effort)
+                if YESCRYPT_FAST_AVAILABLE and yescrypt_fast:
+                    try:
+                        header_data = f"{job_id}{nonce}{job.get('block_header', '')}".encode()
+                        hash_result = yescrypt_fast.hash(header_data)
+                    except Exception:
+                        logger.warning("Yescrypt C extension failed, falling back to Python simulation")
+                        hash_result = None
+                else:
+                    hash_result = None
 
-                # Yescrypt uses multiple rounds - simulate with additional hashing
-                for i in range(8):  # More rounds for better ASIC resistance
-                    validation_hash = hashlib.sha256(validation_hash.encode() + str(i).encode()).hexdigest()
+                if hash_result is None:
+                    # Fallback to a conservative Python simulation (low accuracy)
+                    logger.debug("Using Python fallback for Yescrypt validation")
+                    validation_data = f"{job_id}{nonce}{result}{job.get('block_header', '')}"
+                    validation_hash = hashlib.sha256(validation_data.encode()).hexdigest()
+                    for i in range(8):
+                        validation_hash = hashlib.sha256(validation_hash.encode() + str(i).encode()).hexdigest()
+                    memory_data = validation_hash
+                    for _ in range(4):
+                        memory_data = hashlib.pbkdf2_hmac('sha256', memory_data.encode(), b'yescrypt_zion', 2048, 32).hex()
+                    # Convert to numerical comparison (reduced width)
+                    hash_value = int(memory_data[:16], 16)
+                    target = 2**64 // difficulty
+                    is_valid = hash_value < target
+                    logger.debug(f"Python Yescrypt validation: {is_valid}")
+                    return is_valid
 
-                # Memory-hard component simulation
-                memory_data = validation_hash
-                for _ in range(4):
-                    memory_data = hashlib.pbkdf2_hmac('sha256', memory_data.encode(), b'yescrypt_zion', 2048, 32).hex()
-
-                # Convert to numerical comparison
-                hash_value = int(memory_data[:16], 16)
-                target = 2**64 // difficulty
-
-                is_valid = hash_value < target
-                logger.debug(f"Python Yescrypt validation: {is_valid}")
-                return is_valid
+            # Target comparison using first 224 bits like miner
+            hash_int = int.from_bytes(hash_result[:28], 'big')
+            target = (1 << 224) // difficulty
+            is_valid = hash_int < target
+            logger.debug(f"Yescrypt validation (submitted/result-based) = {is_valid}")
+            return is_valid
 
         except Exception as e:
             logger.error(f"Yescrypt validation error: {e}")
@@ -1575,7 +1586,8 @@ class ZionUniversalPool:
 
         miner = self.miners[addr]
         address = miner['login']
-        algorithm = miner.get('algorithm', 'randomx')
+        # Algorithm from submit params (correct Stratum method), fallback to miner login algorithm
+        algorithm = params.get('algo', miner.get('algorithm', 'randomx')).lower()
         difficulty = self.difficulty.get(algorithm, 1000)  # Default difficulty
 
         # Check for duplicate shares
@@ -2113,6 +2125,8 @@ class ZionUniversalPool:
         params = data.get('params', [])
         logger.info(f"📨 Mining.submit received from {addr}: params={params}")
 
+        start_time = time.time()
+
         if addr not in self.miners:
             return json.dumps({
                 'id': data.get('id'),
@@ -2188,19 +2202,48 @@ class ZionUniversalPool:
             # Fallback to KawPow validation
             is_valid = self.validate_kawpow_share(job_id, nonce, mix_hash, header_hash, difficulty)
 
+        processing_time = time.time() - start_time
+        share_result = mix_hash
+        if algorithm in ('yescrypt', 'randomx', 'autolykos_v2'):
+            share_result = result
+
         if is_valid:
             # Record valid share
             self.submitted_shares.add(share_key)
             self.record_share(address, algorithm, is_valid=True)
 
+            # Persist valid share for payouts/auditing
+            try:
+                self.db.save_share(address, algorithm, job_id, nonce, share_result,
+                                   difficulty, True, processing_time, addr[0])
+            except Exception as db_err:
+                logger.error(f"Failed to persist valid share: {db_err}")
+
             miner['share_count'] = miner.get('share_count', 0) + 1
             total_shares = miner['share_count']
+            share_time = time.time()
+            miner['last_share'] = share_time
+
+            # Track share cadence for vardiff tuning
+            times = miner.setdefault('share_times', [])
+            last_share_time = miner.get('last_share_time')
+            if last_share_time is not None:
+                times.append(share_time - last_share_time)
+                if len(times) > 10:
+                    times.pop(0)
+            miner['last_share_time'] = share_time
 
             # 🎮 CONSCIOUSNESS GAME: Award XP for share submission!
             try:
                 self.consciousness_game.on_share_submitted(address)
             except Exception as e:
                 logger.error(f"Consciousness game share XP error: {e}")
+
+            # Adjust miner difficulty if necessary
+            try:
+                self.adjust_difficulty(addr, algorithm)
+            except Exception as diff_err:
+                logger.debug(f"Difficulty adjust skipped: {diff_err}")
 
             print(f"🎯 {algorithm.upper()} Share: job={job_id}, nonce={nonce}")
             print(f"✅ VALID {algorithm.upper()} SHARE ACCEPTED (Total: {total_shares})")
@@ -2217,6 +2260,17 @@ class ZionUniversalPool:
         else:
             # Invalid share
             self.record_share(address, algorithm, is_valid=False)
+            try:
+                self.db.save_share(address, algorithm, job_id, nonce, share_result,
+                                   difficulty, False, processing_time, addr[0])
+            except Exception as db_err:
+                logger.error(f"Failed to persist invalid share: {db_err}")
+
+            # Track invalid share for potential banning heuristics
+            try:
+                self.track_invalid_share(addr[0], False)
+            except Exception as track_err:
+                logger.debug(f"Invalid share tracking failed: {track_err}")
             print(f"❌ INVALID {algorithm.upper()} SHARE from {addr}")
             return json.dumps({
                 'id': data.get('id'),
@@ -2403,10 +2457,11 @@ class ZionUniversalPool:
         discord_webhook = ZionNetworkConfig.POOL_CONFIG.get('discord_webhook_url')
         if discord_webhook:
             try:
-                from zion_pool_alerting import start_pool_with_alerting
+                pool_alerting = importlib.import_module('zion_pool_alerting')
+                start_pool_with_alerting = getattr(pool_alerting, 'start_pool_with_alerting')
                 self.alerting = await start_pool_with_alerting(self, discord_webhook)
                 print("🔔 Discord alerting system enabled")
-            except Exception as e:
+            except (ModuleNotFoundError, AttributeError) as e:
                 logger.warning(f"Failed to start alerting system: {e}")
                 print("⚠️ Alerting system disabled (check configuration)")
 

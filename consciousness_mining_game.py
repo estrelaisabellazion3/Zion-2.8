@@ -146,14 +146,28 @@ class ConsciousnessMiningGame:
     
     def __init__(self, db_path: str = "consciousness_game.db"):
         self.db_path = db_path
+        self.db_timeout = 15  # seconds
         self.init_database()
         self.active_challenges = self.load_challenges()
         self.achievements = self.load_achievements()
+
+    def _get_connection(self) -> sqlite3.Connection:
+        """Create SQLite connection with busy timeout and thread safety."""
+        conn = sqlite3.connect(self.db_path, timeout=self.db_timeout, check_same_thread=False)
+        conn.execute(f"PRAGMA busy_timeout = {int(self.db_timeout * 1000)}")
+        return conn
         
     def init_database(self):
         """Inicializace databáze pro hru"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
+
+        # Enable WAL for better concurrency and reduce locking
+        try:
+            cursor.execute("PRAGMA journal_mode=WAL")
+            cursor.execute("PRAGMA synchronous=NORMAL")
+        except sqlite3.DatabaseError:
+            logger.debug("SQLite PRAGMA setup failed; continuing with defaults")
         
         # Consciousness profily minerů
         cursor.execute("""
@@ -431,55 +445,55 @@ class ConsciousnessMiningGame:
     
     def get_or_create_miner(self, address: str) -> MinerConsciousness:
         """Získá nebo vytvoří consciousness profil minera"""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
-        cursor.execute("SELECT * FROM miner_consciousness WHERE address = ?", (address,))
-        row = cursor.fetchone()
-        
-        if row:
-            # Parse existing miner
-            return MinerConsciousness(
-                address=row[0],
-                level=ConsciousnessLevel[row[1]],
-                xp=row[2],
-                total_shares=row[3],
-                total_blocks_found=row[4],
-                ai_challenges_completed=row[5],
-                meditation_hours=row[6],
-                community_karma=row[7],
-                achievements=json.loads(row[8]),
-                last_levelup=row[9],
-                created_at=row[10]
-            )
-        else:
-            # Create new miner
-            now = time.time()
-            miner = MinerConsciousness(
-                address=address,
-                level=ConsciousnessLevel.PHYSICAL,
-                xp=0,
-                total_shares=0,
-                total_blocks_found=0,
-                ai_challenges_completed=0,
-                meditation_hours=0.0,
-                community_karma=0,
-                achievements=[],
-                last_levelup=None,
-                created_at=now
-            )
-            
-            cursor.execute("""
-                INSERT INTO miner_consciousness 
-                (address, level, xp, created_at, achievements)
-                VALUES (?, ?, ?, ?, ?)
-            """, (address, miner.level.name, 0, now, '[]'))
-            
-            conn.commit()
-            logger.info(f"🎮 New miner joined the game: {address}")
-        
-        conn.close()
-        return miner
+        try:
+            cursor.execute("SELECT * FROM miner_consciousness WHERE address = ?", (address,))
+            row = cursor.fetchone()
+
+            if row:
+                miner = MinerConsciousness(
+                    address=row[0],
+                    level=ConsciousnessLevel[row[1]],
+                    xp=row[2],
+                    total_shares=row[3],
+                    total_blocks_found=row[4],
+                    ai_challenges_completed=row[5],
+                    meditation_hours=row[6],
+                    community_karma=row[7],
+                    achievements=json.loads(row[8]),
+                    last_levelup=row[9],
+                    created_at=row[10]
+                )
+            else:
+                now = time.time()
+                miner = MinerConsciousness(
+                    address=address,
+                    level=ConsciousnessLevel.PHYSICAL,
+                    xp=0,
+                    total_shares=0,
+                    total_blocks_found=0,
+                    ai_challenges_completed=0,
+                    meditation_hours=0.0,
+                    community_karma=0,
+                    achievements=[],
+                    last_levelup=None,
+                    created_at=now
+                )
+
+                cursor.execute("""
+                    INSERT INTO miner_consciousness 
+                    (address, level, xp, created_at, achievements)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (address, miner.level.name, 0, now, '[]'))
+
+                conn.commit()
+                logger.info(f"🎮 New miner joined the game: {address}")
+
+            return miner
+        finally:
+            conn.close()
     
     def award_xp(self, address: str, xp: int, reason: str) -> Tuple[MinerConsciousness, bool]:
         """Přidá XP minerovi, vrátí (miner, levelup_happened)"""
@@ -587,39 +601,39 @@ class ConsciousnessMiningGame:
     
     def _save_miner(self, miner: MinerConsciousness):
         """Uloží minera do DB"""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        
-        cursor.execute("""
-            UPDATE miner_consciousness 
-            SET level = ?, xp = ?, total_shares = ?, total_blocks_found = ?,
-                ai_challenges_completed = ?, meditation_hours = ?, 
-                community_karma = ?, achievements = ?, last_levelup = ?
-            WHERE address = ?
-        """, (
-            miner.level.name, miner.xp, miner.total_shares, miner.total_blocks_found,
-            miner.ai_challenges_completed, miner.meditation_hours,
-            miner.community_karma, json.dumps(miner.achievements),
-            miner.last_levelup, miner.address
-        ))
-        
-        conn.commit()
-        conn.close()
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                UPDATE miner_consciousness 
+                SET level = ?, xp = ?, total_shares = ?, total_blocks_found = ?,
+                    ai_challenges_completed = ?, meditation_hours = ?, 
+                    community_karma = ?, achievements = ?, last_levelup = ?
+                WHERE address = ?
+            """, (
+                miner.level.name, miner.xp, miner.total_shares, miner.total_blocks_found,
+                miner.ai_challenges_completed, miner.meditation_hours,
+                miner.community_karma, json.dumps(miner.achievements),
+                miner.last_levelup, miner.address
+            ))
+            conn.commit()
+        finally:
+            conn.close()
     
     def _log_levelup(self, address: str, old_level: ConsciousnessLevel, 
                      new_level: ConsciousnessLevel, xp: int):
         """Zaloguje level up do historie"""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        
-        cursor.execute("""
-            INSERT INTO level_history 
-            (miner_address, old_level, new_level, leveled_up_at, xp_at_levelup)
-            VALUES (?, ?, ?, ?, ?)
-        """, (address, old_level.name, new_level.name, time.time(), xp))
-        
-        conn.commit()
-        conn.close()
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO level_history 
+                (miner_address, old_level, new_level, leveled_up_at, xp_at_levelup)
+                VALUES (?, ?, ?, ?, ?)
+            """, (address, old_level.name, new_level.name, time.time(), xp))
+            conn.commit()
+        finally:
+            conn.close()
     
     def _check_achievements(self, address: str):
         """Zkontroluje a odemkne achievements"""
@@ -669,67 +683,54 @@ class ConsciousnessMiningGame:
         self._save_miner(miner)
         
         # Log unlock
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO achievement_unlocks 
-            (miner_address, achievement_id, unlocked_at)
-            VALUES (?, ?, ?)
-        """, (address, achievement.id, time.time()))
-        conn.commit()
-        conn.close()
-        
-        logger.info(f"🏆 {address} unlocked: {achievement.name}! +{achievement.xp_reward} XP, +{achievement.zion_reward} ZION")
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO achievement_unlocks 
+                (miner_address, achievement_id, unlocked_at, xp_earned)
+                VALUES (?, ?, ?, ?)
+            """, (address, achievement.id, time.time(), achievement.xp_reward))
+            conn.commit()
+        finally:
+            conn.close()
+
+        logger.info(
+            f"🏆 Achievement unlocked: {achievement.name} for {address[:20]}... (+{achievement.xp_reward} XP, +{achievement.zion_bonus} ZION)"
+        )
     
     def get_leaderboard(self, limit: int = 100) -> List[Dict]:
         """Vrátí XP leaderboard top N minerů"""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
         
-        cursor.execute("""
-            SELECT address, level, xp, total_shares, total_blocks_found, 
-                   ai_challenges_completed, meditation_hours, community_karma
-            FROM miner_consciousness
-            ORDER BY xp DESC
-            LIMIT ?
-        """, (limit,))
+            cursor.execute("""
+                SELECT address, level, xp, total_shares, total_blocks_found, 
+                       ai_challenges_completed, meditation_hours, community_karma
+                FROM miner_consciousness
+                ORDER BY xp DESC
+                LIMIT ?
+            """, (limit,))
         
-        leaderboard = []
-        rank = 1
-        for row in cursor.fetchall():
-            leaderboard.append({
-                'rank': rank,
-                'address': row[0],
-                'level': row[1],
-                'xp': row[2],
-                'total_shares': row[3],
-                'blocks_found': row[4],
-                'ai_challenges': row[5],
-                'meditation_hours': row[6],
-                'community_karma': row[7]
-            })
-            rank += 1
-        
-        conn.close()
-        return leaderboard
-        miner.achievements.append(achievement.id)
-        self._save_miner(miner)
-        
-        # Award XP
-        self.award_xp(address, achievement.xp_reward, f"achievement: {achievement.name}")
-        
-        # Log unlock
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO achievement_unlocks 
-            (miner_address, achievement_id, unlocked_at, xp_earned)
-            VALUES (?, ?, ?, ?)
-        """, (address, achievement.id, time.time(), achievement.xp_reward))
-        conn.commit()
-        conn.close()
-        
-        logger.info(f"🏆 Achievement unlocked: {achievement.name} for {address[:20]}... (+{achievement.xp_reward} XP, +{achievement.zion_bonus} ZION)")
+            leaderboard = []
+            rank = 1
+            for row in cursor.fetchall():
+                leaderboard.append({
+                    'rank': rank,
+                    'address': row[0],
+                    'level': row[1],
+                    'xp': row[2],
+                    'total_shares': row[3],
+                    'blocks_found': row[4],
+                    'ai_challenges': row[5],
+                    'meditation_hours': row[6],
+                    'community_karma': row[7]
+                })
+                rank += 1
+            return leaderboard
+        finally:
+            conn.close()
 
 
 # === INTEGRATION FUNCTIONS ===
