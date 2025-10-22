@@ -330,7 +330,7 @@ class MiningWorker:
         last_stat_time = time.time()
         hashes_since_stat = 0
         
-        while self.is_mining:
+        while self.is_running:
             try:
                 # Compute hash
                 hash_result = self.yescrypt.hash(job_data, nonce)
