@@ -20,7 +20,7 @@ try:
         "id": 1,
         "jsonrpc": "2.0",
         "method": "mining.subscribe",
-        "params": ["xmrig-test/2.8.0", None]
+        "params": ["xmrig-test/2.8.1", None]
     }
     
     sock.sendall((json.dumps(request) + "\n").encode())

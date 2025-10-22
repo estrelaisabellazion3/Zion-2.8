@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ZION 2.8.0 - ESTRELLA Solar System
+ZION 2.8.1 - ESTRELLA Solar System
 ===================================
 
 ESTRELLA Quantum Engine as the Sun
@@ -662,7 +662,7 @@ class ESTRELLASolarSystem:
         """Get complete solar system status"""
         return {
             "system": "ESTRELLA_SOLAR_SYSTEM",
-            "version": "2.8.0",
+            "version": "2.8.1",
             "codename": "Ad Astra Per Estrella",
             "system_time": self.system_time,
             "estrella_core": self.estrella_core.get_status(),
@@ -744,7 +744,7 @@ class ESTRELLASolarSystem:
 async def main():
     """Main entry point"""
     print("="*80)
-    print("ZION 2.8.0 - ESTRELLA Solar System")
+    print("ZION 2.8.1 - ESTRELLA Solar System")
     print("Ad Astra Per Estrella - To the Stars through ESTRELLA")
     print("="*80)
     print()

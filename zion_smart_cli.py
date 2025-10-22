@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ZION 2.8.0 Smart CLI - Automatic Best Implementation Selection
+ZION 2.8.1 Smart CLI - Automatic Best Implementation Selection
 Automaticky vybere nejlepší dostupnou blockchain implementaci
 """
 
@@ -190,7 +190,7 @@ def run_with_simple_cli(args):
 
 def main():
     """Smart CLI main entry point"""
-    print("🤖 ZION 2.8.0 Smart CLI - Auto Implementation Selection")
+    print("🤖 ZION 2.8.1 Smart CLI - Auto Implementation Selection")
     print("🔍 Detecting available implementations...\n")
     
     # Detect implementations
@@ -210,7 +210,7 @@ def main():
     print("🛡️ JAI RAM SITA HANUMAN - ON THE STAR\n")
     
     # Parse arguments
-    parser = argparse.ArgumentParser(description='ZION 2.8.0 Smart CLI')
+    parser = argparse.ArgumentParser(description='ZION 2.8.1 Smart CLI')
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
     # Stats command

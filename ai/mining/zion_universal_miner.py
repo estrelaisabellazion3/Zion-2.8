@@ -741,7 +741,7 @@ class ZionUniversalMiner:
                 subscribe = {
                     "id": 1,
                     "method": "mining.subscribe",
-                    "params": ["zion-universal-miner/2.8.0 yescrypt"]
+                    "params": ["zion-universal-miner/2.8.1 yescrypt"]
                 }
                 sock.sendall((json.dumps(subscribe) + '\n').encode('utf-8'))
                 response_data = b''

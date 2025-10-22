@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ZION 2.8.0 - Comprehensive Mining & Block Test
+ZION 2.8.1 - Comprehensive Mining & Block Test
 Tests: Mining on SSH pool + Block validation
 """
 

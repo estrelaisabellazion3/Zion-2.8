@@ -588,6 +588,67 @@ class NewZionBlockchain:
         """Vrátí celkovou nabídku ZION"""
         return sum(self.balances.values())
     
+    def get_block_template(self, miner_address: str = "") -> Dict:
+        """Get block template for mining pool - returns block header data for miners to work on"""
+        with self.lock:
+            next_height = len(self.blocks)
+            previous_hash = self.blocks[-1]['hash'] if self.blocks else '0' * 64
+            
+            # Create template block with pending transactions
+            template_block = {
+                'height': next_height,
+                'timestamp': self._enforce_block_timestamp(time.time()),
+                'transactions': self.pending_transactions.copy(),
+                'previous_hash': previous_hash,
+                'nonce': 0,  # Will be filled by miner
+                'difficulty': self.mining_difficulty,
+                'miner': miner_address or 'POOL_MINER',
+                'reward': self.block_reward,
+                'merkle_root': None,
+                'hash': None
+            }
+            
+            # Add mining reward transaction
+            if miner_address:
+                reward_transaction = {
+                    'id': f"mining_reward_{next_height}_{int(time.time())}",
+                    'sender': 'MINING_REWARD',
+                    'receiver': miner_address,
+                    'amount': self.block_reward,
+                    'fee': 0.0,
+                    'timestamp': time.time(),
+                    'purpose': 'Block Mining Reward',
+                    'signature': 'MINING_REWARD_SIGNATURE'
+                }
+                template_block['transactions'].append(reward_transaction)
+            
+            # Calculate merkle root
+            template_block['merkle_root'] = self._merkle_root(template_block['transactions'])
+            
+            # Create block header data for mining (what miners need to hash)
+            block_header_data = {
+                'height': template_block['height'],
+                'previous_hash': template_block['previous_hash'],
+                'timestamp': template_block['timestamp'],
+                'merkle_root': template_block['merkle_root'],
+                'difficulty': template_block['difficulty']
+            }
+            
+            # Convert to hex string that miners can work with
+            header_hex = json.dumps(block_header_data, sort_keys=True, separators=(',', ':')).encode()
+            header_hex = header_hex.hex()
+            
+            return {
+                'height': next_height,
+                'previous_hash': previous_hash,
+                'timestamp': template_block['timestamp'],
+                'merkle_root': template_block['merkle_root'],
+                'difficulty': self.mining_difficulty,
+                'block_header': header_hex,
+                'transactions': len(template_block['transactions']),
+                'target': '0' * self.mining_difficulty
+            }
+    
     def validate_chain(self) -> bool:
         """Validuje celý blockchain bez re-miningu – přepočítá hash a ověří vazby."""
         for i in range(1, len(self.blocks)):

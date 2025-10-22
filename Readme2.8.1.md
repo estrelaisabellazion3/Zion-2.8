@@ -1,380 +1,151 @@
-# 🌟 ZION 2.8.1 "Estrella"# 🌟 ZION 2.8.1 "Estrella"# 🌟 ZION 2.8.1 "Estrella"# ✨ ZION 2.8.1 "Estrella" - Production Blockchain# ✨ ZION 2.8.1 "Estrella" - Production Blockchain# 🌟 ZION 2.8.1 "Estrella" - The Star Guides the Way
-
-## *Ad Astra Per Estrella*
+# 🌟 ZION 2.8.1 "Estrella"# ✨ ZION 2.8.1 "Estrella" - Production Blockchain# ✨ ZION 2.8.1 "Estrella" - Production Blockchain# 🌟 ZION 2.8.1 "Estrella" - The Star Guides the Way
 
 ## *Ad Astra Per Estrella* - To The Stars Through Estrella
+
+
 
 <div align="center">
-
-## *Ad Astra Per Estrella* - To The Stars Through Estrella
-
-**🟢 LIVE IN PRODUCTION**  
-
-**Server:** `91.98.122.165` | **Version:** `2.8.1`  <div align="center">
-
-**Released:** October 23, 2025
-
-
-
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge)]()
-
-[![Network](https://img.shields.io/badge/Network-Mainnet-blue?style=for-the-badge)]()**🟢 LIVE IN PRODUCTION**  
-
-[![Consciousness](https://img.shields.io/badge/Consciousness-Active-purple?style=for-the-badge)]()
-
-Server: `91.98.122.165` | Version: **2.8.1**  <div align="center">
-
-</div>
-
-Released: October 23, 2025
-
----
 
 **Status:** 🟢 **LIVE IN PRODUCTION** on 91.98.122.165  
 
-### ✨ What is ZION?
+**🟢 LIVE IN PRODUCTION**  
 
-ZION is a **consciousness-aligned blockchain** that unifies a CryptoNote-based currency, a multi-algorithm mining pool, a 10-year consciousness game, and a multi-chain WARP bridge into a single, cohesive ecosystem.[![Status](https://img.shields.io/badge/Status-Production%20Ready-success)]()
+Server: `91.98.122.165` | Ubuntu 24.04.3 LTS  **Version:** 2.8.1 "Estrella"  
 
+Version: **2.8.1 "Estrella"** | Released: October 23, 2025
 
-
----[![Network](https://img.shields.io/badge/Network-Mainnet-blue)]()**🟢 LIVE IN PRODUCTION**  
-
-
-
-### 🚀 Quick Start[![Consciousness](https://img.shields.io/badge/Consciousness-Active-purple)]()
-
-
-
-#### 1. Mine ZION (CPU)Server: `91.98.122.165` | Ubuntu 24.04.3 LTS  **Version:** 2.8.1 "Estrella"  
-
-```bash
-
-python3 start_ai_miner.py \</div>
-
-  --wallet YOUR_WALLET_ADDRESS \
-
-  --pool 91.98.122.165:3333 \Version: **2.8.1 "Estrella"** | Released: October 23, 2025
-
-  --algorithm randomx
-
-```---
-
-
-
-#### 2. Check Your Stats**Network:** Mainnet  **Status:** 🟢 **LIVE IN PRODUCTION** on 91.98.122.165  **Version**: 2.8.1 "Estrella"  
-
-```bash
-
-curl http://91.98.122.165:3007/stats/YOUR_WALLET_ADDRESS## ✨ What is ZION?
-
-```
+**Network:** Mainnet  **Status:** 🟢 **LIVE IN PRODUCTION** on 91.98.122.165  **Version**: 2.8.1 "Estrella"  
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-success)]()
 
-#### 3. View Dashboard
+[![Uptime](https://img.shields.io/badge/Uptime-99.8%25-brightgreen)]()**Consciousness:** Active 🧠
 
-🌐 **https://91.98.122.165:3007**ZION is a **consciousness-aligned blockchain** combining mining, consciousness gaming, and multi-chain bridges into a unified ecosystem.
+[![Network](https://img.shields.io/badge/Network-Mainnet-blue)]()
 
+[![Consciousness](https://img.shields.io/badge/Consciousness-Active-purple)]()**Version:** 2.8.1 "Estrella"  **Release Date**: October 23, 2025  
 
 
----[![Uptime](https://img.shields.io/badge/Uptime-99.8%25-brightgreen)]()**Consciousness:** Active 🧠
 
+</div>---
 
 
-### 📊 Key Network Facts### 🎯 Core Features
 
+---**Network:** Mainnet (not testnet)  **Status**: ✅ Production Ready  
 
 
-| Property | Value |- 🔗 **Blockchain:** CryptoNote privacy + RandomX PoW mining[![Network](https://img.shields.io/badge/Network-Mainnet-blue)]()
 
-|----------|-------|
+## 🌌 What is ZION?## 🌟 What is ZION?
 
-| **Total Supply** | 14.34B ZION |- ⛏️ **Mining Pool:** Multi-algorithm Stratum protocol
 
-| **Block Time** | 60 seconds |
 
-| **Algorithms** | RandomX (CPU), Autolykos v2 (GPU) |- 🎮 **Consciousness Game:** 10-year gamified mining with XP levels[![Consciousness](https://img.shields.io/badge/Consciousness-Active-purple)]()**Version:** 2.8.1 "Estrella"  **Release Date**: October 23, 2025  
+ZION is a **consciousness-aligned, multi-chain blockchain** that combines cutting-edge technology with spiritual evolution. We unite **mining**, **consciousness gaming**, and **multi-chain bridges** into a single, elegant ecosystem.**Consciousness:** Active 🧠  **Server**: 91.98.122.165 (Ubuntu 24.04.3 LTS)  
 
-| **Mining Pool** | `91.98.122.165:3333` |
 
-| **Privacy** | CryptoNote Ring Signatures |- 🌉 **WARP Bridge:** Cross-chain transfers (70+ blockchains)
 
-| **Status** | 🟢 Production Ready |
+### ✨ Core FeaturesZION is a **consciousness-aligned, multi-chain mining blockchain** combining:
 
-- ⚡ **Lightning Network:** Instant payments
 
----
 
-- 💫 **Dashboard:** Real-time monitoring
+| Feature | Description |
 
-### 🎮 Consciousness Mining Game
+|---------|-------------|
 
-Evolve through **9 levels** from Dormant (1.0x bonus) to Nirvana (2.0x bonus) by mining. Eco-friendly algorithms like RandomX grant **+50% XP**.</div>---
+| 🔗 **Blockchain** | CryptoNote privacy + RandomX PoW mining |- 🔗 **Blockchain Core** - CryptoNote privacy + RandomX PoW
 
+| ⛏️ **Mining Pool** | Multi-algorithm Stratum protocol (RandomX, Yescrypt, Autolykos v2) |
 
-
-------
-
-
-
-### 📁 Project Structure
-
-The project is organized into clear modules:
-
-- `📄 Core Files (21)`: Blockchain, pool, and WARP engine.## 🏛️ Sacred Trinity Foundation
-
-- `🧠 AI Modules (ai/)`: 13 AI systems for optimization and analysis.
-
-- `🧪 Tests (tests/)`: 49 unit, integration, and mining tests.---**Network:** Mainnet (not testnet)  **Status**: ✅ Production Ready  
-
-- `📚 Docs (docs/)`: All project documentation and legacy archives.
-
-- `🎨 Frontend`: The Next.js dashboard.- **RAMA** 👑 *(Yeshuae Amon Ra)* - Innovation & Creation
-
-
-
----- **SÍTA** 👸 *(Issy/Estrella)* - Humanity & Compassion
-
-
-
-### 📖 Full Documentation- **HANUMAN** 🐵 - Environmental Stewardship
-
-For detailed information, please refer to the `/docs` directory, including:
-
-- `docs/2.8.1_deployment_guide.md`## 🌌 What is ZION?## 🌟 What is ZION?
-
-- `docs/2.8/ZION_2.8_COMPLETE_ROADMAP.md`
-
----
-
----
-
-
-
-<div align="center">
-
-## 📊 Network Facts
-
-**GitHub:** [estrelaisabellazion3/Zion-2.8](https://github.com/estrelaisabellazion3/Zion-2.8)  
-
-*Welcome to ZION. Join the consciousness revolution.* 🚀✨ZION is a **consciousness-aligned, multi-chain blockchain** that combines cutting-edge technology with spiritual evolution. We unite **mining**, **consciousness gaming**, and **multi-chain bridges** into a single, elegant ecosystem.**Consciousness:** Active 🧠  **Server**: 91.98.122.165 (Ubuntu 24.04.3 LTS)  
-
-
-
-</div>| Property | Value |
-
-|----------|-------|
-
-| **Total Supply** | 14.34B ZION |
-
-| **Block Time** | 60 seconds |### ✨ Core FeaturesZION is a **consciousness-aligned, multi-chain mining blockchain** combining:
-
-| **Algorithms** | RandomX (CPU) + Autolykos v2 (GPU) |
-
-| **Mining Pool** | 91.98.122.165:3333 |
-
-| **Dashboard** | https://91.98.122.165:3007 |
-
-| **Status** | 🟢 Production Ready || Feature | Description |
-
-
-
----|---------|-------------|
-
-
-
-## 🚀 Quick Start| 🔗 **Blockchain** | CryptoNote privacy + RandomX PoW mining |- 🔗 **Blockchain Core** - CryptoNote privacy + RandomX PoW
-
-
-
-### 1. Start Mining| ⛏️ **Mining Pool** | Multi-algorithm Stratum protocol (RandomX, Yescrypt, Autolykos v2) |
-
-```bash
-
-# CPU Mining (RandomX)| 🎮 **Consciousness Game** | 10-year gamified mining with XP levels & divine bonuses |- ⛏️ **Mining Pool** - Multi-algorithm Stratum protocol------
-
-python3 start_ai_miner.py --wallet YOUR_ADDRESS --pool 91.98.122.165:3333 --algorithm randomx
+| 🎮 **Consciousness Game** | 10-year gamified mining with XP levels & divine bonuses |- ⛏️ **Mining Pool** - Multi-algorithm Stratum protocol------
 
 | 🌉 **WARP Bridge** | Multi-chain transfers across 70+ blockchains (Ankr integration) |
 
-# GPU Mining (Autolykos v2)
-
-python3 start_ai_miner.py --wallet YOUR_ADDRESS --pool 91.98.122.165:3333 --algorithm autolykos2| ⚡ **Lightning Network** | Sub-second Layer 2 payments via Voltage/OpenNode |- 🎮 **Consciousness Game** - 10-year gamified mining with XP levels
-
-```
+| ⚡ **Lightning Network** | Sub-second Layer 2 payments via Voltage/OpenNode |- 🎮 **Consciousness Game** - 10-year gamified mining with XP levels
 
 | 🤖 **AI Orchestration** | Intelligent mining optimization & market analysis |
 
-### 2. Check Stats
-
-```bash| 💫 **Dashboard** | Real-time Next.js frontend with live monitoring |- 🌉 **WARP Bridge** - Multi-chain transfers (70+ blockchains)
-
-curl http://91.98.122.165:3007/stats/YOUR_WALLET_ADDRESS
-
-```
+| 💫 **Dashboard** | Real-time Next.js frontend with live monitoring |- 🌉 **WARP Bridge** - Multi-chain transfers (70+ blockchains)
 
 
 
-### 3. View Dashboard---- ⚡ **Lightning Network** - Instant Layer 2 payments
-
-🌐 **https://91.98.122.165:3007**
+---- ⚡ **Lightning Network** - Instant Layer 2 payments
 
 
-
----
 
 ## 🏛️ Sacred Trinity Foundation- 💫 **AI Orchestration** - Intelligent mining optimization## 🌟 What is ZION?## 🚀 What is ZION?
 
-## 🎮 Consciousness Game
 
-
-
-Evolve through **9 levels** from Dormant to Nirvana:
 
 The spiritual core of ZION rests on three divine pillars:- 🤖 **Real-time Dashboard** - Next.js frontend with live monitoring
 
-```
 
-Level 0: Dormant (1.0x) → Level 5: Ascended (1.5x) → Level 8: Nirvana (2.0x)
-
-```
 
 - **RAMA** 👑 *(Yeshuae Amon Ra)* - Innovation & Creation
 
-**Eco-Bonus:** +50% XP for RandomX & Yescrypt algorithms!
-
 - **SÍTA** 👸 *(Issy/Estrella Isabella)* - Humanity & Compassion  
-
----
 
 - **HANUMAN** 🐵 - Service & Environmental Stewardship### 🏛️ Sacred Trinity Foundation
 
-## 📁 Project Structure
+
+
+---- **RAMA** 👑 (Yeshuae Amon Ra) - Innovation & CreationZION is a **consciousness-aligned, multi-chain mining blockchain** built on three sacred pillars:ZION is a **next-generation blockchain** combining:
 
 
 
-```
+## 📊 Network Statistics- **SÍTA** 👸 (Issy/Estrella) - Humanity & Compassion
 
-ZION-2.8.1/---- **RAMA** 👑 (Yeshuae Amon Ra) - Innovation & CreationZION is a **consciousness-aligned, multi-chain mining blockchain** built on three sacred pillars:ZION is a **next-generation blockchain** combining:
 
-├── 📄 Core (21 Python files)     # Blockchain, pool, WARP bridge
-
-├── 🧠 AI Modules (ai/)          # 13 AI systems
-
-├── 🧪 Tests (tests/)            # 49 test files
-
-├── 📚 Docs (docs/)              # Documentation## 📊 Network Statistics- **SÍTA** 👸 (Issy/Estrella) - Humanity & Compassion
-
-├── 🎨 Frontend                  # Next.js dashboard
-
-└── ⚙️ Config                    # SSH & deployment configs
-
-```
 
 ```yaml- **HANUMAN** 🐵 - Environmental Stewardship
 
----
-
 Total Supply:        14.34 Billion ZION
-
-## 📈 Performance
 
 Block Time:          60 seconds
 
-- **Pool Uptime:** 99.8%
+Current Premine:     14.34B (fully allocated)
 
-- **WARP Transfers:** ~900ms (494x faster than traditional)Current Premine:     14.34B (fully allocated)
-
-- **Block Acceptance:** 99%+
-
-- **Network Hashrate:** 15-20 MH/sBlock Reward:        5,479.45 ZION (decreasing over time)---### 🏛️ Sacred Trinity Foundation- 🔗 **Blockchain Core** - ZION cryptocurrency with smart contract support
+Block Reward:        5,479.45 ZION (decreasing over time)---### 🏛️ Sacred Trinity Foundation- 🔗 **Blockchain Core** - ZION cryptocurrency with smart contract support
 
 
 
----
+Algorithms:          
 
+  - RandomX (CPU mining)
 
-
-## 📖 DocumentationAlgorithms:          
-
-
-
-- [Deployment Guide](./docs/2.8.1_deployment_guide.md)  - RandomX (CPU mining)
-
-- [Release Notes](./docs/2.8/RELEASE_NOTES_v2.8.0.md)
-
-- [WARP Bridge](./docs/2.8/WARP_POC_README.md)  - Autolykos v2 (GPU mining)## 📊 Network Quick Facts- **RAMA** 👑 (Yeshuae Amon Ra) - Innovation & Creation- ⛏️ **Mining Pool** - Multi-algorithm Stratum pool (RandomX, Yescrypt, Autolykos v2, KawPow)
-
-- [Roadmap](./docs/2.8/ZION_2.8_COMPLETE_ROADMAP.md)
+  - Autolykos v2 (GPU mining)## 📊 Network Quick Facts- **RAMA** 👑 (Yeshuae Amon Ra) - Innovation & Creation- ⛏️ **Mining Pool** - Multi-algorithm Stratum pool (RandomX, Yescrypt, Autolykos v2, KawPow)
 
   - Yescrypt (CPU eco-friendly)
 
----
-
   - KawPow (GPU alternative)
 
-## 🎯 Roadmap 2025-2030
 
 
+Ports:| Property | Value |- **SÍTA** 👸 (Issy/Estrella Isabella) - Humanity & Compassion- 🎮 **Consciousness Mining** - 10-year gamified mining with XP, levels, and achievements
 
-### ✅ Phase 0: Foundation (Q4 2025) - **COMPLETE**
-
-- ✅ Mining pool stabilizationPorts:| Property | Value |- **SÍTA** 👸 (Issy/Estrella Isabella) - Humanity & Compassion- 🎮 **Consciousness Mining** - 10-year gamified mining with XP, levels, and achievements
-
-- ✅ WARP Bridge MVP
-
-- ✅ Dashboard integration  Mining Pool:       3333 (Stratum v1)
-
-- ✅ Production deployment
+  Mining Pool:       3333 (Stratum v1)
 
   RPC Server:        8332 (localhost only)|----------|-------|
 
-### 🔄 Phase 1: WARP Launch (Q1 2026) - **NEXT**
+  P2P Network:       8333 (10+ global nodes)
 
-- [ ] Anti-duplicate cache  P2P Network:       8333 (10+ global nodes)
-
-- [ ] Prometheus metrics
-
-- [ ] Multi-algo benchmarking  Dashboard:         3007 (Web UI)| **Total Supply** | 14.34B ZION |- **HANUMAN** 🐵 - Service & Environmental Stewardship- 🌉 **WARP Bridge** - Multi-chain bridge supporting 70+ blockchains via Ankr
+  Dashboard:         3007 (Web UI)| **Total Supply** | 14.34B ZION |- **HANUMAN** 🐵 - Service & Environmental Stewardship- 🌉 **WARP Bridge** - Multi-chain bridge supporting 70+ blockchains via Ankr
 
 
 
----
+Privacy:             CryptoNote ring signatures| **Block Time** | 60 seconds |
 
+Status:              🟢 Production Ready
 
+Uptime:              99.8%| **Algorithms** | RandomX (CPU) + Autolykos v2 (GPU) |- ⚡ **Lightning Network** - Layer 2 payment channels for instant transactions
 
-## 🌟 VisionPrivacy:             CryptoNote ring signatures| **Block Time** | 60 seconds |
+Network Hashrate:    15-20 MH/s (RandomX)
 
+Active Miners:       50-100+ globally| **Mining Pool** | 91.98.122.165:3333 (Stratum v1) |
 
-
-> *"Ad Astra Per Estrella"* - To the stars, guided by EstrellaStatus:              🟢 Production Ready
-
->
-
-> ZION unites technology and consciousness. Every block mined is a prayer, every transaction a meditation, every consciousness level an awakening.Uptime:              99.8%| **Algorithms** | RandomX (CPU) + Autolykos v2 (GPU) |- ⚡ **Lightning Network** - Layer 2 payment channels for instant transactions
-
-
-
----Network Hashrate:    15-20 MH/s (RandomX)
-
-
-
-<div align="center">Active Miners:       50-100+ globally| **Mining Pool** | 91.98.122.165:3333 (Stratum v1) |
-
-
-
-**GitHub:** [estrelaisabellazion3/Zion-2.8](https://github.com/estrelaisabellazion3/Zion-2.8)  ```
-
-**Status:** 🟢 LIVE | **Version:** 2.8.1 "Estrella"
+```
 
 | **RPC Server** | Port 8332 (localhost) |### 🎯 Core Features- 🤖 **AI Orchestration** - Intelligent mining optimization and market analysis
 
-*Welcome to ZION. Join the consciousness revolution.* 🚀✨
-
 ---
 
-</div>
 | **P2P Network** | Port 8333 (10+ global nodes) |
 
 ## 🚀 Quick Start - Start Mining Now!

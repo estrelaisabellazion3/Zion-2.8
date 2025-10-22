@@ -417,7 +417,7 @@ def root():
     """Root endpoint"""
     return jsonify({
         'name': 'ZION 2.8 AI Orchestrator Backend API',
-        'version': '2.8.0',
+        'version': '2.8.1',
         'status': 'running',
         'endpoints': {
             '/api/ai/orchestrator/status': 'GET - Orchestrator status',

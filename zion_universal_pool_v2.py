@@ -50,7 +50,7 @@ logger = logging.getLogger(__name__)
 # Pool info
 pool_info = Info('zion_pool_info', 'ZION Mining Pool Information')
 pool_info.info({
-    'version': '2.8.0',
+    'version': '2.8.1',
     'name': 'ZION Universal Pool',
     'consciousness_mining': 'enabled'
 })
@@ -437,7 +437,7 @@ class ZIONPoolAPIHandler(BaseHTTPRequestHandler):
         """Send general pool information"""
         info = {
             'name': 'ZION Universal Mining Pool',
-            'version': '2.8.0',
+            'version': '2.8.1',
             'algorithms': ['randomx', 'yescrypt', 'autolykos_v2'],
             'ports': {
                 'stratum': self.pool.port,
@@ -644,7 +644,7 @@ class ZionUniversalPool:
         logger.info(f"💰 Base block reward: {self.base_block_reward} ZION (before consciousness multiplier)")
 
         # Share validation
-        self.submitted_shares = set()  # For duplicate detection
+        self.submitted_shares = {}  # Dict with timestamp for expiration: {share_key: timestamp}
         self.share_window_size = 100  # Rolling window for difficulty adjustment
 
         # Algorithm difficulty from centralized config
@@ -1590,10 +1590,17 @@ class ZionUniversalPool:
         algorithm = params.get('algo', miner.get('algorithm', 'randomx')).lower()
         difficulty = self.difficulty.get(algorithm, 1000)  # Default difficulty
 
-        # Check for duplicate shares
+        # Check for duplicate shares (with expiration)
+        current_time = time.time()
         share_key = f"{job_id}:{nonce}:{result}"
+        
+        # Clean expired shares (older than 5 minutes)
+        expired_keys = [k for k, t in self.submitted_shares.items() if current_time - t > 300]
+        for k in expired_keys:
+            del self.submitted_shares[k]
+        
         if share_key in self.submitted_shares:
-            print(f"🚫 DUPLICATE SHARE from {addr}")
+            print(f"🚫 DUPLICATE SHARE from {addr} (submitted {current_time - self.submitted_shares[share_key]:.1f}s ago)")
             self.record_share(address, algorithm, is_valid=False)
             return json.dumps({
                 "id": data.get('id'),
@@ -1643,7 +1650,7 @@ class ZionUniversalPool:
         
         if is_valid:
             # Record valid share
-            self.submitted_shares.add(share_key)
+            self.submitted_shares[share_key] = current_time
             self.record_share(address, algorithm, is_valid=True)
 
             # Save detailed share to database
@@ -1813,12 +1820,48 @@ class ZionUniversalPool:
         return job
 
     def create_yescrypt_job(self):
-        """Create Yescrypt job for CPU miners"""
+        """Create Yescrypt job for CPU miners using real blockchain data"""
         self.job_counter += 1
         job_id = f"zion_ys_{self.job_counter:06d}"
 
+        # Try to get real block template from blockchain
+        block_header = None
         height = self.current_block_height + self.job_counter
-        block_header = secrets.token_hex(80)
+        
+        if self.blockchain and hasattr(self.blockchain, 'get_block_template'):
+            try:
+                template = self.blockchain.get_block_template()
+                block_header = template['block_header']
+                height = template['height']
+                print(f"🔗 Using real blockchain template for Yescrypt job: height={height}")
+            except Exception as e:
+                logger.warning(f"Failed to get blockchain template: {e}")
+        
+        # Fallback to RPC data if local blockchain failed
+        if block_header is None and self.blockchain_rpc and self.blockchain_rpc.connected:
+            try:
+                # Get latest block and create template-like data
+                latest_height = self.blockchain_rpc.get_height()
+                if latest_height >= 0:
+                    latest_block = self.blockchain_rpc.get_block(latest_height)
+                    if latest_block:
+                        # Create a simple block header from RPC data
+                        header_data = {
+                            'height': latest_height + 1,
+                            'previous_hash': latest_block['hash'],
+                            'timestamp': int(time.time()),
+                            'difficulty': 4  # Default difficulty
+                        }
+                        block_header = json.dumps(header_data, sort_keys=True).encode().hex()
+                        height = latest_height + 1
+                        print(f"📡 Using RPC blockchain data for Yescrypt job: height={height}")
+            except Exception as e:
+                logger.warning(f"Failed to get RPC blockchain data: {e}")
+        
+        # Final fallback to random data (for development/testing)
+        if block_header is None:
+            block_header = secrets.token_hex(80)
+            print(f"🎲 Using fallback random data for Yescrypt job (no blockchain available)")
 
         job = {
             'job_id': job_id,
@@ -2170,7 +2213,14 @@ class ZionUniversalPool:
         logger.info(f"📩 Submit: worker={worker}, job={job_id}, nonce={nonce[:8]}...")  
 
         # Check for duplicate shares
+        current_time = time.time()
         share_key = f"{job_id}:{nonce}:{mix_hash}:{header_hash}"
+        
+        # Clean expired shares (older than 5 minutes)
+        expired_keys = [k for k, t in self.submitted_shares.items() if current_time - t > 300]
+        for k in expired_keys:
+            del self.submitted_shares[k]
+        
         if share_key in self.submitted_shares:
             print(f"🚫 DUPLICATE {algorithm.upper()} SHARE from {addr}")
             self.record_share(address, algorithm, is_valid=False)
@@ -2209,7 +2259,7 @@ class ZionUniversalPool:
 
         if is_valid:
             # Record valid share
-            self.submitted_shares.add(share_key)
+            self.submitted_shares[share_key] = current_time
             self.record_share(address, algorithm, is_valid=True)
 
             # Persist valid share for payouts/auditing

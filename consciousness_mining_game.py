@@ -146,16 +146,52 @@ class ConsciousnessMiningGame:
     
     def __init__(self, db_path: str = "consciousness_game.db"):
         self.db_path = db_path
-        self.db_timeout = 15  # seconds
+        self.db_timeout = 30  # Increased timeout for high concurrency
+        self.max_retries = 3  # Retry failed operations
+        self.retry_delay = 0.1  # Delay between retries
         self.init_database()
         self.active_challenges = self.load_challenges()
         self.achievements = self.load_achievements()
 
     def _get_connection(self) -> sqlite3.Connection:
         """Create SQLite connection with busy timeout and thread safety."""
-        conn = sqlite3.connect(self.db_path, timeout=self.db_timeout, check_same_thread=False)
-        conn.execute(f"PRAGMA busy_timeout = {int(self.db_timeout * 1000)}")
-        return conn
+        for attempt in range(self.max_retries):
+            try:
+                conn = sqlite3.connect(self.db_path, timeout=self.db_timeout, check_same_thread=False)
+                conn.execute(f"PRAGMA busy_timeout = {int(self.db_timeout * 1000)}")
+                # Additional WAL optimizations for high concurrency
+                conn.execute("PRAGMA wal_autocheckpoint = 1000")  # Checkpoint every 1000 pages
+                conn.execute("PRAGMA temp_store = memory")  # Store temp tables in memory
+                conn.execute("PRAGMA mmap_size = 268435456")  # 256MB memory map
+                return conn
+            except sqlite3.DatabaseError as e:
+                if attempt == self.max_retries - 1:
+                    logger.error(f"Failed to connect to database after {self.max_retries} attempts: {e}")
+                    raise
+                logger.warning(f"Database connection attempt {attempt + 1} failed, retrying: {e}")
+                time.sleep(self.retry_delay * (attempt + 1))  # Exponential backoff
+    
+    def _execute_with_retry(self, operation_func, *args, **kwargs):
+        """Execute database operation with retry logic for handling locks."""
+        for attempt in range(self.max_retries):
+            conn = None
+            try:
+                conn = self._get_connection()
+                result = operation_func(conn, *args, **kwargs)
+                conn.commit()
+                return result
+            except sqlite3.DatabaseError as e:
+                if attempt == self.max_retries - 1:
+                    logger.error(f"Database operation failed after {self.max_retries} attempts: {e}")
+                    raise
+                logger.warning(f"Database operation attempt {attempt + 1} failed, retrying: {e}")
+                time.sleep(self.retry_delay * (attempt + 1))
+            finally:
+                if conn:
+                    try:
+                        conn.close()
+                    except:
+                        pass
         
     def init_database(self):
         """Inicializace databáze pro hru"""

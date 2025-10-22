@@ -4,7 +4,7 @@
 Používá socket.socket místo asyncio - perfect pro mining thready
 
 Egyszerű, synchronní implementace bez async komplikací.
-Anti-duplicate cache added in v2.8.0 to prevent re-submission.
+Anti-duplicate cache added in v2.8.1 to prevent re-submission.
 """
 
 import socket
@@ -41,7 +41,7 @@ class StratumClientSync:
         self.request_id = 0
         self._pending_responses: Dict[int, Dict] = {}
         
-        # Anti-duplicate cache (v2.8.0)
+        # Anti-duplicate cache (v2.8.1)
         self._submitted_shares: Dict[str, Set[int]] = defaultdict(set)
         self._job_cache_max_age = 300  # 5 minutes TTL
         self._job_cache_timestamps: Dict[str, float] = {}
@@ -172,7 +172,7 @@ class StratumClientSync:
     def submit_share(self, job_id: str, nonce: int, result_hash: bytes) -> bool:
         """Submit mining share with anti-duplicate check"""
         try:
-            # Anti-duplicate check (v2.8.0)
+            # Anti-duplicate check (v2.8.1)
             if self._is_duplicate_share(job_id, nonce):
                 logger.debug(f"⏭️  Skipping duplicate share: job={job_id}, nonce={nonce}")
                 return False

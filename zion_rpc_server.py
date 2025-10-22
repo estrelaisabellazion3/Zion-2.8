@@ -225,6 +225,8 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
                 result = self.rpc_get_nonce(params)
             elif method == 'getmetrics':
                 result = self.rpc_get_metrics(params)
+            elif method == 'getblocktemplate':
+                result = self.rpc_get_block_template(params)
             else:
                 self.send_json_response({
                     'error': {'code': -32601, 'message': 'Method not found'},
@@ -257,7 +259,7 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
         <!DOCTYPE html>
         <html>
         <head>
-            <title>ZION 2.8.0 RPC Interface</title>
+            <title>ZION 2.8.1 RPC Interface</title>
             <style>
                 body { font-family: Arial, sans-serif; margin: 40px; }
                 h1 { color: #2c3e50; }
@@ -266,7 +268,7 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
             </style>
         </head>
         <body>
-            <h1>🚀 ZION 2.8.0 RPC Interface</h1>
+            <h1>🚀 ZION 2.8.1 RPC Interface</h1>
             <p>Real blockchain s humanitarian tithe systémem</p>
 
             <h2>API Endpoints</h2>
@@ -602,7 +604,16 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
             'peers': self.blockchain.get_network_status().get('connected_peers', 0) if hasattr(self.blockchain,'get_network_status') else 0
         }
 
-    def rpc_get_difficulty(self, params) -> Any:
+    def rpc_get_block_template(self, params) -> Any:
+        """RPC: getblocktemplate - Return block template for mining"""
+        try:
+            # Optional miner address parameter
+            miner_address = params[0] if params else ""
+            return self.blockchain.get_block_template(miner_address)
+        except Exception as e:
+            return {'error': f'Block template retrieval failed: {e}'}
+
+    def rpc_create_address(self, params) -> Any:
         return getattr(self.blockchain, 'mining_difficulty', 0)
 
     def rpc_create_address(self, params) -> Any:
