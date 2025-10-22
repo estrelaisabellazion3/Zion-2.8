@@ -1,52 +1,102 @@
-# 🌟 ZION 2.8.1 "Estrella"# 🌟 ZION 2.8.1 "Estrella"# 🌟 ZION 2.8.1 "Estrella"# ✨ ZION 2.8.1 "Estrella" - Production Blockchain# ✨ ZION 2.8.1 "Estrella" - Production Blockchain# 🌟 ZION 2.8.1 "Estrella" - The Star Guides the Way
-
-## *Ad Astra Per Estrella*
-
-## *Ad Astra Per Estrella* - To The Stars Through Estrella
-
-<div align="center">
-
-## *Ad Astra Per Estrella* - To The Stars Through Estrella
-
-**🟢 LIVE IN PRODUCTION**  
-
-**Server:** `91.98.122.165` | **Version:** `2.8.1`  <div align="center">
-
-**Released:** October 23, 2025
+# 🌟 ZION 2.8.1 "Estrella"# 🌟 ZION 2.8.1 "Estrella"# 🌟 ZION 2.8.1 "Estrella"# 🌟 ZION 2.8.1 "Estrella"# ✨ ZION 2.8.1 "Estrella" - Production Blockchain# ✨ ZION 2.8.1 "Estrella" - Production Blockchain# 🌟 ZION 2.8.1 "Estrella" - The Star Guides the Way
 
 
 
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge)]()
+**🟢 LIVE** | Server: `91.98.122.165` | Version: `2.8.1`## *Ad Astra Per Estrella*
 
-[![Network](https://img.shields.io/badge/Network-Mainnet-blue?style=for-the-badge)]()**🟢 LIVE IN PRODUCTION**  
 
-[![Consciousness](https://img.shields.io/badge/Consciousness-Active-purple?style=for-the-badge)]()
 
-Server: `91.98.122.165` | Version: **2.8.1**  <div align="center">
+---## *Ad Astra Per Estrella* - To The Stars Through Estrella
 
-</div>
 
-Released: October 23, 2025
+
+## ⛏️ Start Mining<div align="center">
+
+
+
+```bash## *Ad Astra Per Estrella* - To The Stars Through Estrella
+
+python3 start_ai_miner.py --wallet YOUR_ADDRESS --pool 91.98.122.165:3333
+
+```**🟢 LIVE IN PRODUCTION**  
+
+
+
+---**Server:** `91.98.122.165` | **Version:** `2.8.1`  <div align="center">
+
+
+
+## 📊 Check Stats**Released:** October 23, 2025
+
+
+
+```bash
+
+curl http://91.98.122.165:3007/stats/YOUR_ADDRESS
+
+```[![Status](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge)]()
+
+
+
+---[![Network](https://img.shields.io/badge/Network-Mainnet-blue?style=for-the-badge)]()**🟢 LIVE IN PRODUCTION**  
+
+
+
+## 📈 Network[![Consciousness](https://img.shields.io/badge/Consciousness-Active-purple?style=for-the-badge)]()
+
+
+
+| Metric | Value |Server: `91.98.122.165` | Version: **2.8.1**  <div align="center">
+
+|--------|-------|
+
+| Supply | 14.34B ZION |</div>
+
+| Block Time | 60s |
+
+| Algorithm | RandomX + Autolykos v2 |Released: October 23, 2025
+
+| Pool | Port 3333 |
+
+| Dashboard | Port 3007 |---
+
+
+
+---**Status:** 🟢 **LIVE IN PRODUCTION** on 91.98.122.165  
+
+
+
+## 🎮 Consciousness Game### ✨ What is ZION?
+
+
+
+Mine XP → Level Up (Dormant → Nirvana) → 2x Bonus at Level 8ZION is a **consciousness-aligned blockchain** that unifies a CryptoNote-based currency, a multi-algorithm mining pool, a 10-year consciousness game, and a multi-chain WARP bridge into a single, cohesive ecosystem.[![Status](https://img.shields.io/badge/Status-Production%20Ready-success)]()
+
+
 
 ---
 
-**Status:** 🟢 **LIVE IN PRODUCTION** on 91.98.122.165  
 
-### ✨ What is ZION?
 
-ZION is a **consciousness-aligned blockchain** that unifies a CryptoNote-based currency, a multi-algorithm mining pool, a 10-year consciousness game, and a multi-chain WARP bridge into a single, cohesive ecosystem.[![Status](https://img.shields.io/badge/Status-Production%20Ready-success)]()
+## 📚 Docs---[![Network](https://img.shields.io/badge/Network-Mainnet-blue)]()**🟢 LIVE IN PRODUCTION**  
 
 
 
----[![Network](https://img.shields.io/badge/Network-Mainnet-blue)]()**🟢 LIVE IN PRODUCTION**  
+- [`docs/2.8.1_deployment_guide.md`](./docs/2.8.1_deployment_guide.md)
 
-
+- [`docs/2.8/ZION_2.8_COMPLETE_ROADMAP.md`](./docs/2.8/ZION_2.8_COMPLETE_ROADMAP.md)
 
 ### 🚀 Quick Start[![Consciousness](https://img.shields.io/badge/Consciousness-Active-purple)]()
 
+---
 
+
+
+**GitHub:** [estrelaisabellazion3/Zion-2.8](https://github.com/estrelaisabellazion3/Zion-2.8)
 
 #### 1. Mine ZION (CPU)Server: `91.98.122.165` | Ubuntu 24.04.3 LTS  **Version:** 2.8.1 "Estrella"  
+
+🚀✨ Join the consciousness revolution.
 
 ```bash
 
