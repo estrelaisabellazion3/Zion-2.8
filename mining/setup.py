@@ -11,14 +11,22 @@ except ImportError:
 import os
 
 # C extension for optimized Yescrypt
+import sys
+
+compile_args = []
+if sys.platform == 'win32':
+    compile_args = ['/O2']  # Windows MSVC
+else:
+    compile_args = ['-O3', '-march=native', '-fPIC']  # Linux/macOS GCC
+
 yescrypt_module = Extension(
     'yescrypt_fast',
     sources=[
         'yescrypt_fast.c',
-        'salsa20.c'  # Will be created separately
+        'salsa20.c'
     ],
     include_dirs=['.'],
-    extra_compile_args=['/O2'],  # Windows MSVC optimization
+    extra_compile_args=compile_args,
     extra_link_args=[]
 )
 
