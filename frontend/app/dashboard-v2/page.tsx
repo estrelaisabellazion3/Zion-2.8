@@ -8,6 +8,7 @@ import MiningWidget from '../components/MiningWidget';
 import GPUWidget from '../components/GPUWidget';
 import SystemWidget from '../components/SystemWidget';
 import LightningWidget from '../components/LightningWidget';
+import WarpWidget from '../components/WarpWidget';
 import NavigationMenu from '../components/NavigationMenu';
 
 interface ZionCoreStats {
@@ -269,11 +270,20 @@ export default function DashboardV2() {
         {stats && (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             
-            {/* System Stats */}
+            {/* WARP Bridge Widget */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
+            >
+              <WarpWidget />
+            </motion.div>
+
+            {/* System Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
             >
               <SystemWidget stats={stats.system} />
             </motion.div>
