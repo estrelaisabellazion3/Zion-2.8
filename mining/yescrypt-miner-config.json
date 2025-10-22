@@ -1,4 +1,8 @@
 {
+  "pool": {
+    "host": "localhost",
+    "port": 4444
+  },
   "pool_host": "localhost",
   "pool_port": 4444,
   "wallet_address": "ZioniXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",

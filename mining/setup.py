@@ -22,8 +22,7 @@ else:
 yescrypt_module = Extension(
     'yescrypt_fast',
     sources=[
-        'yescrypt_fast.c',
-        'salsa20.c'
+        'yescrypt_fast.c'
     ],
     include_dirs=['.'],
     extra_compile_args=compile_args,

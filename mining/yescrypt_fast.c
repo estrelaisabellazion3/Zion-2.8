@@ -17,11 +17,50 @@
 #define YESCRYPT_P 1
 #define YESCRYPT_DKLEN 32
 
-// Salsa20/8 core function
-void salsa20_8(uint32_t *block);
+// Helper functions
+#define ROTL(a,b) (((a) << (b)) | ((a) >> (32 - (b))))
 
-// Optimized Yescrypt hash function
-int yescrypt_hash_fast(const uint8_t *input, size_t input_len, uint8_t *output);
+// Salsa20/8 core function
+static void salsa20_8(uint32_t *block) {
+    uint32_t x[16];
+    int i;
+    
+    // Copy input
+    for (i = 0; i < 16; i++) {
+        x[i] = block[i];
+    }
+    
+    // 8 rounds (4 double rounds)
+    for (i = 8; i > 0; i -= 2) {
+        x[ 4] ^= ROTL(x[ 0]+x[12], 7);
+        x[ 8] ^= ROTL(x[ 4]+x[ 0], 9);
+        x[12] ^= ROTL(x[ 8]+x[ 4],13);
+        x[ 0] ^= ROTL(x[12]+x[ 8],18);
+        
+        x[ 9] ^= ROTL(x[ 5]+x[ 1], 7);
+        x[13] ^= ROTL(x[ 9]+x[ 5], 9);
+        x[ 1] ^= ROTL(x[13]+x[ 9],13);
+        x[ 5] ^= ROTL(x[ 1]+x[13],18);
+        
+        x[14] ^= ROTL(x[10]+x[ 6], 7);
+        x[ 2] ^= ROTL(x[14]+x[10], 9);
+        x[ 6] ^= ROTL(x[ 2]+x[14],13);
+        x[10] ^= ROTL(x[ 6]+x[ 2],18);
+        
+        x[ 3] ^= ROTL(x[15]+x[11], 7);
+        x[ 7] ^= ROTL(x[ 3]+x[15], 9);
+        x[11] ^= ROTL(x[ 7]+x[ 3],13);
+        x[15] ^= ROTL(x[11]+x[ 7],18);
+    }
+    
+    // Add to original
+    for (i = 0; i < 16; i++) {
+        block[i] += x[i];
+    }
+}
+
+// Optimized Yescrypt hash function with nonce support
+static int yescrypt_hash_fast(const uint8_t *input, size_t input_len, uint32_t nonce, uint8_t *output);
 
 // Python wrapper functions
 static PyObject* py_yescrypt_hash(PyObject* self, PyObject* args);
@@ -43,69 +82,8 @@ static struct PyModuleDef yescryptmodule = {
     YescryptMethods
 };
 
-// Salsa20/8 implementation
-void salsa20_8(uint32_t *block) {
-    uint32_t x[16];
-    int i;
-    
-    // Copy input
-    for (i = 0; i < 16; i++) {
-        x[i] = block[i];
-    }
-    
-    // 8 rounds (4 double rounds)
-    for (i = 0; i < 4; i++) {
-        // Column round
-        x[ 4] ^= ((x[ 0] + x[12]) << 7) | ((x[ 0] + x[12]) >> 25);
-        x[ 8] ^= ((x[ 4] + x[ 0]) << 9) | ((x[ 4] + x[ 0]) >> 23);
-        x[12] ^= ((x[ 8] + x[ 4]) << 13) | ((x[ 8] + x[ 4]) >> 19);
-        x[ 0] ^= ((x[12] + x[ 8]) << 18) | ((x[12] + x[ 8]) >> 14);
-        
-        x[ 9] ^= ((x[ 5] + x[ 1]) << 7) | ((x[ 5] + x[ 1]) >> 25);
-        x[13] ^= ((x[ 9] + x[ 5]) << 9) | ((x[ 9] + x[ 5]) >> 23);
-        x[ 1] ^= ((x[13] + x[ 9]) << 13) | ((x[13] + x[ 9]) >> 19);
-        x[ 5] ^= ((x[ 1] + x[13]) << 18) | ((x[ 1] + x[13]) >> 14);
-        
-        x[14] ^= ((x[10] + x[ 6]) << 7) | ((x[10] + x[ 6]) >> 25);
-        x[ 2] ^= ((x[14] + x[10]) << 9) | ((x[14] + x[10]) >> 23);
-        x[ 6] ^= ((x[ 2] + x[14]) << 13) | ((x[ 2] + x[14]) >> 19);
-        x[10] ^= ((x[ 6] + x[ 2]) << 18) | ((x[ 6] + x[ 2]) >> 14);
-        
-        x[ 3] ^= ((x[15] + x[11]) << 7) | ((x[15] + x[11]) >> 25);
-        x[ 7] ^= ((x[ 3] + x[15]) << 9) | ((x[ 3] + x[15]) >> 23);
-        x[11] ^= ((x[ 7] + x[ 3]) << 13) | ((x[ 7] + x[ 3]) >> 19);
-        x[15] ^= ((x[11] + x[ 7]) << 18) | ((x[11] + x[ 7]) >> 14);
-        
-        // Row round
-        x[ 1] ^= ((x[ 0] + x[ 3]) << 7) | ((x[ 0] + x[ 3]) >> 25);
-        x[ 2] ^= ((x[ 1] + x[ 0]) << 9) | ((x[ 1] + x[ 0]) >> 23);
-        x[ 3] ^= ((x[ 2] + x[ 1]) << 13) | ((x[ 2] + x[ 1]) >> 19);
-        x[ 0] ^= ((x[ 3] + x[ 2]) << 18) | ((x[ 3] + x[ 2]) >> 14);
-        
-        x[ 6] ^= ((x[ 5] + x[ 4]) << 7) | ((x[ 5] + x[ 4]) >> 25);
-        x[ 7] ^= ((x[ 6] + x[ 5]) << 9) | ((x[ 6] + x[ 5]) >> 23);
-        x[ 4] ^= ((x[ 7] + x[ 6]) << 13) | ((x[ 7] + x[ 6]) >> 19);
-        x[ 5] ^= ((x[ 4] + x[ 7]) << 18) | ((x[ 4] + x[ 7]) >> 14);
-        
-        x[11] ^= ((x[10] + x[ 9]) << 7) | ((x[10] + x[ 9]) >> 25);
-        x[ 8] ^= ((x[11] + x[10]) << 9) | ((x[11] + x[10]) >> 23);
-        x[ 9] ^= ((x[ 8] + x[11]) << 13) | ((x[ 8] + x[11]) >> 19);
-        x[10] ^= ((x[ 9] + x[ 8]) << 18) | ((x[ 9] + x[ 8]) >> 14);
-        
-        x[12] ^= ((x[15] + x[14]) << 7) | ((x[15] + x[14]) >> 25);
-        x[13] ^= ((x[12] + x[15]) << 9) | ((x[12] + x[15]) >> 23);
-        x[14] ^= ((x[13] + x[12]) << 13) | ((x[13] + x[12]) >> 19);
-        x[15] ^= ((x[14] + x[13]) << 18) | ((x[14] + x[13]) >> 14);
-    }
-    
-    // Add to original
-    for (i = 0; i < 16; i++) {
-        block[i] += x[i];
-    }
-}
-
 // Fast Yescrypt hash implementation
-int yescrypt_hash_fast(const uint8_t *input, size_t input_len, uint8_t *output) {
+static int yescrypt_hash_fast(const uint8_t *input, size_t input_len, uint32_t nonce, uint8_t *output) {
     // Simplified fast implementation
     // In production, implement full Yescrypt with memory allocation
     
@@ -115,6 +93,12 @@ int yescrypt_hash_fast(const uint8_t *input, size_t input_len, uint8_t *output) 
     // Initialize state with input
     memset(state, 0, sizeof(state));
     memcpy(state, input, (input_len < 64) ? input_len : 64);
+    
+    // Add nonce to state (make nonce matter!)
+    state[0] ^= nonce;
+    state[1] ^= (nonce >> 8);
+    state[2] ^= (nonce >> 16);
+    state[3] ^= (nonce >> 24);
     
     // Apply Salsa20/8 multiple times for memory hardness simulation
     for (i = 0; i < YESCRYPT_N / 32; i++) {
@@ -131,13 +115,15 @@ int yescrypt_hash_fast(const uint8_t *input, size_t input_len, uint8_t *output) 
 static PyObject* py_yescrypt_hash(PyObject* self, PyObject* args) {
     const char *input;
     Py_ssize_t input_len;
+    uint32_t nonce = 0;
     uint8_t output[YESCRYPT_DKLEN];
     
-    if (!PyArg_ParseTuple(args, "y#", &input, &input_len)) {
+    // Parse arguments: bytes data and optional uint32 nonce
+    if (!PyArg_ParseTuple(args, "y#|I", &input, &input_len, &nonce)) {
         return NULL;
     }
     
-    int result = yescrypt_hash_fast((const uint8_t*)input, input_len, output);
+    int result = yescrypt_hash_fast((const uint8_t*)input, input_len, nonce, output);
     
     if (result != 0) {
         PyErr_SetString(PyExc_RuntimeError, "Yescrypt hash computation failed");
@@ -162,7 +148,7 @@ static PyObject* py_yescrypt_benchmark(PyObject* self, PyObject* args) {
     clock_t start = clock();
     
     for (int i = 0; i < iterations; i++) {
-        yescrypt_hash_fast(test_input, sizeof(test_input), output);
+        yescrypt_hash_fast(test_input, sizeof(test_input), (uint32_t)i, output);
     }
     
     clock_t end = clock();

@@ -400,5 +400,8 @@ def main():
         print(f"❌ Fatal error: {e}")
         sys.exit(1)
 
+# Alias for compatibility
+ProfessionalYescryptMiner = ZionYescryptMiner
+
 if __name__ == "__main__":
     main()
