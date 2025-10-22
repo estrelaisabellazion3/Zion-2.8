@@ -15,14 +15,14 @@ Ekonomický model (UPDATED):
 
 Consciousness Levels (hra):
 1. PHYSICAL (1.0x) - Začátečník
-2. EMOTIONAL (1.5x) - Učící se
-3. MENTAL (2.0x) - Chápající  
-4. SACRED (3.0x) - Zasvěcený
-5. QUANTUM (4.0x) - Kvantový myslitel
-6. COSMIC (5.0x) - Kosmické vědomí
-7. ENLIGHTENED (7.5x) - Osvícený
-8. TRANSCENDENT (10.0x) - Transcendentní
-9. ON_THE_STAR (15.0x) - Na Hvězdě ✨
+2. EMOTIONAL (1.05x) - Učící se
+3. MENTAL (1.1x) - Chápající  
+4. SACRED (1.25x) - Zasvěcený
+5. QUANTUM (1.5x) - Kvantový myslitel
+6. COSMIC (2.0x) - Kosmické vědomí
+7. ENLIGHTENED (3.0x) - Osvícený
+8. TRANSCENDENT (5.0x) - Transcendentní
+9. ON_THE_STAR (10.0x) - Na Hvězdě ✨
 
 Jak postupovat:
 - Mining (pasivní XP za každý share)
@@ -47,14 +47,14 @@ logger = logging.getLogger(__name__)
 class ConsciousnessLevel(Enum):
     """Consciousness levely s multipliers a XP requirements"""
     PHYSICAL = (1.0, 0, "🪨 Physical Body - Beginning the Journey")
-    EMOTIONAL = (1.5, 1000, "💧 Emotional Awareness - Feeling the Flow")  
-    MENTAL = (2.0, 5000, "🧠 Mental Clarity - Understanding Patterns")
-    SACRED = (3.0, 15000, "🕉️ Sacred Geometry - Seeing the Divine")
-    QUANTUM = (4.0, 40000, "⚛️ Quantum Reality - Probability Waves")
-    COSMIC = (5.0, 100000, "🌌 Cosmic Consciousness - Universal Mind")
-    ENLIGHTENED = (7.5, 250000, "✨ Enlightenment - Pure Awareness")
-    TRANSCENDENT = (10.0, 500000, "🔮 Transcendent - Beyond Duality")
-    ON_THE_STAR = (15.0, 1000000, "⭐ On The Star - Maitreya's Realm")
+    EMOTIONAL = (1.05, 1000, "💧 Emotional Awareness - Feeling the Flow")  
+    MENTAL = (1.1, 5000, "🧠 Mental Clarity - Understanding Patterns")
+    SACRED = (1.25, 15000, "🕉️ Sacred Geometry - Seeing the Divine")
+    QUANTUM = (1.5, 40000, "⚛️ Quantum Reality - Probability Waves")
+    COSMIC = (2.0, 100000, "🌌 Cosmic Consciousness - Universal Mind")
+    ENLIGHTENED = (3.0, 250000, "✨ Enlightenment - Pure Awareness")
+    TRANSCENDENT = (5.0, 500000, "🔮 Transcendent - Beyond Duality")
+    ON_THE_STAR = (10.0, 1000000, "⭐ On The Star - Maitreya's Realm")
     
     def __init__(self, multiplier: float, xp_required: int, description: str):
         self.multiplier = multiplier

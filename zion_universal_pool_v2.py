@@ -442,14 +442,14 @@ class ZIONPoolAPIHandler(BaseHTTPRequestHandler):
                 'base_block_reward': self.pool.base_block_reward,
                 'consciousness_multipliers': {
                     'PHYSICAL': 1.0,
-                    'EMOTIONAL': 1.5,
-                    'MENTAL': 2.0,
-                    'SACRED': 3.0,
-                    'QUANTUM': 4.0,
-                    'COSMIC': 5.0,
-                    'ENLIGHTENED': 7.5,
-                    'TRANSCENDENT': 10.0,
-                    'ON_THE_STAR': 15.0
+                    'EMOTIONAL': 1.05,
+                    'MENTAL': 1.1,
+                    'SACRED': 1.25,
+                    'QUANTUM': 1.5,
+                    'COSMIC': 2.0,
+                    'ENLIGHTENED': 3.0,
+                    'TRANSCENDENT': 5.0,
+                    'ON_THE_STAR': 10.0
                 },
                 'eco_bonuses': {
                     'randomx': 1.0,
