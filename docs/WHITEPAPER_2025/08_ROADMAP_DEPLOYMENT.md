@@ -400,7 +400,7 @@ Financial:
   Liquidity Mining:
     - Provide liquidity to AMM pools
     - Earn ZION rewards (100M/year)
-    - Boost with consciousness level (L9 gets 15× rewards)
+    - Boost with consciousness level (L9 gets 10× rewards)
 ```
 
 ### Global Expansion

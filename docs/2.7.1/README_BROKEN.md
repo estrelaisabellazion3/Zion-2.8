@@ -24,7 +24,7 @@
 
 - **Base reward:** 2 ZION za blok
 
-- 🧘 **Consciousness-Based Mining**: Rewards scale with spiritual development (1x-15x multipliers)
+- 🧘 **Consciousness-Based Mining**: Rewards scale with spiritual development (1x-10x multipliers)
 
 - 🏛️ **Spiritual Governance**: Maitreya Buddha as Network Administrator## 🚀 Klíčové funkce
 

@@ -1,0 +1,111 @@
+{
+  "api": {
+    "id": null,
+    "worker-id": null
+  },
+  "http": {
+    "enabled": false,
+    "host": "127.0.0.1",
+    "port": 0,
+    "access-token": null,
+    "restricted": true
+  },
+  "autosave": true,
+  "background": false,
+  "colors": true,
+  "title": true,
+  "randomx": {
+    "init": -1,
+    "init-avx2": -1,
+    "mode": "auto",
+    "1gb-pages": false,
+    "rdmsr": true,
+    "rdmsr-protected": false,
+    "cache_qos": false,
+    "cuda": false,
+    "opencl": false
+  },
+  "cpu": {
+    "enabled": true,
+    "huge-pages": true,
+    "huge-pages-jit": false,
+    "hw-aes": null,
+    "priority": null,
+    "memory-pool": false,
+    "yield": true,
+    "max-threads-hint": 75,
+    "asm": "auto",
+    "argon2-impl": null,
+    "astrobwt-max-size": 550,
+    "cortex": true,
+    "cn-heavy-memory": false,
+    "cn-pciex": false,
+    "cn-gpu": false
+  },
+  "cuda": {
+    "enabled": false,
+    "loader": null,
+    "nvml": null
+  },
+  "opencl": {
+    "enabled": false,
+    "loader": null,
+    "nvidia": false,
+    "amd": false,
+    "platform": 0
+  },
+  "opencl-adl": true,
+  "pools": [
+    {
+      "algo": "randomx",
+      "coin": null,
+      "url": "91.98.122.165:3333",
+      "user": "XMRIG_SSH_TEST",
+      "password": "x",
+      "rig-id": null,
+      "nicehash": false,
+      "keepalive": true,
+      "enabled": true,
+      "tls": false,
+      "tls-fingerprint": null,
+      "daemon": false,
+      "socks5": null,
+      "self-select": null,
+      "submit-to-origin": false
+    }
+  ],
+  "retries": 5,
+  "retry-pause": 5,
+  "print-time": 60,
+  "health-print-time": 60,
+  "dmi": true,
+  "tags": [],
+  "donate-level": 0,
+  "donate-over-proxy": 1,
+  "log-file": null,
+  "misc": {
+    "aes-ni": null,
+    "azalea-stratum": true,
+    "cache_boost": true,
+    "cuda-loader": null,
+    "groestl": "auto",
+    "idle-alert": true,
+    "verbose": true,
+    "user-agent": null,
+    "compile-time": false,
+    "prefer-numa": true,
+    "profiling": false,
+    "bench-all": false,
+    "bench": null,
+    "title-probe": true
+  },
+  "benchmark": {
+    "algo": null,
+    "coins": null,
+    "epochs": 3,
+    "seed": null,
+    "submission": false,
+    "verify": true,
+    "warmup": true
+  }
+}

@@ -17,7 +17,7 @@ Find block hash → Get reward → Repeat
 ```
 Find block hash →
 Get base reward →
-+ Consciousness level multiplier (1× to 15×) →
++ Consciousness level multiplier (1× to 10×) →
 + Earn XP for actions →
 + Level up consciousness →
 + Unlock AI challenges →
@@ -37,28 +37,28 @@ Get base reward →
 │ CONSCIOUSNESS LEVELS & MULTIPLIERS                   │
 ├──────────────────────────────────────────────────────┤
 │                                                       │
-│ L9: ON THE STAR        15.0× │ 1,000,000 XP         │
+│ L9: ON THE STAR        10.0× │ 1,000,000 XP         │
 │     (Maitreya's Realm - Ultimate Achievement)        │
 │                                                       │
-│ L8: TRANSCENDENT       10.0× │ 500,000 XP           │
+│ L8: TRANSCENDENT       5.0×  │ 500,000 XP           │
 │     (Beyond duality, pure consciousness)             │
 │                                                       │
-│ L7: ENLIGHTENED        7.5×  │ 250,000 XP           │
+│ L7: ENLIGHTENED        3.0×  │ 250,000 XP           │
 │     (Awakened being, teaching others)                │
 │                                                       │
-│ L6: COSMIC             5.0×  │ 100,000 XP           │
+│ L6: COSMIC             2.0×  │ 100,000 XP           │
 │     (Universal perspective, oneness)                 │
 │                                                       │
-│ L5: QUANTUM            4.0×  │ 40,000 XP            │
+│ L5: QUANTUM            1.5×  │ 40,000 XP            │
 │     (Non-local awareness, synchronicity)             │
 │                                                       │
-│ L4: SACRED             3.0×  │ 15,000 XP            │
+│ L4: SACRED             1.25× │ 15,000 XP            │
 │     (Sacred geometry, divine patterns)               │
 │                                                       │
-│ L3: MENTAL             2.0×  │ 5,000 XP             │
+│ L3: MENTAL             1.1×  │ 5,000 XP             │
 │     (Intellectual mastery, logic)                    │
 │                                                       │
-│ L2: EMOTIONAL          1.5×  │ 1,000 XP             │
+│ L2: EMOTIONAL          1.05× │ 1,000 XP             │
 │     (Emotional intelligence, empathy)                │
 │                                                       │
 │ L1: PHYSICAL           1.0×  │ 0 XP (starting)      │
@@ -73,8 +73,8 @@ Get base reward →
 
 ```python
 def calculate_total_reward(base_reward, consciousness_bonus, level):
-    MULTIPLIERS = {1: 1.0, 2: 1.5, 3: 2.0, 4: 3.0, 5: 4.0, 
-                   6: 5.0, 7: 7.5, 8: 10.0, 9: 15.0}
+    MULTIPLIERS = {1: 1.0, 2: 1.05, 3: 1.1, 4: 1.25, 5: 1.5, 
+                   6: 2.0, 7: 3.0, 8: 5.0, 9: 10.0}
     
     consciousness_reward = consciousness_bonus * MULTIPLIERS[level]
     total_reward = base_reward + consciousness_reward
@@ -86,16 +86,16 @@ level_1_reward = 5_479.45 + (1_569.63 × 1.0)
 # = 7,049.08 ZION
 
 # Level 5 (Quantum) - pokročilý
-level_5_reward = 5_479.45 + (1_569.63 × 4.0)
-# = 11,757.97 ZION (66% bonus!)
+level_5_reward = 5_479.45 + (1_569.63 × 1.5)
+# = 7,833.90 ZION (11% bonus)
 
 # Level 9 (On The Star) - master
-level_9_reward = 5_479.45 + (1_569.63 × 15.0)
-# = 29,023.90 ZION (312% bonus!)
+level_9_reward = 5_479.45 + (1_569.63 × 10.0)
+# = 21,175.75 ZION (200% bonus!)
 ```
 
 **Impact:**
-- Level 1 vs Level 9 = **4.12× difference in block rewards!**
+- Level 1 vs Level 9 = **3.0× difference in block rewards!**
 - Incentivizes personal growth, not just hashrate
 - High-level miners earn more even with less hardware
 
@@ -166,7 +166,7 @@ TOTAL:                                  47,450 XP
 Progress: 
 ├─ Started: L1 PHYSICAL (0 XP)
 ├─ After 1 month: L5 QUANTUM (40k reached, 7.5k surplus)
-└─ Multiplier: 1.0× → 4.0× (4× increase in rewards!)
+└─ Multiplier: 1.0× → 1.5× (50% increase in rewards!)
 ```
 
 **Casual Miner - 1 Month:**

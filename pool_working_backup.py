@@ -1282,6 +1282,22 @@ class ZionUniversalPool:
         connections_counter.inc()
         connected_miners_gauge.set(len(self.miners) + 1)  # +1 for this new connection
 
+        
+        # WELCOME MESSAGE - send immediately to client
+        try:
+            welcome = json.dumps({
+                "jsonrpc": "2.0",
+                "id": None,
+                "method": "mining.set_difficulty",
+                "params": [32]
+            }) + "\n"
+            
+            writer.write(welcome.encode('utf-8'))
+            await writer.drain()
+            logger.info(f"Sent welcome to {addr}")
+        except Exception as e:
+            logger.error(f"Failed to send welcome: {e}")
+        
         try:
             # Switch to line-based parsing to avoid concatenated JSON issues
             while True:
@@ -1521,10 +1537,8 @@ class ZionUniversalPool:
         # Create job for login response
         job = self.get_job_for_miner(addr)
 
-        # PowerPool-compatible handshake: send login result + difficulty + job notify
-        difficulty = self.difficulty.get(self.miners[addr]['algorithm'], self.difficulty.get('cpu', 1000))
-
-        login_response = json.dumps({
+        # XMRig expects exact login response format - NO error field when successful
+        response = json.dumps({
             "id": data.get("id"),
             "jsonrpc": "2.0",
             "result": {
@@ -1534,28 +1548,13 @@ class ZionUniversalPool:
             }
         }) + '\n'
 
-        set_diff_msg = json.dumps({
-            "id": None,
-            "jsonrpc": "2.0",
-            "method": "mining.set_difficulty",
-            "params": [difficulty]
-        }) + '\n'
-
-        job_notify_msg = json.dumps({
-            "id": None,
-            "jsonrpc": "2.0",
-            "method": "job",
-            "params": job
-        }) + '\n'
-
         logger.info(f"XMrig login successful for {addr}")
         print(f"✅ CPU miner login successful")
 
         # Start sending periodic jobs to maintain connection
         asyncio.create_task(self.send_periodic_jobs(addr))
 
-        # Bundle messages to mirror PowerPool behaviour
-        return login_response + set_diff_msg + job_notify_msg
+        return response
 
     async def handle_xmrig_submit(self, data, addr, writer):
         """Handle XMrig share submission with real validation and rewards"""

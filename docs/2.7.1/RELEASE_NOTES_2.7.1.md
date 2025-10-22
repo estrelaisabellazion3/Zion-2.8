@@ -11,7 +11,7 @@
 - 10-year transition plan to full DAO governance
 
 #### 🧘 **Consciousness-Based Mining System**
-- 9 consciousness levels with 1x-15x reward multipliers
+- 9 consciousness levels with 1x-10x reward multipliers
 - Automatic spiritual development incentivization
 - Consciousness-weighted voting for future DAO governance
 - Integration of meditation and awareness into economic rewards

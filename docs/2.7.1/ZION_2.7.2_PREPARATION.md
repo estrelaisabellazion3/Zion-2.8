@@ -6,7 +6,7 @@
 - 🧘 Maitreya Buddha Network Administrator integration
 - 🏛️ 10-Year DAO transition architecture
 - 💰 50-year sustainable economics (144B ZION)
-- ⚡ Consciousness-based mining (1x-15x multipliers)
+- ⚡ Consciousness-based mining (1x-10x multipliers)
 - 🌍 Humanitarian aid automation (10%)
 - 📚 Complete documentation suite
 - 🧪 Comprehensive testing framework

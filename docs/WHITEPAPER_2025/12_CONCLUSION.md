@@ -136,7 +136,7 @@ Start Mining in 10 Minutes:
   5. Level Up (Consciousness Game):
      - Join Discord: https://discord.gg/zion
      - Complete AI challenges (quiz, conversation, meditation)
-     - Earn XP → Level up → Multiply rewards (up to 15×)
+     - Earn XP → Level up → Multiply rewards (up to 10×)
 
 Expected Earnings (hypothetical):
   Budget PC (1000 H/s):

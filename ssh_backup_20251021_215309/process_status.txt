@@ -1,0 +1,5 @@
+root           3  0.0  0.0      0     0 ?        S    01:10   0:00 [pool_workqueue_release]
+root         823  0.0  2.0 1067312 80628 ?       Ssl  01:10   1:04 /usr/bin/python3 /usr/bin/fail2ban-server -xf start
+root         884  0.0  0.5 109668 22912 ?        Ssl  01:10   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+root       29460  0.0  0.7 111236 28376 ?        Sl   19:38   0:00 python3 run_blockchain_production.py
+root       29464  0.0  0.8 117656 34384 ?        Sl   19:38   0:00 python3 zion_universal_pool_v2.py

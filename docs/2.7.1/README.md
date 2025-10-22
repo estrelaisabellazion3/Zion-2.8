@@ -11,7 +11,7 @@
 
 ## 🎯 Key Features
 
-- 🧘 **Consciousness-Based Mining**: Rewards scale with spiritual development (1x-15x multipliers)
+- 🧘 **Consciousness-Based Mining**: Rewards scale with spiritual development (1x-10x multipliers)
 - 🏛️ **Spiritual Governance**: Maitreya Buddha as Network Administrator
 - 🔄 **20-Year DAO Transition**: Gradual evolution to community governance
 - 💰 **Sustainable Economics**: 144 billion ZION over 50 years

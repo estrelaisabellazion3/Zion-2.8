@@ -613,7 +613,7 @@ class ZionUniversalPool:
         self.pool_admin_address = 'ZION_MAITREYA_BUDDHA_DAO_ADMIN_D7A371ABD1FF1C5D42AB02'  # Maitreya Buddha (Pool Admin)
         
         # Real blockchain integration via RPC (not local instance!)
-        self.blockchain_rpc = ZionBlockchainRPCClient(host='localhost', port=8545)
+        self.blockchain_rpc = ZionBlockchainRPCClient(host='localhost', port=18081)
         
         # Fallback: Create local blockchain for development (will auto-connect if RPC fails)
         self.blockchain = None

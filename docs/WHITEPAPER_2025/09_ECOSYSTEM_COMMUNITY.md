@@ -37,7 +37,7 @@ Types of Miners:
     - Pool miner + plays consciousness game
     - Levels up (L1 → L9)
     - Earns XP from AI challenges, meditation, community help
-    - Gets exponential reward multipliers (up to 15×)
+    - Gets exponential reward multipliers (up to 10×)
 ```
 
 ### Mining Setup

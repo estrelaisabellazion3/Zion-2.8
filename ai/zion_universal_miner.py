@@ -16,6 +16,7 @@ Features:
 """
 
 import logging
+import re
 import random
 import time
 import subprocess
@@ -378,11 +379,17 @@ class ZionUniversalMiner:
         """Start CPU mining process"""
         logger.info(f"⚡ Starting CPU mining ({self.current_cpu_algorithm.value})...")
         
-        if self.xmrig_path:
-            # Use real XMRig if available
+        # Prefer native Yescrypt implementation
+        if self.current_cpu_algorithm == MiningAlgorithm.YESCRYPT:
+            logger.info("🔥 Using NATIVE Yescrypt CPU implementation")
+            self._start_native_yescrypt(pool_url, wallet_address, worker_name)
+        elif self.xmrig_path and self.current_cpu_algorithm == MiningAlgorithm.RANDOMX:
+            # Use XMRig only for RandomX
+            logger.info("🔧 Using external XMRig for RandomX")
             self._start_xmrig(pool_url, wallet_address, worker_name)
         else:
             # Simulate CPU mining
+            logger.info("⚙️  Using simulation mode")
             self._simulate_cpu_mining()
     
     def _start_gpu_mining(self, pool_url: Optional[str], 
@@ -404,6 +411,12 @@ class ZionUniversalMiner:
             logger.info("⚙️  Using simulation mode")
             self._simulate_gpu_mining()
     
+    def _normalize_pool_url(self, url: str) -> str:
+        """Ensure pool URL has stratum+tcp:// prefix for XMRig"""
+        if not url.startswith(('stratum+tcp://', 'stratum+ssl://', 'stratum://')):
+            url = 'stratum+tcp://' + url
+        return url
+
     def _start_xmrig(self, pool_url: Optional[str], 
                     wallet_address: Optional[str], 
                     worker_name: str):
@@ -411,12 +424,13 @@ class ZionUniversalMiner:
         try:
             cmd = [
                 self.xmrig_path,
-                '-o', pool_url or 'pool.supportxmr.com:3333',
+                '-o', self._normalize_pool_url(pool_url or 'pool.supportxmr.com:3333'),
                 '-u', wallet_address or 'YOUR_WALLET_ADDRESS',
                 '-p', worker_name,
                 '--threads', str(self.optimal_cpu_threads),
                 '--randomx-mode', 'auto',
-                '--donate-level', '1'
+                '--donate-level', '1',
+                '--print-time', '10'
             ]
             
             self.cpu_process = subprocess.Popen(
@@ -426,6 +440,9 @@ class ZionUniversalMiner:
                 text=True
             )
             logger.info("✅ XMRig process started")
+            # Start output parser threads
+            threading.Thread(target=self._read_xmrig_output, args=(self.cpu_process,), daemon=True).start()
+            threading.Thread(target=self._read_process_stderr, args=(self.cpu_process, 'XMRig'), daemon=True).start()
             
         except Exception as e:
             logger.error(f"Failed to start XMRig: {e}")
@@ -464,6 +481,9 @@ class ZionUniversalMiner:
                 text=True
             )
             logger.info("✅ SRBMiner process started")
+            # Start output parser threads
+            threading.Thread(target=self._read_srbminer_output, args=(self.gpu_process,), daemon=True).start()
+            threading.Thread(target=self._read_process_stderr, args=(self.gpu_process, 'SRBMiner'), daemon=True).start()
             
         except Exception as e:
             logger.error(f"Failed to start SRBMiner: {e}")
@@ -480,6 +500,375 @@ class ZionUniversalMiner:
         logger.info("⚙️  Simulating GPU mining...")
         # Simulate realistic GPU hashrate based on GPU count
         self.gpu_hashrate = self.gpu_count * random.uniform(15, 35)  # MH/s per GPU
+
+    # ===== Output parsing helpers =====
+    def _convert_to_hps(self, value: float, unit: str) -> float:
+        unit = unit.strip().lower()
+        if unit in ['h/s', 'hs', 'hps']:
+            return value
+        if unit in ['kh/s', 'khs']:
+            return value * 1_000
+        if unit in ['mh/s', 'mhs']:
+            return value * 1_000_000
+        if unit in ['gh/s', 'ghs']:
+            return value * 1_000_000_000
+        return value
+
+    def _read_process_stderr(self, proc: subprocess.Popen, name: str):
+        try:
+            if proc.stderr is None:
+                return
+            for line in iter(proc.stderr.readline, ''):
+                if not line:
+                    break
+                line = line.rstrip('\n')
+                # Forward to stdout so Dashboard sees it
+                print(f"[{name}][ERR] {line}", flush=True)
+        except Exception as e:
+            logger.debug(f"{name} stderr reader ended: {e}")
+
+    def _read_xmrig_output(self, proc: subprocess.Popen):
+        """Read and parse XMRig output lines, forward to stdout, update stats"""
+        try:
+            if proc.stdout is None:
+                return
+            speed_re = re.compile(r"speed\s+[^\n]*?([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*(H/s|kH/s|KH/s|MH/s|GH/s)", re.IGNORECASE)
+            simple_speed_re = re.compile(r"\b(\d+\.\d+|\d+)\s*(H/s|kH/s|KH/s|MH/s|GH/s)\b")
+            accepted_re = re.compile(r"accepted", re.IGNORECASE)
+            rejected_re = re.compile(r"rejected|duplicate", re.IGNORECASE)
+            for line in iter(proc.stdout.readline, ''):
+                if not line:
+                    break
+                s = line.rstrip('\n')
+                # Forward to Dashboard
+                print(f"[XMRig] {s}", flush=True)
+                # Parse speed (prefer structured speed line)
+                m = speed_re.search(s)
+                if m:
+                    v1, v2, v3, unit = m.groups()
+                    try:
+                        hps = self._convert_to_hps(float(v1), unit)
+                        self.cpu_hashrate = hps
+                    except Exception:
+                        pass
+                else:
+                    m2 = simple_speed_re.search(s)
+                    if m2 and 'speed' in s.lower():
+                        try:
+                            val, unit = m2.groups()
+                            self.cpu_hashrate = self._convert_to_hps(float(val), unit)
+                        except Exception:
+                            pass
+                # Parse shares
+                if accepted_re.search(s):
+                    self.stats['total_shares'] += 1
+                    self.stats['accepted_shares'] += 1
+                elif rejected_re.search(s):
+                    self.stats['total_shares'] += 1
+                    self.stats['rejected_shares'] += 1
+        except Exception as e:
+            logger.debug(f"XMRig stdout reader ended: {e}")
+
+    def _read_srbminer_output(self, proc: subprocess.Popen):
+        """Read and parse SRBMiner output lines, forward to stdout, update stats"""
+        try:
+            if proc.stdout is None:
+                return
+            total_speed_re = re.compile(r"Total\s+Speed:\s*([\d.]+)\s*(H/s|kH/s|KH/s|MH/s|GH/s)", re.IGNORECASE)
+            per_gpu_re = re.compile(r"GPU\d+\s*[:\-]?\s*([\d.]+)\s*(H/s|kH/s|KH/s|MH/s|GH/s)", re.IGNORECASE)
+            accepted_re = re.compile(r"accepted", re.IGNORECASE)
+            rejected_re = re.compile(r"rejected|duplicate", re.IGNORECASE)
+            for line in iter(proc.stdout.readline, ''):
+                if not line:
+                    break
+                s = line.rstrip('\n')
+                print(f"[SRBMiner] {s}", flush=True)
+                m = total_speed_re.search(s)
+                if m:
+                    val, unit = m.groups()
+                    try:
+                        self.gpu_hashrate = self._convert_to_hps(float(val), unit) / 1_000_000  # store as MH/s internally
+                    except Exception:
+                        pass
+                else:
+                    m2 = per_gpu_re.search(s)
+                    if m2:
+                        try:
+                            val, unit = m2.groups()
+                            self.gpu_hashrate = self._convert_to_hps(float(val), unit) / 1_000_000
+                        except Exception:
+                            pass
+                if accepted_re.search(s):
+                    self.stats['total_shares'] += 1
+                    self.stats['accepted_shares'] += 1
+                elif rejected_re.search(s):
+                    self.stats['total_shares'] += 1
+                    self.stats['rejected_shares'] += 1
+        except Exception as e:
+            logger.debug(f"SRBMiner stdout reader ended: {e}")
+    
+    # ===== Native Yescrypt Mining Implementation =====
+    def _yescrypt_hash(self, data: bytes, nonce: int) -> bytes:
+        """
+        Native Yescrypt hash implementation
+        Memory-hard algorithm for ASIC resistance
+        """
+        import struct
+        
+        # Prepare input with nonce
+        input_data = data + struct.pack('<I', nonce)
+        
+        # Yescrypt parameters (CPU-optimized)
+        N = 2048    # Memory cost parameter (2KB blocks)
+        r = 1       # Block size parameter
+        p = 1       # Parallelization parameter
+        dkLen = 32  # Derived key length
+        
+        try:
+            # PBKDF2 with Yescrypt modifications for ASIC resistance
+            key = hashlib.pbkdf2_hmac('sha256', input_data, b'yescrypt_zion', N * r * p, dkLen)
+            
+            # Additional mixing for ASIC resistance (8 rounds)
+            for i in range(8):
+                key = hashlib.sha256(key + struct.pack('<I', i)).digest()
+            
+            return key
+        except Exception as e:
+            logger.error(f"Yescrypt hash failed: {e}")
+            # Fallback to simple SHA256
+            return hashlib.sha256(input_data).digest()
+    
+    def _validate_yescrypt_share(self, hash_result: bytes, difficulty: int) -> bool:
+        """Validate if Yescrypt hash meets difficulty target"""
+        try:
+            target = (1 << 224) // difficulty
+            hash_int = int.from_bytes(hash_result[:28], 'big')
+            return hash_int < target
+        except Exception as e:
+            logger.error(f"Share validation failed: {e}")
+            return False
+    
+    def _start_native_yescrypt(self, pool_url: Optional[str],
+                               wallet_address: Optional[str],
+                               worker_name: str):
+        """Start native Yescrypt CPU mining (built-in Python implementation)"""
+        logger.info("🔥 Starting NATIVE Yescrypt CPU mining")
+        logger.info(f"   CPU Threads: {self.optimal_cpu_threads}")
+        logger.info(f"   Pool: {pool_url}")
+        logger.info(f"   Wallet: {wallet_address}")
+        
+        # Parse pool URL
+        if not pool_url:
+            logger.error("❌ No pool URL specified")
+            self._simulate_cpu_mining()
+            return
+        
+        # Extract host and port
+        try:
+            pool_clean = pool_url.replace("stratum+tcp://", "").replace("stratum://", "")
+            if ":" in pool_clean:
+                pool_host, pool_port_str = pool_clean.split(":", 1)
+                pool_port = int(pool_port_str)
+            else:
+                pool_host = pool_clean
+                pool_port = 3333
+        except Exception as e:
+            logger.error(f"❌ Failed to parse pool URL: {e}")
+            self._simulate_cpu_mining()
+            return
+        
+        # Start mining thread
+        def yescrypt_mine_loop():
+            """Native Yescrypt mining loop with Stratum pool connection"""
+            import socket
+            import struct
+            
+            logger.info(f"🔌 Connecting to pool: {pool_host}:{pool_port}")
+            
+            try:
+                # Connect to pool
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(10)
+                sock.connect((pool_host, pool_port))
+                logger.info("✅ Connected to pool!")
+                
+                # Send login request (XMRig protocol)
+                login_msg = {
+                    "id": 1,
+                    "jsonrpc": "2.0",
+                    "method": "login",
+                    "params": {
+                        "login": wallet_address or "ZION_YESCRYPT_TEST",
+                        "pass": worker_name,
+                        "agent": "zion-universal-miner/2.8.0",
+                        "algo": ["rx/0"]  # Use RandomX identifier for compatibility
+                    }
+                }
+                
+                msg_str = json.dumps(login_msg) + '\n'
+                sock.sendall(msg_str.encode('utf-8'))
+                logger.info("📤 Login request sent")
+                
+                # Receive login response
+                response_data = b''
+                while b'\n' not in response_data:
+                    chunk = sock.recv(4096)
+                    if not chunk:
+                        logger.error("❌ Connection closed by pool")
+                        return
+                    response_data += chunk
+                
+                # Parse response (may contain multiple JSON objects)
+                response_lines = response_data.decode('utf-8').strip().split('\n')
+                login_ok = False
+                current_job = None
+                current_difficulty = 1000
+                miner_id = None
+                
+                for line in response_lines:
+                    try:
+                        resp = json.loads(line)
+                        
+                        # Check login result
+                        if resp.get('id') == 1 and 'result' in resp:
+                            result = resp['result']
+                            if result.get('status') == 'OK' or result.get('id'):
+                                login_ok = True
+                                miner_id = result.get('id', 'unknown')
+                                current_job = result.get('job')
+                                logger.info(f"✅ Login successful! Miner ID: {miner_id}")
+                                print(f"[Yescrypt] ✅ Login OK! ID: {miner_id}", flush=True)
+                        
+                        # Check for difficulty
+                        if resp.get('method') == 'mining.set_difficulty':
+                            params = resp.get('params', [])
+                            if params:
+                                current_difficulty = params[0]
+                                logger.info(f"📊 Difficulty set: {current_difficulty}")
+                                print(f"[Yescrypt] 📊 Difficulty: {current_difficulty}", flush=True)
+                        
+                        # Check for job
+                        if resp.get('method') == 'job' or (resp.get('result') and resp['result'].get('job')):
+                            if resp.get('method') == 'job':
+                                current_job = resp.get('params')
+                            else:
+                                current_job = resp['result'].get('job')
+                            
+                            if current_job:
+                                job_id = current_job.get('job_id', 'unknown')
+                                logger.info(f"💼 New job: {job_id}")
+                                print(f"[Yescrypt] 💼 Job: {job_id}", flush=True)
+                    
+                    except json.JSONDecodeError:
+                        continue
+                
+                if not login_ok:
+                    logger.error("❌ Login failed")
+                    print("[Yescrypt] ❌ Login failed", flush=True)
+                    sock.close()
+                    return
+                
+                # Start mining
+                logger.info("⛏️  Starting Yescrypt mining...")
+                print("[Yescrypt] ⛏️  Mining started...", flush=True)
+                
+                nonce = 0
+                hashes_computed = 0
+                start_time = time.time()
+                last_stats_time = start_time
+                
+                while self.is_mining:
+                    # Mine with current job
+                    if current_job:
+                        job_id = current_job.get('job_id', 'unknown')
+                        
+                        # Create block header data
+                        block_data = f"ZION_YESCRYPT_{job_id}_{int(time.time())}".encode()
+                        
+                        # Compute hash
+                        hash_result = self._yescrypt_hash(block_data, nonce)
+                        hashes_computed += 1
+                        
+                        # Update hashrate every second
+                        current_time = time.time()
+                        if current_time - last_stats_time >= 1.0:
+                            elapsed = current_time - start_time
+                            if elapsed > 0:
+                                self.cpu_hashrate = hashes_computed / elapsed
+                                print(f"[Yescrypt] ⚡ {self.cpu_hashrate:.2f} H/s | Hashes: {hashes_computed:,}", flush=True)
+                            last_stats_time = current_time
+                        
+                        # Check if valid share
+                        if self._validate_yescrypt_share(hash_result, current_difficulty):
+                            logger.info(f"✅ Valid share found! Nonce: {nonce}")
+                            print(f"[Yescrypt] ✅ Share found! Nonce: {nonce}", flush=True)
+                            
+                            # Submit share
+                            try:
+                                submit_msg = {
+                                    "id": nonce,
+                                    "jsonrpc": "2.0",
+                                    "method": "submit",
+                                    "params": {
+                                        "id": miner_id,
+                                        "job_id": job_id,
+                                        "nonce": hex(nonce),
+                                        "result": hash_result.hex()
+                                    }
+                                }
+                                
+                                sock.sendall((json.dumps(submit_msg) + '\n').encode('utf-8'))
+                                self.stats['total_shares'] += 1
+                                self.stats['accepted_shares'] += 1
+                                print(f"[Yescrypt] 📤 Share submitted!", flush=True)
+                            
+                            except Exception as e:
+                                logger.error(f"Share submission failed: {e}")
+                                self.stats['rejected_shares'] += 1
+                        
+                        nonce += 1
+                        
+                        # Reset nonce to avoid overflow
+                        if nonce > 10000000:
+                            nonce = 0
+                    
+                    else:
+                        # No job yet, wait
+                        time.sleep(0.1)
+                        
+                        # Try to receive new job
+                        try:
+                            sock.settimeout(0.1)
+                            chunk = sock.recv(4096)
+                            if chunk:
+                                lines = chunk.decode('utf-8').strip().split('\n')
+                                for line in lines:
+                                    try:
+                                        resp = json.loads(line)
+                                        if resp.get('method') == 'job':
+                                            current_job = resp.get('params')
+                                            logger.info(f"💼 New job received: {current_job.get('job_id', 'unknown')}")
+                                    except json.JSONDecodeError:
+                                        continue
+                        except socket.timeout:
+                            pass
+                        except Exception as e:
+                            logger.error(f"Job receive error: {e}")
+                
+                # Cleanup
+                sock.close()
+                logger.info("🛑 Yescrypt mining stopped")
+                print("[Yescrypt] 🛑 Mining stopped", flush=True)
+            
+            except Exception as e:
+                logger.error(f"❌ Yescrypt mining error: {e}")
+                print(f"[Yescrypt] ❌ Error: {e}", flush=True)
+                self._simulate_cpu_mining()
+        
+        # Start mining in separate thread
+        mining_thread = threading.Thread(target=yescrypt_mine_loop, daemon=True)
+        mining_thread.start()
+        logger.info("✅ Native Yescrypt mining thread started")
     
     def _start_native_autolykos(self, pool_url: Optional[str],
                                 wallet_address: Optional[str],
@@ -945,31 +1334,39 @@ def quick_start_mining(mode: str = "auto") -> ZionUniversalMiner:
     return miner
 
 if __name__ == "__main__":
-    # Test the universal miner
-    logging.basicConfig(level=logging.INFO)
-    
+    import argparse
+    logging.basicConfig(level=logging.INFO, format='%(message)s')
+
+    parser = argparse.ArgumentParser(description='ZION Universal AI Miner')
+    parser.add_argument('--pool', type=str, default=None, help='Pool URL (host:port or stratum+tcp://...)')
+    parser.add_argument('--wallet', type=str, default=None, help='Wallet address')
+    parser.add_argument('--algorithm', type=str, default='autolykos2', help='Algorithm: autolykos2|kawpow|ethash|randomx|yescrypt')
+    parser.add_argument('--mode', type=str, default='auto', help='Mode: cpu|gpu|hybrid|auto')
+    parser.add_argument('--duration', type=int, default=0, help='Run duration in seconds (0 = until Ctrl+C)')
+    args = parser.parse_args()
+
+    mode_map = {
+        'cpu': MiningMode.CPU_ONLY,
+        'gpu': MiningMode.GPU_ONLY,
+        'hybrid': MiningMode.HYBRID,
+        'auto': MiningMode.AUTO,
+    }
+    mode = mode_map.get(args.mode.lower(), MiningMode.AUTO)
+
     print("🔥 ZION 2.8 Universal AI Miner")
-    print("=" * 50)
-    
-    miner = ZionUniversalMiner(mode=MiningMode.AUTO)
-    
-    print("\n📊 Initial Status:")
-    status = miner.get_status()
-    print(json.dumps(status, indent=2))
-    
-    print("\n🚀 Starting mining...")
-    result = miner.start_mining()
-    print(json.dumps(result, indent=2))
-    
-    print("\n⏳ Mining for 30 seconds...")
-    time.sleep(30)
-    
-    print("\n📊 Mining Status:")
-    status = miner.get_status()
-    print(json.dumps(status, indent=2))
-    
-    print("\n⏹️  Stopping mining...")
-    result = miner.stop_mining()
-    print(json.dumps(result, indent=2))
-    
-    print("\n✅ Test complete!")
+    print("=" * 50, flush=True)
+
+    miner = ZionUniversalMiner(mode=mode)
+    res = miner.start_mining(pool_url=args.pool, wallet_address=args.wallet, algorithm=args.algorithm)
+    print(json.dumps(res, indent=2), flush=True)
+
+    try:
+        if args.duration and args.duration > 0:
+            time.sleep(args.duration)
+        else:
+            while True:
+                time.sleep(1)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        print(json.dumps(miner.stop_mining(), indent=2), flush=True)

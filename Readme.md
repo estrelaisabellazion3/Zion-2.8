@@ -4,7 +4,7 @@
 
 > 🎯 **Version 2.8.0 (October 2025)** - ESTRELLA Quantum Warp Engine + Stratum Protocol + Autolykos v2 GPU Mining
 
-> 🚀 **NEW:** 22-Pole 3-Phase Quantum Fusion Ignition System - "To the stars through the star"
+> 🚀 **NEW:** 22-Pole 3-Phase Quantum Fusion Ignition System - "To the stars through the sun"
 
 ---
 
