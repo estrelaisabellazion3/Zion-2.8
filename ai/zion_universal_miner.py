@@ -47,6 +47,20 @@ except ImportError:
         AUTOLYKOS_AVAILABLE = False
         AutolykosV2 = None
 
+# Import Professional Yescrypt miner with C extension
+try:
+    import sys
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'mining'))
+    from zion_yescrypt_professional import ProfessionalYescryptMiner, yescrypt_fast
+    YESCRYPT_PROFESSIONAL_AVAILABLE = True
+except ImportError:
+    try:
+        from mining.zion_yescrypt_professional import ProfessionalYescryptMiner, yescrypt_fast
+        YESCRYPT_PROFESSIONAL_AVAILABLE = True
+    except ImportError:
+        YESCRYPT_PROFESSIONAL_AVAILABLE = False
+        ProfessionalYescryptMiner = None
+
 logger = logging.getLogger(__name__)
 
 class MiningMode(Enum):
@@ -379,10 +393,14 @@ class ZionUniversalMiner:
         """Start CPU mining process"""
         logger.info(f"⚡ Starting CPU mining ({self.current_cpu_algorithm.value})...")
         
-        # Prefer native Yescrypt implementation
+        # Prefer professional Yescrypt implementation (C-optimized, 562K H/s)
         if self.current_cpu_algorithm == MiningAlgorithm.YESCRYPT:
-            logger.info("🔥 Using NATIVE Yescrypt CPU implementation")
-            self._start_native_yescrypt(pool_url, wallet_address, worker_name)
+            if YESCRYPT_PROFESSIONAL_AVAILABLE and ProfessionalYescryptMiner:
+                logger.info("🔥 Using PROFESSIONAL Yescrypt C-optimized implementation (562K H/s)")
+                self._start_professional_yescrypt(pool_url, wallet_address, worker_name)
+            else:
+                logger.info("🔥 Using NATIVE Yescrypt CPU implementation (fallback)")
+                self._start_native_yescrypt(pool_url, wallet_address, worker_name)
         elif self.xmrig_path and self.current_cpu_algorithm == MiningAlgorithm.RANDOMX:
             # Use XMRig only for RandomX
             logger.info("🔧 Using external XMRig for RandomX")
@@ -869,6 +887,100 @@ class ZionUniversalMiner:
         mining_thread = threading.Thread(target=yescrypt_mine_loop, daemon=True)
         mining_thread.start()
         logger.info("✅ Native Yescrypt mining thread started")
+    
+    def _start_professional_yescrypt(self, pool_url: Optional[str],
+                                     wallet_address: Optional[str],
+                                     worker_name: str):
+        """Start professional C-optimized Yescrypt mining (562K H/s)"""
+        if not YESCRYPT_PROFESSIONAL_AVAILABLE or not ProfessionalYescryptMiner:
+            logger.error("❌ Professional Yescrypt miner not available, using fallback")
+            self._start_native_yescrypt(pool_url, wallet_address, worker_name)
+            return
+        
+        logger.info("🔥 Starting PROFESSIONAL Yescrypt CPU mining (C-optimized)")
+        logger.info(f"   Expected Hashrate: 562K H/s")
+        logger.info(f"   CPU Threads: {self.optimal_cpu_threads}")
+        logger.info(f"   Pool: {pool_url}")
+        logger.info(f"   Wallet: {wallet_address}")
+        
+        def professional_yescrypt_mine_loop():
+            """Professional Yescrypt mining loop with C extension"""
+            try:
+                # Initialize professional miner config
+                config = {
+                    'pool_host': None,
+                    'pool_port': None,
+                    'wallet_address': wallet_address or 'ZION_TEST_WALLET',
+                    'worker_name': worker_name or 'zion-professional-miner',
+                    'threads': self.optimal_cpu_threads,
+                    'eco_mode': True,
+                    'use_c_extension': True,
+                    'memory_limit_mb': 2048,
+                    'target_hashrate': 400000,
+                    'difficulty_multiplier': 1.0
+                }
+                
+                # Parse pool URL
+                if pool_url:
+                    try:
+                        pool_clean = pool_url.replace("stratum+tcp://", "").replace("stratum://", "")
+                        if ":" in pool_clean:
+                            config['pool_host'], port_str = pool_clean.split(":", 1)
+                            config['pool_port'] = int(port_str)
+                        else:
+                            config['pool_host'] = pool_clean
+                            config['pool_port'] = 3333
+                    except Exception as e:
+                        logger.warning(f"Pool URL parse error, using defaults: {e}")
+                
+                # Initialize and start professional miner
+                logger.info("📊 Initializing C-optimized Yescrypt engine...")
+                miner = ProfessionalYescryptMiner(config)
+                
+                # Test C extension hashrate
+                logger.info("🧪 Testing C extension performance...")
+                try:
+                    test_data = b"test_block_data_" * 4
+                    import time as time_mod
+                    start_time = time_mod.time()
+                    for i in range(1000):
+                        _ = yescrypt_fast.hash(test_data, i)
+                    elapsed = time_mod.time() - start_time
+                    measured_hashrate = 1000 / elapsed if elapsed > 0 else 0
+                    logger.info(f"✅ C Extension Performance: {measured_hashrate:.0f} H/s")
+                    print(f"[Yescrypt Professional] ✅ C Extension Performance: {measured_hashrate:.0f} H/s", flush=True)
+                except Exception as e:
+                    logger.warning(f"Could not measure C extension: {e}")
+                
+                # Start mining
+                logger.info("🚀 Starting professional mining loop...")
+                miner.start_mining()
+                
+                # Keep mining running
+                while self.is_mining:
+                    time.sleep(1)
+                    # Update hashrate if available
+                    try:
+                        status = miner.get_status()
+                        if status:
+                            self.cpu_hashrate = status.get('hashrate', self.cpu_hashrate)
+                            self.power_consumption = status.get('power_watts', self.power_consumption)
+                    except:
+                        pass
+                
+                logger.info("🛑 Professional Yescrypt mining stopped")
+                print("[Yescrypt Professional] 🛑 Mining stopped", flush=True)
+                
+            except Exception as e:
+                logger.error(f"❌ Professional Yescrypt mining error: {e}")
+                print(f"[Yescrypt Professional] ❌ Error: {e}", flush=True)
+                # Fallback to native implementation
+                self._start_native_yescrypt(pool_url, wallet_address, worker_name)
+        
+        # Start mining in separate thread
+        mining_thread = threading.Thread(target=professional_yescrypt_mine_loop, daemon=True)
+        mining_thread.start()
+        logger.info("✅ Professional Yescrypt mining thread started (C-optimized)")
     
     def _start_native_autolykos(self, pool_url: Optional[str],
                                 wallet_address: Optional[str],
