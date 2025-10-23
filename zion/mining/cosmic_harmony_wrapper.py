@@ -183,14 +183,15 @@ class CosmicHarmonyHasher:
         golden_matrix = self._golden_matrix_transform(sha3_hash)
         
         # Stage 5: Compute Harmony Factor
-        harmony_factor = 0
+        harmony_factor: int = 0
         for i in range(8):
-            harmony_factor ^= (golden_matrix[i] >> 32) & 0xFFFFFFFF
-            harmony_factor ^= golden_matrix[i] & 0xFFFFFFFF
+            v = int(golden_matrix[i])  # ensure Python int, avoid numpy.uint64 to_bytes issues
+            harmony_factor ^= (v >> 32) & 0xFFFFFFFF
+            harmony_factor ^= v & 0xFFFFFFFF
         
         # Apply cosmic resonance
-        harmony_factor = (harmony_factor * PHI_UINT32) ^ nonce
-        harmony_bytes = harmony_factor.to_bytes(4, byteorder='little')
+        harmony_factor = int((harmony_factor * PHI_UINT32) ^ int(nonce)) & 0xFFFFFFFF
+        harmony_bytes = int(harmony_factor).to_bytes(4, byteorder='little')
         
         # Final: Cosmic Fusion
         fusion_input = (
@@ -323,6 +324,16 @@ class CosmicHarmonyHasher:
                 break
         
         return hash_difficulty >= target_difficulty
+
+    def check_target32(self, hash_result: bytes, target32: int) -> bool:
+        """
+        Check if first 4 bytes (little-endian) of hash_result are <= 32-bit target.
+        This matches the GPU miner's placeholder/state[0] semantics used during bring-up.
+        """
+        if not hash_result or len(hash_result) < 4:
+            return False
+        state0 = int.from_bytes(hash_result[:4], 'little', signed=False)
+        return state0 <= int(target32)
 
 
 # Convenience functions
