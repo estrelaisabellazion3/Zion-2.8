@@ -79,7 +79,7 @@ class ZionNetworkConfig:
         'payout_threshold': 1.0,  # ZION
         'difficulty': {
             # Lower initial Cosmic Harmony difficulty to enable fast share-finding during bring-up
-            'cosmic_harmony': 200,  # 🌟 ZION native algorithm (test-friendly)
+            'cosmic_harmony': 50,  # 🌟 ZION native algorithm (easier for core validation bring-up)
             'randomx': 100,           # Velmi nízká obtížnost pro testování
             'yescrypt': 8000, 
             'autolykos_v2': 75,

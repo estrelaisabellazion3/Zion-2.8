@@ -23,6 +23,8 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 import hashlib
 import struct
+import os
+import sys
 
 # Logging setup
 logging.basicConfig(
@@ -30,6 +32,25 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger("ZionGPUMiner")
+
+# Try to import core Cosmic Harmony wrapper for optional core-submit
+_CH_HASHER = None
+def _get_core_hasher():
+    global _CH_HASHER
+    if _CH_HASHER is not None:
+        return _CH_HASHER
+    try:
+        # Add project path to import cosmic_harmony_wrapper (../../zion/mining)
+        from pathlib import Path
+        repo_root = Path(__file__).resolve().parents[2]
+        sys.path.insert(0, str(repo_root / 'zion' / 'mining'))
+        from cosmic_harmony_wrapper import get_hasher  # type: ignore
+        _CH_HASHER = get_hasher()
+        logger.info("🧠 Core hasher available for core-submit mode")
+    except Exception as e:
+        logger.warning(f"Core hasher unavailable: {e}")
+        _CH_HASHER = None
+    return _CH_HASHER
 
 # ============================================================================
 # COSMIC HARMONY OPENCL KERNEL - SIMPLIFIED
@@ -205,6 +226,7 @@ class ZionGPUMiner:
             'worker': 'gpu_miner_001',
             'password': 'cosmic_harmony',  # request Cosmic Harmony jobs from pool
             'algorithm': 'cosmic_harmony',
+            'core_submit': True,           # if True, compute wrapper hash before submit
         }
 
         # Stratum/job state
@@ -543,8 +565,29 @@ class ZionGPUMiner:
                 nonce += batch_size
                 
                 if found and self.pool_socket and job_copy:
-                    self.submit_share(job_copy['job_id'], found_nonce, found_hash)
-                    self.stats['shares_found'] += 1
+                    submit_hash = found_hash
+                    # Optional core-submit for Cosmic Harmony
+                    if job_copy.get('algorithm') == 'cosmic_harmony' and self.config.get('core_submit', False):
+                        try:
+                            hasher = _get_core_hasher()
+                            if hasher is not None:
+                                core_hash = hasher.hash(job_copy.get('header', b''), int(found_nonce))
+                                # Prefilter by target32 to avoid invalid submits in strict mode
+                                tgt = int(job_copy.get('target32_int', 0xFFFFFFFF))
+                                # Some hashers expose check_target32; fallback to manual check (LE)
+                                ok = getattr(hasher, 'check_target32', lambda h, t: int.from_bytes(h[:4], 'little') <= (t & 0xFFFFFFFF))(core_hash, tgt)
+                                if ok:
+                                    submit_hash = core_hash
+                                else:
+                                    logger.debug(f"[Core-Filter] Skipping nonce 0x{int(found_nonce):08x}: core state0 > target32")
+                                    submit_hash = None
+                            else:
+                                logger.debug("Core hasher not available; using GPU hash")
+                        except Exception as ce:
+                            logger.debug(f"Core-submit error: {ce}")
+                    if submit_hash:
+                        self.submit_share(job_copy['job_id'], found_nonce, submit_hash)
+                        self.stats['shares_found'] += 1
                 
                 # Log stats every 10 seconds
                 if nonce % (batch_size * 100) == 0:
