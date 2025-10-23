@@ -25,6 +25,7 @@ interface User {
   lastLogin?: string;
   dailyLimit: number;
   totalVolume: number;
+  provider: 'local' | 'google';
 }
 
 // Global users store (in production, use proper database)
@@ -53,6 +54,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if user is local (has password)
+    if (user.provider !== 'local' || !user.passwordHash) {
+      return NextResponse.json(
+        { error: 'This account uses a different login method. Please use Google sign-in.' },
+        { status: 401 }
+      );
+    }
+
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPassword) {
@@ -72,6 +81,7 @@ export async function POST(request: NextRequest) {
         username: user.username,
         email: user.email,
         role: user.role,
+        provider: user.provider,
       },
       JWT_SECRET,
       { expiresIn: '7d' }

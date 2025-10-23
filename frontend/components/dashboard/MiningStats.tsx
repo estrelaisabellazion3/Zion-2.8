@@ -4,7 +4,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ZionAPI, MiningStats } from '@/lib/api/client';
+import { ZionAPI, type MiningStats } from '@/lib/api/client';
 
 export default function MiningStats() {
   const [stats, setStats] = useState<MiningStats | null>(null);

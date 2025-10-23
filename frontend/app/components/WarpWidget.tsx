@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, ArrowRightLeft, Clock, DollarSign, CheckCircle, XCircle } from 'lucide-react';
+import { getSession } from 'next-auth/react';
+import { toast } from 'sonner';
 
 interface WarpTransaction {
   id: string;
@@ -43,6 +45,23 @@ export default function WarpWidget({ className = "" }: WarpWidgetProps) {
     amount: ''
   });
 
+  // Helper function to get auth token (supports both NextAuth and manual JWT)
+  const getAuthToken = async (): Promise<string | null> => {
+    // Try NextAuth session first
+    const session = await getSession();
+    if (session?.accessToken) {
+      return session.accessToken;
+    }
+
+    // Fallback to manual JWT token
+    const manualToken = localStorage.getItem('zion_auth_token');
+    if (manualToken) {
+      return manualToken;
+    }
+
+    return null;
+  };
+
   // Handle transfer form submission
   const handleTransferSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +69,7 @@ export default function WarpWidget({ className = "" }: WarpWidgetProps) {
     setError(null);
 
     try {
-      const token = localStorage.getItem('zion_auth_token');
+      const token = await getAuthToken();
       if (!token) {
         throw new Error('Authentication required');
       }
@@ -93,56 +112,46 @@ export default function WarpWidget({ className = "" }: WarpWidgetProps) {
         amount: ''
       });
 
+      // Show success toast
+      toast.success(
+        `🌌 WARP Transfer initiated! ${data.transaction.amount} ${data.transaction.asset} from ${data.transaction.source_chain} to ${data.transaction.destination_chain}`,
+        {
+          duration: 5000,
+          icon: <Zap className="w-5 h-5" />,
+        }
+      );
+
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Transfer failed');
+      const errorMessage = err instanceof Error ? err.message : 'Transfer failed';
+      setError(errorMessage);
+      toast.error(errorMessage, {
+        duration: 5000,
+      });
     } finally {
       setTransferLoading(false);
     }
   };
 
-  // Load WARP data from API
+  // Load WARP data on component mount
   const loadWarpData = async () => {
     try {
-      const token = localStorage.getItem('zion_auth_token');
+      const token = await getAuthToken();
       if (!token) {
-        setError('Authentication required');
-        setLoading(false);
-        return;
+        return; // No auth, skip loading
       }
 
       const response = await fetch('/api/warp', {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
         }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to load WARP data');
+      if (response.ok) {
+        const data = await response.json();
+        setTransactions(data.transactions || []);
       }
-
-      const data = await response.json();
-
-      setTransactions(data.transactions.map((tx: any) => ({
-        id: tx.id,
-        source_chain: tx.source_chain,
-        destination_chain: tx.destination_chain,
-        asset: tx.asset,
-        amount: tx.amount,
-        status: tx.status,
-        timestamp: new Date(tx.timestamp).toLocaleString(),
-        tx_hash: tx.tx_hash,
-        bridge_fee: tx.bridge_fee,
-        warp_speed: tx.warp_speed
-      })));
-
-      setStats(data.stats);
-      setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load data');
-      console.error('WARP data load error:', err);
-    } finally {
-      setLoading(false);
+      console.error('Failed to load WARP data:', err);
     }
   };
 

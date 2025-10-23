@@ -8,9 +8,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'zion-warp-bridge-secret-key';
 
 // User schema validation
 const registerSchema = z.object({
-  username: z.string().min(3).max(50),
+  username: z.string().min(3).max(50).regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
 const loginSchema = z.object({
@@ -31,19 +31,13 @@ interface User {
   lastLogin?: string;
   dailyLimit: number;
   totalVolume: number;
+  provider: 'local' | 'google';
   walletAddress?: string; // For wallet-based auth
 }
 
 // Global users store (in production, use proper database)
-declare global {
-  var zionUsers: User[] | undefined;
-}
-
-if (!global.zionUsers) {
-  global.zionUsers = [];
-}
-
-const users = global.zionUsers;
+// Using a simple in-memory store for demo purposes
+let zionUsers: User[] = [];
 
 // Generate API key
 function generateApiKey(): string {
@@ -57,7 +51,7 @@ export async function POST(request: NextRequest) {
     const { username, email, password } = registerSchema.parse(body);
 
     // Check if user already exists
-    const existingUser = users.find(u => u.email === email || u.username === username);
+    const existingUser = zionUsers.find((u: User) => u.email === email || u.username === username);
     if (existingUser) {
       return NextResponse.json(
         { error: 'User already exists' },
@@ -79,9 +73,10 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString(),
       dailyLimit: 1000.0, // $1000 daily limit
       totalVolume: 0.0,
+      provider: 'local',
     };
 
-    users.push(user);
+    zionUsers.push(user);
 
     // Generate JWT token
     const token = jwt.sign(
