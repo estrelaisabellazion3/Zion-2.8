@@ -32,29 +32,10 @@ pool_proc = subprocess.Popen(
     bufsize=1
 )
 
-# Wait for pool to be ready (up to 20s)
-ready = False
-start_wait = time.time()
-while time.time() - start_wait < 20:
-    line = pool_proc.stdout.readline()
-    if not line:
-        time.sleep(0.2)
-        continue
-    l = line.strip()
-    if l:
-        print(f"[POOL] {l}")
-    if "ZION Universal Mining Pool started on port" in l:
-        ready = True
-        break
-    if "address already in use" in l.lower():
-        print("[POOL] Port already in use - assuming pool already running")
-        ready = True
-        break
-    if "error" in l.lower():
-        # keep reading; minor errors may not be fatal
-        pass
-if not ready:
-    print("⚠️ Pool readiness not confirmed, proceeding anyway...")
+# Wait for pool to be ready - just give it 3 seconds
+print("⏳ Waiting 3s for pool startup...")
+time.sleep(3)
+print("✅ Pool should be ready")
 
 # Start miner
 print("2. Starting GPU miner (2 minutes)...")
@@ -75,9 +56,20 @@ try:
         elapsed = time.time() - start_time
         if time.time() - last_stats >= 10:
             stats = miner.get_stats()
+            kt = stats.get('kernel_time_ms_last')
+            kt_str = f"{kt:.2f}ms" if kt else "n/a"
+            temp = stats.get('gpu_temp_c')
+            temp_str = f"{temp:.0f}°C" if temp else "n/a"
+            rtt = stats.get('submit_latency_ms_last')
+            rtt_str = f"{rtt:.1f}ms" if rtt else "n/a"
+            ab_temp = stats.get('afterburner_temp_c')
+            ab_temp_str = f"AB:{ab_temp:.0f}°C" if ab_temp else ""
+            ab_eff = stats.get('afterburner_efficiency_pct')
+            ab_eff_str = f"{ab_eff:.0f}%" if ab_eff else ""
+            
             print(f"[{int(elapsed):3d}s] {stats['hashrate']} | Shares: {stats['shares']} | "
-                  f"Hashes: {stats['total_hashes']:,} | GPU: {stats.get('gpu_temp_c')}°C | "
-                  f"Kt: {stats.get('kernel_time_ms_last')}ms | RTT: {stats.get('submit_latency_ms_last')}ms")
+                  f"Hashes: {stats['total_hashes']:,} | GPU: {temp_str} | "
+                  f"Kt: {kt_str} | RTT: {rtt_str} {ab_temp_str} {ab_eff_str}")
             last_stats = time.time()
         time.sleep(1)
 except KeyboardInterrupt:
