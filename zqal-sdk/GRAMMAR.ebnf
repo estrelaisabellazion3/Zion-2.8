@@ -1,0 +1,58 @@
+(* ZQAL Grammar (EBNF) - Minimal draft *)
+
+program        = { decl } ;
+
+decl           = algorithm_decl | const_decl | type_decl | fn_decl ;
+
+algorithm_decl = "@algorithm" , ident , "{" , { meta_kv } , "}" ;
+meta_kv        = ident , ":" , value ;
+
+const_decl     = "const" , ident , ":" , type , "=" , literal , ";" ;
+
+type_decl      = ("quantum" , ident , "[" , number , "]" , ":" , type)
+                | ("type" , ident , "=" , type) , ";" ;
+
+fn_decl        = (kernel_fn | validator_fn | reward_fn) ;
+
+kernel_fn      = "@kernel" , "fn" , ident , "(" , params? , ")" , "->" , type , block ;
+validator_fn   = "@validator" , "fn" , ident , "(" , params? , ")" , "->" , type , block ;
+reward_fn      = "@reward" , "fn" , ident , "(" , params? , ")" , "->" , type , block ;
+
+params         = param , { "," , param } ;
+param          = ident , ":" , type ;
+
+block          = "{" , { stmt } , "}" ;
+stmt           = let_stmt | assign_stmt | for_stmt | if_stmt | return_stmt | expr_stmt ;
+
+let_stmt       = "let" , ident , "=" , expr , ";" ;
+assign_stmt    = ident , "=" , expr , ";" ;
+for_stmt       = "for" , ident , "in" , number , ".." , number , block ;
+if_stmt        = "if" , expr , block , [ "else" , block ] ;
+return_stmt    = "return" , expr , ";" ;
+expr_stmt      = expr , ";" ;
+
+expr           = primary , { op , primary } ;
+primary        = ident | literal | call | index | paren ;
+call           = ident , "(" , [ args ] , ")" ;
+args           = expr , { "," , expr } ;
+index          = ident , "[" , expr , "]" ;
+paren          = "(" , expr , ")" ;
+
+op             = "+" | "-" | "*" | "/" | "^" | "&" | "|" | "==" | "<=" | ">=" | "<" | ">" ;
+
+(* Types *)
+
+type           = "u32" | "u64" | "f32" | "f64" | "bytes" | "bytes80" | "hash32"
+               | "bool" | array_type | ref_type ;
+array_type     = "[" , type , ";" , number , "]" ;
+ref_type       = "&" , "mut"? , type ;
+
+(* Lexical *)
+ident          = letter , { letter | digit | "_" } ;
+number         = digit , { digit | "_" } ;
+literal        = number | string ;
+string         = '"' , { ? any ? } , '"' ;
+letter         = ? letter ? ;
+digit          = ? digit ? ;
+value          = string | number | list ;
+list           = "[" , [ value , { "," , value } ] , "]" ;

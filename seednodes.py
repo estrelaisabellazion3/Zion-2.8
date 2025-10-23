@@ -78,14 +78,14 @@ class ZionNetworkConfig:
         'fee_percent': 0.01,  # 1%
         'payout_threshold': 1.0,  # ZION
         'difficulty': {
-            # Lower initial Cosmic Harmony difficulty to enable fast share-finding during bring-up
-            'cosmic_harmony': 50,  # 🌟 ZION native algorithm (easier for core validation bring-up)
-            'randomx': 100,           # Velmi nízká obtížnost pro testování
-            'yescrypt': 8000, 
-            'autolykos_v2': 75,
-            'kawpow': 50,             # KawPow pro GPU mining
-            'ethash': 40,             # Ethash pro GPU mining
-            'gpu': 50                 # Default GPU difficulty (fallback)
+            # ⚡ ULTRA-LOW DIFFICULTY FOR FAST BLOCK TESTING ⚡
+            'cosmic_harmony': 15,  # 🌟 ZION native - FAST BLOCKS (was 50)
+            'randomx': 25,           # Quick testing
+            'yescrypt': 1000,        # Reduced
+            'autolykos_v2': 20,      # Fast GPU blocks
+            'kawpow': 15,            # Fast KawPow
+            'ethash': 15,            # Fast Ethash
+            'gpu': 15                # Fast GPU default - EXPECT BLOCKS EVERY ~30s!
         },
         'eco_rewards': {
             'cosmic_harmony': 1.25,   # 🌟 +25% bonus - ZION native algorithm
