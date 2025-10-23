@@ -3,34 +3,28 @@
 ZION Cosmic Harmony Algorithm - Python Wrapper
 Wraps C++ optimized implementation for use in Universal AI Miner
 
-Architecture:
-- Blake3 → Keccak-256 → SHA3-512 → Golden Ratio Matrix → Cosmic Fusion
-- 5-stage hash process with PHI constants
-- OpenSSL + BLAKE3 optimizations
+When the native library is unavailable we mirror the OpenCL kernel so GPU and
+CPU results stay aligned during validator bring-up.
 """
 
-import os
-import sys
 import ctypes
-import hashlib
 import logging
-from typing import Optional, Tuple
+import struct
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-# Try to import blake3 (pure Python fallback available)
-try:
-    import blake3
-    BLAKE3_AVAILABLE = True
-except ImportError:
-    BLAKE3_AVAILABLE = False
-    logger.warning("⚠️ blake3 module not available, using fallback implementation")
+UINT32_MASK = 0xFFFFFFFF
+PHI_UINT32 = 0x9E3779B9  # Golden ratio constant used by the OpenCL kernel
 
-# Golden Ratio constant
-PHI = 1.618033988749895
-PHI_UINT32 = 0x9E3779B9  # Golden ratio in uint32
-PHI_UINT64 = 0x9E3779B97F4A7C15  # Golden ratio in uint64
+
+def _rotl32(value: int, shift: int) -> int:
+    shift &= 31
+    return ((value << shift) & UINT32_MASK) | ((value & UINT32_MASK) >> (32 - shift))
+
+
+def _mix(a: int, b: int, c: int) -> int:
+    return (_rotl32((a ^ b) & UINT32_MASK, 5) + (c & UINT32_MASK)) & UINT32_MASK
 
 
 class CosmicHarmonyHasher:
@@ -150,152 +144,48 @@ class CosmicHarmonyHasher:
             return self._hash_python(input_data, nonce)
     
     def _hash_python(self, input_data: bytes, nonce: int) -> bytes:
-        """
-        Hash using pure Python (slower fallback)
-        
-        Implements simplified Cosmic Harmony:
-        1. Blake3 foundation
-        2. Keccak-256 (via SHA3-256) galactic matrix
-        3. SHA3-512 stellar harmony
-        4. Golden ratio transformations
-        5. Final Blake3 fusion
-        """
-        # Prepare input with nonce
-        nonce_bytes = nonce.to_bytes(4, byteorder='little')
-        nonce_input = input_data + nonce_bytes
-        
-        # Stage 1: Blake3 - Quantum Foundation
-        if BLAKE3_AVAILABLE:
-            blake3_hash = blake3.blake3(nonce_input).digest()
+        """Reproduce the simplified OpenCL kernel in pure Python."""
+        state = [
+            0x6A09E667,
+            0xBB67AE85,
+            0x3C6EF372,
+            0xA54FF53A,
+            0x510E527F,
+            0x9B05688C,
+            0x1F83D9AB,
+            0x5BE0CD19,
+        ]
+
+        padding = (-len(input_data)) % 4
+        padded = input_data + (b"\x00" * padding)
+        if padded:
+            words = struct.unpack_from(f"<{len(padded) // 4}I", padded)
         else:
-            # Fallback: SHA256 (not as good but works)
-            blake3_hash = hashlib.sha256(nonce_input).digest()
-        
-        # Stage 2: Galactic Matrix Operations (Keccak-256 via SHA3-256)
-        keccak_input = self._galactic_matrix_ops(blake3_hash)
-        keccak_hash = hashlib.sha3_256(keccak_input).digest()
-        
-        # Stage 3: Stellar Harmony Processing (SHA3-512)
-        stellar_input = self._stellar_harmony_process(keccak_hash)
-        sha3_hash = hashlib.sha3_512(stellar_input).digest()
-        
-        # Stage 4: Golden Ratio Matrix Transformation
-        golden_matrix = self._golden_matrix_transform(sha3_hash)
-        
-        # Stage 5: Compute Harmony Factor
-        harmony_factor: int = 0
-        for i in range(8):
-            v = int(golden_matrix[i])  # ensure Python int, avoid numpy.uint64 to_bytes issues
-            harmony_factor ^= (v >> 32) & 0xFFFFFFFF
-            harmony_factor ^= v & 0xFFFFFFFF
-        
-        # Apply cosmic resonance
-        harmony_factor = int((harmony_factor * PHI_UINT32) ^ int(nonce)) & 0xFFFFFFFF
-        harmony_bytes = int(harmony_factor).to_bytes(4, byteorder='little')
-        
-        # Final: Cosmic Fusion
-        fusion_input = (
-            blake3_hash +      # 32 bytes
-            keccak_hash +      # 32 bytes
-            sha3_hash +        # 64 bytes
-            golden_matrix.tobytes() +  # 64 bytes
-            harmony_bytes +    # 4 bytes
-            nonce_bytes        # 4 bytes
-        )
-        
-        if BLAKE3_AVAILABLE:
-            final_hash = blake3.blake3(fusion_input).digest()
-        else:
-            final_hash = hashlib.sha256(fusion_input).digest()
-        
-        return final_hash
-    
-    def _galactic_matrix_ops(self, input_hash: bytes) -> bytes:
-        """Galactic matrix operations with golden ratio mixing"""
-        temp = bytearray(input_hash)
-        
-        # Apply galactic matrix operations (4 rounds)
-        for round_num in range(4):
-            # Golden ratio mixing
-            for i in range(len(temp)):
-                phi_byte = (PHI_UINT64 >> (i % 64)) & 0xFF
-                temp[i] ^= phi_byte
-                temp[i] = ((temp[i] << 3) | (temp[i] >> 5)) & 0xFF
-            
-            # Galactic rotation
-            carry = temp[0]
-            temp[:-1] = temp[1:]
-            temp[-1] = carry
-        
-        return bytes(temp)
-    
-    def _stellar_harmony_process(self, input_hash: bytes) -> bytes:
-        """Stellar harmony processing with wave functions"""
-        stellar_input = bytearray(input_hash)
-        
-        # Extend to 64 bytes with stellar field harmonics
-        for i in range(32, 64):
-            stellar_input.append(
-                input_hash[i - 32] ^ ((PHI_UINT64 >> ((i * 8) % 64)) & 0xFF)
-            )
-        
-        # Apply stellar wave functions (3 waves)
-        for wave in range(3):
-            for i in range(64):
-                harmonic = stellar_input[i]
-                harmonic ^= (harmonic << 1) | (harmonic >> 7)
-                harmonic ^= (PHI_UINT32 >> ((wave * 8 + i) % 32)) & 0xFF
-                stellar_input[i] = harmonic & 0xFF
-        
-        return bytes(stellar_input)
-    
-    def _golden_matrix_transform(self, input_hash: bytes) -> 'numpy.ndarray':
-        """Golden ratio matrix transformation"""
-        try:
-            import numpy as np
-            matrix = np.zeros(8, dtype=np.uint64)
-        except ImportError:
-            # Fallback without numpy
-            matrix = [0] * 8
-        
-        # Initialize with PHI-based values
-        for i in range(8):
-            matrix[i] = (PHI_UINT64 * (i + 1)) & 0xFFFFFFFFFFFFFFFF
-        
-        # Transform matrix using input bytes (8 rounds)
-        for round_num in range(8):
+            words = ()
+
+        limit = min(len(words), 8)
+        for i in range(limit):
+            state[i] ^= words[i] & UINT32_MASK
+
+        state[0] ^= nonce & UINT32_MASK
+        state[1] ^= (nonce >> 16) & UINT32_MASK
+
+        for _round in range(12):
             for i in range(8):
-                # Build input chunk from hash
-                input_chunk = 0
-                for j in range(8):
-                    idx = (round_num * 8 + j) % len(input_hash)
-                    input_chunk |= (input_hash[idx] << (j * 8))
-                
-                # Golden ratio transformation
-                matrix[i] ^= input_chunk
-                matrix[i] = ((matrix[i] * PHI_UINT64) ^ (matrix[i] >> 32)) & 0xFFFFFFFFFFFFFFFF
-                matrix[i] = (matrix[i] + PHI_UINT64) & 0xFFFFFFFFFFFFFFFF
-                
-                # Matrix mixing
-                if i > 0:
-                    matrix[i] ^= matrix[i - 1]
-            
-            # Matrix rotation
-            temp = matrix[0]
-            matrix[:-1] = matrix[1:]
-            matrix[-1] = temp
-        
-        try:
-            import numpy as np
-            return np.array(matrix, dtype=np.uint64)
-        except ImportError:
-            # Return as simple object with tobytes method
-            class SimpleArray:
-                def __init__(self, data):
-                    self.data = data
-                def tobytes(self):
-                    return b''.join(x.to_bytes(8, 'little') for x in self.data)
-            return SimpleArray(matrix)
+                state[i] = _mix(state[i], state[(i + 1) % 8], state[(i + 2) % 8])
+            for i in range(4):
+                state[i], state[i + 4] = state[i + 4], state[i]
+
+        xor_mix = 0
+        for value in state:
+            xor_mix ^= value
+        for i in range(8):
+            state[i] = (state[i] ^ xor_mix) & UINT32_MASK
+
+        for i in range(8):
+            state[i] = (state[i] * PHI_UINT32) & UINT32_MASK
+
+        return struct.pack('<8I', *state)
     
     def check_difficulty(self, hash_result: bytes, target_difficulty: int) -> bool:
         """

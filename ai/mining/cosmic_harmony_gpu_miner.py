@@ -25,6 +25,7 @@ import hashlib
 import struct
 import os
 import sys
+from collections import deque
 
 # Logging setup
 logging.basicConfig(
@@ -213,10 +214,13 @@ class ZionGPUMiner:
         self.stats = {
             'total_hashes': 0,
             'shares_found': 0,
+            'shares_rejected': 0,
             'blocks_found': 0,
             'hashrate': 0.0,
             'start_time': None,
             'current_nonce': 0,
+            'submit_latency_ms_last': None,
+            'submit_latency_ms_avg': None,
         }
         
         self.config = {
@@ -226,8 +230,27 @@ class ZionGPUMiner:
             'worker': 'gpu_miner_001',
             'password': 'cosmic_harmony',  # request Cosmic Harmony jobs from pool
             'algorithm': 'cosmic_harmony',
-            'core_submit': True,           # if True, compute wrapper hash before submit
+            'core_submit': True,           # deprecated path; use cpu_verify instead
+            'cpu_verify': True,            # verify GPU-found hash with CPU wrapper before submit
         }
+
+        # Allow environment overrides for quick testing
+        try:
+            self.config['pool_url'] = os.environ.get('ZION_POOL_HOST', self.config['pool_url'])
+            self.config['pool_port'] = int(os.environ.get('ZION_POOL_PORT', str(self.config['pool_port'])))
+            self.config['wallet'] = os.environ.get('ZION_WALLET', self.config['wallet'])
+            self.config['password'] = os.environ.get('ZION_POOL_PASSWORD', self.config['password'])
+            self.config['core_submit'] = os.environ.get('ZION_CORE_SUBMIT', str(self.config['core_submit'])).lower() in ('1','true','yes')
+            self.config['cpu_verify'] = os.environ.get('ZION_CPU_VERIFY', str(self.config['cpu_verify'])).lower() in ('1','true','yes')
+        except Exception:
+            pass
+
+        # Submit timing queue (for RTT/latency)
+        self.submit_times: deque = deque()
+
+        # Optional AI Afterburner integration
+        self.afterburner = None
+        self.afterburner_enabled = os.environ.get('ZION_AI_AFTERBURNER', '1').lower() in ('1','true','yes')
 
         # Stratum/job state
         self.current_job = {
@@ -240,7 +263,7 @@ class ZionGPUMiner:
         self.job_lock = threading.Lock()
         self.receiver_thread: Optional[threading.Thread] = None
         
-        logger.info("🌟 ZION GPU Miner initialized")
+    logger.info("🌟 ZION GPU Miner initialized")
     
     def detect_gpus(self) -> bool:
         """Detect and initialize GPU platforms (prefer AMD APP platform)"""
@@ -438,10 +461,26 @@ class ZionGPUMiner:
     def connect_to_pool(self) -> bool:
         """Connect to mining pool via Stratum"""
         try:
-            self.pool_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.pool_socket.settimeout(5)
-            
-            self.pool_socket.connect((self.config['pool_url'], self.config['pool_port']))
+            host = self.config['pool_url']
+            port = self.config['pool_port']
+            attempts = int(os.environ.get('ZION_POOL_RETRIES', '12'))  # ~1 min with 5s delay
+
+            for attempt in range(1, attempts + 1):
+                try:
+                    self.pool_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.pool_socket.settimeout(5)
+                    self.pool_socket.connect((host, port))
+                    break
+                except Exception as ce:
+                    logger.error(f"❌ Pool connection failed (attempt {attempt}/{attempts}): {ce}")
+                    try:
+                        self.pool_socket.close()
+                    except Exception:
+                        pass
+                    self.pool_socket = None
+                    if attempt == attempts:
+                        return False
+                    time.sleep(5)
             
             # Send mining.subscribe
             subscribe_msg = {
@@ -493,12 +532,11 @@ class ZionGPUMiner:
                 ]
             }
             
+            # Send without blocking recv here to avoid race with receiver thread
+            # Receiver thread will log and update stats based on id==3 responses
+            self.submit_times.append(time.time())
             self.pool_socket.send((json.dumps(share_msg) + "\n").encode())
-            
-            response = self.pool_socket.recv(1024).decode()
-            logger.info(f"✅ Share submitted: {response[:100]}...")
-            
-            self.stats['shares_found'] += 1
+            logger.debug("📤 Share sent (awaiting pool response in receiver loop)")
             return True
             
         except Exception as e:
@@ -525,6 +563,23 @@ class ZionGPUMiner:
         self.mining_thread.start()
         
         logger.info("✅ GPU mining started")
+
+        # Start AI Afterburner sidecar (non-blocking, CPU-oriented)
+        if self.afterburner_enabled and self.afterburner is None:
+            try:
+                # Make sure ai/ is on path
+                repo_root = Path(__file__).resolve().parents[2]
+                sys.path.insert(0, str(repo_root / 'ai'))
+                from zion_ai_afterburner import ZionAIAfterburner  # type: ignore
+                self.afterburner = ZionAIAfterburner()
+                self.afterburner.start_afterburner()
+                # Queue a few lightweight tasks to show activity
+                self.afterburner.add_ai_task("neural_network", priority=7, compute_req=1.5, sacred=True)
+                self.afterburner.add_ai_task("sacred_geometry", priority=8, compute_req=1.2, sacred=True)
+                self.afterburner.add_ai_task("image_analysis", priority=5, compute_req=0.8, sacred=False)
+                logger.info("🔥 AI Afterburner online (HUD every 10s)")
+            except Exception as ab_err:
+                logger.warning(f"Afterburner init failed: {ab_err}")
         return True
     
     def _mining_loop(self):
@@ -566,33 +621,35 @@ class ZionGPUMiner:
                 
                 if found and self.pool_socket and job_copy:
                     submit_hash = found_hash
-                    # Optional core-submit for Cosmic Harmony
-                    if job_copy.get('algorithm') == 'cosmic_harmony' and self.config.get('core_submit', False):
+                    # Optional CPU verify to ensure GPU hash matches wrapper
+                    if job_copy.get('algorithm') == 'cosmic_harmony' and self.config.get('cpu_verify', True):
                         try:
                             hasher = _get_core_hasher()
                             if hasher is not None:
                                 core_hash = hasher.hash(job_copy.get('header', b''), int(found_nonce))
-                                # Prefilter by target32 to avoid invalid submits in strict mode
-                                tgt = int(job_copy.get('target32_int', 0xFFFFFFFF))
-                                # Some hashers expose check_target32; fallback to manual check (LE)
-                                ok = getattr(hasher, 'check_target32', lambda h, t: int.from_bytes(h[:4], 'little') <= (t & 0xFFFFFFFF))(core_hash, tgt)
-                                if ok:
-                                    submit_hash = core_hash
-                                else:
-                                    logger.debug(f"[Core-Filter] Skipping nonce 0x{int(found_nonce):08x}: core state0 > target32")
+                                if core_hash != found_hash:
+                                    logger.warning("❌ CPU verify mismatch: skipping submit to avoid invalid share")
                                     submit_hash = None
+                                else:
+                                    submit_hash = core_hash  # equal, use either
                             else:
-                                logger.debug("Core hasher not available; using GPU hash")
+                                logger.debug("CPU verify disabled (hasher unavailable)")
                         except Exception as ce:
-                            logger.debug(f"Core-submit error: {ce}")
+                            logger.debug(f"CPU-verify error: {ce}")
                     if submit_hash:
                         self.submit_share(job_copy['job_id'], found_nonce, submit_hash)
-                        self.stats['shares_found'] += 1
                 
                 # Log stats every 10 seconds
                 if nonce % (batch_size * 100) == 0:
-                    logger.info(f"⛏️  Mining: {self.stats['hashrate']:.0f} H/s, "
-                              f"Nonce: {nonce:,}, Shares: {self.stats['shares_found']}")
+                    lat_last = self.stats.get('submit_latency_ms_last')
+                    lat_avg = self.stats.get('submit_latency_ms_avg')
+                    lat_s = "n/a" if lat_last is None else f"{lat_last:.0f}ms"
+                    lat_a = "n/a" if lat_avg is None else f"{lat_avg:.0f}ms"
+                    logger.info(
+                        f"⛏️  Mining: {self.stats['hashrate']:.0f} H/s, Nonce: {nonce:,}, "
+                        f"Shares A/R: {self.stats['shares_found']}/{self.stats.get('shares_rejected',0)} | "
+                        f"Latency: {lat_s} avg {lat_a}"
+                    )
                 
                 time.sleep(0.01)  # Small delay to prevent CPU spinning
                 
@@ -607,6 +664,14 @@ class ZionGPUMiner:
         if self.mining_thread:
             self.mining_thread.join(timeout=5)
         
+        # Stop AI Afterburner if running
+        if self.afterburner is not None:
+            try:
+                self.afterburner.stop_afterburner()
+            except Exception:
+                pass
+            self.afterburner = None
+
         if self.pool_socket:
             try:
                 self.pool_socket.close()
@@ -700,8 +765,29 @@ class ZionGPUMiner:
                             logger.info(f"🧭 New job received: {job_id} (ALv2)")
                 else:
                     # auth result or others
-                    if 'result' in msg and msg.get('id') == 2:
-                        logger.info("✅ Auth confirmed by pool")
+                    if 'result' in msg:
+                        if msg.get('id') == 2:
+                            logger.info("✅ Auth confirmed by pool")
+                        elif msg.get('id') == 3:
+                            # Share submit response
+                            if msg['result'] is True:
+                                self.stats['shares_found'] += 1
+                                # Compute latency if possible
+                                try:
+                                    if self.submit_times:
+                                        sent_ts = self.submit_times.popleft()
+                                        lat = (time.time() - sent_ts) * 1000.0
+                                        self.stats['submit_latency_ms_last'] = lat
+                                        prev = self.stats['submit_latency_ms_avg']
+                                        self.stats['submit_latency_ms_avg'] = lat if prev is None else (0.7 * prev + 0.3 * lat)
+                                except Exception:
+                                    pass
+                                logger.info("✅ Share accepted by pool")
+                            else:
+                                # Some pools return result False with error details
+                                err = msg.get('error') or {}
+                                self.stats['shares_rejected'] += 1
+                                logger.warning(f"❌ Share rejected: {err}")
         except Exception as e:
             logger.error(f"Receiver loop error: {e}")
 
