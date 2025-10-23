@@ -11,16 +11,34 @@ import secrets
 import asyncio
 import threading
 import argparse
+import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 import sqlite3
 import math
+
+# Setup logging first
+logger = logging.getLogger(__name__)
+
+# 🌟 Cosmic Harmony Integration
+try:
+    import sys
+    import os
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'zion', 'mining'))
+    from cosmic_harmony_wrapper import get_hasher
+    COSMIC_HARMONY_AVAILABLE = True
+except ImportError:
+    COSMIC_HARMONY_AVAILABLE = False
 
 # Add P2P network import
 from zion_p2p_network import ZIONP2PNetwork
 from zion_rpc_server import ZIONRPCServer
 from crypto_utils import tx_hash
 from seednodes import ZionNetworkConfig, get_premine_addresses, get_p2p_port, get_rpc_port, get_max_supply, get_dao_config
+
+# Setup logging
+import logging
+logger = logging.getLogger(__name__)
 
 class NewZionBlockchain:
     """Nový ZION blockchain s novými premine adresami a persistent storage"""
@@ -331,11 +349,33 @@ class NewZionBlockchain:
         return hashlib.sha256(block_string.encode()).hexdigest()
     
     def _calculate_hash(self, block: Dict) -> str:
-        """Bez-mutační výpočet hash bloku (nonce už musí být nastaven)."""
-        # Exclude non-consensus / post-mining metadata fields from hash
+        """Bez-mutační výpočet hash bloku (nonce už musí být nastaven).
+        
+        Supports multiple algorithms:
+        - cosmic_harmony: 🌟 Native ZION (Blake3 + Keccak + SHA3 + Golden Ratio)
+        - sha256: Standard fallback
+        """
+        # Exclude non-consensus fields from hash
         block_clone = {k: block[k] for k in block if k not in ('hash', 'cumulative_work')}
         block_string = json.dumps(block_clone, sort_keys=True, separators=(',', ':'))
-        return hashlib.sha256(block_string.encode()).hexdigest()
+        
+        # Check algorithm
+        algorithm = block.get('algorithm', 'sha256')
+        
+        if algorithm == 'cosmic_harmony' and COSMIC_HARMONY_AVAILABLE:
+            try:
+                # Use native Cosmic Harmony
+                hasher = get_hasher()
+                nonce = block.get('nonce', 0)
+                hash_result = hasher.hash(block_string.encode(), int(nonce))
+                logger.debug(f"🌟 Cosmic Harmony hash computed: {hash_result.hex()[:16]}...")
+                return hash_result.hex()
+            except Exception as e:
+                logger.warning(f"⚠️ Cosmic Harmony failed ({e}), falling back to SHA256")
+                return hashlib.sha256(block_string.encode()).hexdigest()
+        else:
+            # Fallback to SHA256
+            return hashlib.sha256(block_string.encode()).hexdigest()
 
     def _mine_block(self, block: Dict) -> str:
         """Těží blok pomocí Proof of Work – mění pouze nonce dokud hash nesplní target."""

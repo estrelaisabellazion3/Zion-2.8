@@ -54,8 +54,9 @@ class ZionNetworkConfig:
         'p2p_testnet': 8334, 
         'rpc_mainnet': 8545,  # Changed from 8332 to match pool expectation
         'rpc_testnet': 8335,
-        'pool_stratum': 3333,  # Standard Stratum port
-        'pool_api': 3334,      # API port (3333 + 1)
+        'pool_stratum': 3333,        # Standard Stratum port
+        'pool_api': 3334,            # API port (3333 + 1)
+        'pool_cosmic_harmony': 3336,  # 🌟 Cosmic Harmony algorithm port
         'pool_testnet': 3335,
     }
     
@@ -77,20 +78,22 @@ class ZionNetworkConfig:
         'fee_percent': 0.01,  # 1%
         'payout_threshold': 1.0,  # ZION
         'difficulty': {
-            'randomx': 100,     # Velmi nízká obtížnost pro testování
+            'cosmic_harmony': 10000,  # 🌟 ZION native algorithm - highest difficulty
+            'randomx': 100,           # Velmi nízká obtížnost pro testování
             'yescrypt': 8000, 
             'autolykos_v2': 75,
-            'kawpow': 50,       # KawPow pro GPU mining
-            'ethash': 40,       # Ethash pro GPU mining
-            'gpu': 50           # Default GPU difficulty (fallback)
+            'kawpow': 50,             # KawPow pro GPU mining
+            'ethash': 40,             # Ethash pro GPU mining
+            'gpu': 50                 # Default GPU difficulty (fallback)
         },
         'eco_rewards': {
-            'randomx': 1.0,      # Standard
-            'yescrypt': 1.15,    # +15% eco bonus
-            'autolykos_v2': 1.2, # +20% eco bonus
-            'kawpow': 1.0,       # Standard GPU
-            'ethash': 1.0,       # Standard GPU
-            'gpu': 1.0           # Default GPU (fallback)
+            'cosmic_harmony': 1.25,   # 🌟 +25% bonus - ZION native algorithm
+            'randomx': 1.0,           # Standard
+            'yescrypt': 1.15,         # +15% eco bonus
+            'autolykos_v2': 1.2,      # +20% eco bonus
+            'kawpow': 1.0,            # Standard GPU
+            'ethash': 1.0,            # Standard GPU
+            'gpu': 1.0                # Default GPU (fallback)
         }
     }
     

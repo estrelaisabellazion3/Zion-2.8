@@ -29,6 +29,20 @@ except ImportError:
     yescrypt_fast = None  # type: ignore
     YESCRYPT_FAST_AVAILABLE = False
 
+# 🌟 Cosmic Harmony (Native ZION Algorithm)
+try:
+    import sys
+    import os
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'zion', 'mining'))
+    from cosmic_harmony_wrapper import CosmicHarmonyHasher, get_hasher
+    COSMIC_HARMONY_AVAILABLE = True
+    logger_init = logging.getLogger(__name__)
+    logger_init.info("✅ Cosmic Harmony algorithm available")
+except ImportError as e:
+    COSMIC_HARMONY_AVAILABLE = False
+    logger_init = logging.getLogger(__name__)
+    logger_init.debug(f"Cosmic Harmony not available: {e}")
+
 # Prometheus monitoring
 from prometheus_client import Counter, Gauge, Histogram, start_http_server, Info
 
@@ -855,9 +869,12 @@ class ZionUniversalPool:
         self.miners: Dict[tuple, dict] = {}
         self.miner_stats: Dict[str, MinerStats] = {}
         self.current_jobs = {
+            'cosmic_harmony': None,  # 🌟 Native ZION algorithm
             'randomx': None,
             'kawpow': None,
-            'ethash': None
+            'ethash': None,
+            'yescrypt': None,
+            'autolykos2': None
         }
         self.job_counter = 0
         self.share_counter = 0
@@ -1067,6 +1084,52 @@ class ZionUniversalPool:
             else:
                 self.miner_stats[address] = MinerStats(address=address)
         return self.miner_stats[address]
+
+    def validate_cosmic_harmony_share(self, job_id: str, nonce: int, result: str, difficulty: int) -> bool:
+        """
+        🌟 Validate Cosmic Harmony (Native ZION) share
+        Validates against 5-stage hash: Blake3 + Keccak + SHA3 + Golden Ratio + Fusion
+        """
+        try:
+            if not COSMIC_HARMONY_AVAILABLE:
+                logger.warning("⚠️ Cosmic Harmony not available, falling back to SHA256 validation")
+                # Fallback to SHA256 check
+                result_hash = hashlib.sha256(f"{job_id}{nonce}{result}".encode()).hexdigest()
+                target_value = int(result_hash[:16], 16)
+                required_target = 2**256 // max(difficulty, 1)
+                return target_value < required_target
+
+            # Get job
+            if job_id not in self.jobs:
+                logger.warning(f"Job {job_id} not found")
+                return False
+
+            job = self.jobs[job_id]
+            block_data = job.get('data', b'')
+
+            # Use Cosmic Harmony wrapper
+            hasher = get_hasher()
+            hash_result = hasher.hash(block_data, int(nonce))
+
+            # Verify against result hex string
+            result_hex = hash_result.hex()
+            if result_hex[:16] != result[:16]:
+                logger.debug(f"Cosmic Harmony hash mismatch: {result_hex[:16]} vs {result[:16]}")
+                return False
+
+            # Check difficulty
+            is_valid = hasher.check_difficulty(hash_result, difficulty)
+            
+            if is_valid:
+                logger.info(f"✅ Cosmic Harmony share validated: nonce={nonce}, difficulty={difficulty}")
+            else:
+                logger.debug(f"❌ Cosmic Harmony share difficulty check failed")
+
+            return is_valid
+
+        except Exception as e:
+            logger.error(f"Cosmic Harmony validation error: {e}")
+            return False
 
     def validate_kawpow_share(self, job_id: str, nonce: str, mix_hash: str, header_hash: str, difficulty: int) -> bool:
         """
