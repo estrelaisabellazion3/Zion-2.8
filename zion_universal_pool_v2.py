@@ -13,6 +13,7 @@ import secrets
 import hashlib
 import logging
 import sqlite3
+import argparse
 from typing import Dict, Optional, Any, List
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -587,10 +588,11 @@ class ZIONPoolAPIServer:
             print("📊 Pool API server stopped")
 
 class ZionUniversalPool:
-    def __init__(self, port=None):
+    def __init__(self, port=None, network="mainnet"):
         # Use centralized pool configuration
         pool_config = ZionNetworkConfig.POOL_CONFIG
         
+        self.network = network
         self.port = port or pool_config['stratum_port']
         self.miners: Dict[tuple, dict] = {}
         self.miner_stats: Dict[str, MinerStats] = {}
@@ -622,7 +624,9 @@ class ZionUniversalPool:
         self.pool_admin_address = 'ZION_MAITREYA_BUDDHA_DAO_ADMIN_D7A371ABD1FF1C5D42AB02'  # Maitreya Buddha (Pool Admin)
         
         # Real blockchain integration via RPC (not local instance!)
-        self.blockchain_rpc = ZionBlockchainRPCClient(host='localhost', port=8545)
+        # Use correct RPC port based on network
+        rpc_port = ZionNetworkConfig.get_port("rpc", network)
+        self.blockchain_rpc = ZionBlockchainRPCClient(host='localhost', port=rpc_port)
         
         # Fallback: Create local blockchain for development (will auto-connect if RPC fails)
         self.blockchain = None
@@ -631,7 +635,7 @@ class ZionUniversalPool:
             self.blockchain = NewZionBlockchain(enable_rpc=False)
         
         # Get current height and block reward from blockchain
-        if self.blockchain_rpc.connected:
+        if self.blockchain_rpc.health_check():
             self.current_block_height = self.blockchain_rpc.get_height()
             logger.info(f"📡 Connected to blockchain via RPC at height {self.current_block_height}")
         else:
@@ -646,6 +650,8 @@ class ZionUniversalPool:
         # Share validation
         self.submitted_shares = {}  # Dict with timestamp for expiration: {share_key: timestamp}
         self.share_window_size = 100  # Rolling window for difficulty adjustment
+        self.duplicate_cache_max_size = 10000  # Maximum entries in duplicate cache
+        self.duplicate_cache_cleanup_interval = 60  # Cleanup every 60 seconds
 
         # Algorithm difficulty from centralized config
         self.difficulty = pool_config['difficulty'].copy()
@@ -735,6 +741,43 @@ class ZionUniversalPool:
                 return True
             except ValueError:
                 return False
+        return False
+
+    def _manage_duplicate_cache(self):
+        """Manage duplicate share cache: cleanup expired entries and enforce size limits"""
+        current_time = time.time()
+        
+        # Clean expired shares (older than 5 minutes)
+        expired_keys = [k for k, t in self.submitted_shares.items() if current_time - t > 300]
+        for k in expired_keys:
+            del self.submitted_shares[k]
+        
+        # Enforce size limit using LRU-style eviction (remove oldest entries)
+        if len(self.submitted_shares) > self.duplicate_cache_max_size:
+            # Sort by timestamp (oldest first) and remove excess
+            sorted_entries = sorted(self.submitted_shares.items(), key=lambda x: x[1])
+            excess_count = len(self.submitted_shares) - self.duplicate_cache_max_size
+            
+            for i in range(excess_count):
+                del self.submitted_shares[sorted_entries[i][0]]
+            
+            logger.info(f"🧹 Cleaned up {excess_count} old duplicate cache entries (size limit: {self.duplicate_cache_max_size})")
+
+    def is_duplicate_share(self, share_key: str) -> bool:
+        """Check if share is duplicate with optimized cache management"""
+        current_time = time.time()
+        
+        # Manage cache before checking
+        self._manage_duplicate_cache()
+        
+        # Check if share key exists
+        if share_key in self.submitted_shares:
+            # Update timestamp to prevent premature eviction
+            self.submitted_shares[share_key] = current_time
+            return True
+        
+        # Add new share to cache
+        self.submitted_shares[share_key] = current_time
         return False
 
     def convert_address_for_mining(self, address):
@@ -1594,12 +1637,7 @@ class ZionUniversalPool:
         current_time = time.time()
         share_key = f"{job_id}:{nonce}:{result}"
         
-        # Clean expired shares (older than 5 minutes)
-        expired_keys = [k for k, t in self.submitted_shares.items() if current_time - t > 300]
-        for k in expired_keys:
-            del self.submitted_shares[k]
-        
-        if share_key in self.submitted_shares:
+        if self.is_duplicate_share(share_key):
             print(f"🚫 DUPLICATE SHARE from {addr} (submitted {current_time - self.submitted_shares[share_key]:.1f}s ago)")
             self.record_share(address, algorithm, is_valid=False)
             return json.dumps({
@@ -1642,7 +1680,6 @@ class ZionUniversalPool:
         # Keep only last 100 processing times for average calculation
         if len(self.share_processing_times) > 100:
             self.share_processing_times.pop(0)
-
         self.performance_stats['avg_share_processing_time'] = sum(self.share_processing_times) / len(self.share_processing_times)
 
         # Track share for IP banning
@@ -1675,6 +1712,12 @@ class ZionUniversalPool:
             
             # Adjust difficulty if needed
             self.adjust_difficulty(addr, algorithm)
+
+            # 🎮 CONSCIOUSNESS GAME: Award XP for share submission!
+            try:
+                self.consciousness_game.on_share_submitted(address)
+            except Exception as e:
+                logger.error(f"Consciousness game share XP error: {e}")
 
             print(f"🎯 {algorithm.upper()} Share: job={job_id}, nonce={nonce}")
             print(f"✅ VALID {algorithm.upper()} SHARE ACCEPTED (Total: {total_shares})")
@@ -2216,12 +2259,7 @@ class ZionUniversalPool:
         current_time = time.time()
         share_key = f"{job_id}:{nonce}:{mix_hash}:{header_hash}"
         
-        # Clean expired shares (older than 5 minutes)
-        expired_keys = [k for k, t in self.submitted_shares.items() if current_time - t > 300]
-        for k in expired_keys:
-            del self.submitted_shares[k]
-        
-        if share_key in self.submitted_shares:
+        if self.is_duplicate_share(share_key):
             print(f"🚫 DUPLICATE {algorithm.upper()} SHARE from {addr}")
             self.record_share(address, algorithm, is_valid=False)
             return json.dumps({
@@ -2421,6 +2459,20 @@ class ZionUniversalPool:
             }
         }
 
+    async def periodic_duplicate_cache_cleanup(self):
+        """Periodically cleanup expired duplicate share cache entries"""
+        while True:
+            await asyncio.sleep(self.duplicate_cache_cleanup_interval)
+            try:
+                cache_size_before = len(self.submitted_shares)
+                self._manage_duplicate_cache()
+                cache_size_after = len(self.submitted_shares)
+                
+                if cache_size_before != cache_size_after:
+                    logger.info(f"🧹 Periodic duplicate cache cleanup: {cache_size_before} → {cache_size_after} entries")
+            except Exception as e:
+                logger.error(f"Error in periodic duplicate cache cleanup: {e}")
+
     async def periodic_stats_save(self):
         """Periodically save pool statistics to database"""
         while True:
@@ -2503,6 +2555,9 @@ class ZionUniversalPool:
         # Start periodic stats saving
         asyncio.create_task(self.periodic_stats_save())
         
+        # Start periodic duplicate cache cleanup
+        asyncio.create_task(self.periodic_duplicate_cache_cleanup())
+        
         # Start alerting system if Discord webhook configured
         discord_webhook = ZionNetworkConfig.POOL_CONFIG.get('discord_webhook_url')
         if discord_webhook:
@@ -2546,7 +2601,23 @@ class ZionUniversalPool:
             print(f"Server error: {e}")
 
 async def main():
-    pool = ZionUniversalPool(port=3333)
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='ZION Universal Mining Pool')
+    parser.add_argument('--testnet', action='store_true', help='Run in testnet mode')
+    args = parser.parse_args()
+    
+    # Set port and network based on mode
+    if args.testnet:
+        port = 3335  # Testnet pool port
+        network = "testnet"
+        print("🧪 ZION Universal Pool - TESTNET MODE")
+    else:
+        port = 3333  # Mainnet pool port
+        network = "mainnet"
+        print("🚀 ZION Universal Pool - PRODUCTION MODE")
+    
+    pool = ZionUniversalPool(port=port, network=network)
     await pool.start_server()
 
 if __name__ == "__main__":

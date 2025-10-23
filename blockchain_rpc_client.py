@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 ZION Blockchain RPC Client for Pool Integration
-Communicates with running blockchain process via RPC
+Communicates with running blockchain process via HTTP RPC
 """
 
-import socket
+import requests
 import json
 import logging
 import time
@@ -13,36 +13,18 @@ from typing import Dict, Any, Optional, List
 logger = logging.getLogger(__name__)
 
 class ZionBlockchainRPCClient:
-    """RPC client to communicate with blockchain process"""
+    """RPC client to communicate with blockchain process via HTTP"""
     
     def __init__(self, host: str = 'localhost', port: int = 8545):
         self.host = host
         self.port = port
+        self.url = f"http://{host}:{port}"
         self.rpc_id = 0
-        self.socket = None
-        self.connected = False
-        self._connect()
-    
-    def _connect(self) -> bool:
-        """Connect to blockchain RPC server"""
-        try:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.settimeout(5)
-            self.socket.connect((self.host, self.port))
-            self.connected = True
-            logger.info(f"✅ Connected to blockchain RPC at {self.host}:{self.port}")
-            return True
-        except Exception as e:
-            logger.warning(f"⚠️  Failed to connect to blockchain RPC: {e}")
-            self.connected = False
-            return False
+        self.session = requests.Session()
+        self.session.timeout = 10  # 10 second timeout
     
     def _send_rpc(self, method: str, params: List[Any] = None) -> Optional[Dict]:
-        """Send JSON-RPC request to blockchain"""
-        if not self.connected:
-            if not self._connect():
-                return None
-        
+        """Send JSON-RPC request to blockchain via HTTP"""
         if params is None:
             params = []
         
@@ -55,29 +37,21 @@ class ZionBlockchainRPCClient:
         }
         
         try:
-            # Send request
-            request_json = json.dumps(request)
-            self.socket.sendall(request_json.encode() + b'\n')
+            headers = {'Content-Type': 'application/json'}
+            response = self.session.post(self.url, json=request, headers=headers, timeout=10)
+            response.raise_for_status()
             
-            # Receive response
-            response_data = b''
-            while True:
-                chunk = self.socket.recv(4096)
-                if not chunk:
-                    break
-                response_data += chunk
-                # Try to parse complete JSON
-                try:
-                    response = json.loads(response_data)
-                    return response
-                except json.JSONDecodeError:
-                    continue
+            result = response.json()
+            if "error" in result and result["error"] is not None:
+                logger.error(f"RPC error: {result['error']}")
+                return None
+            return result
             
+        except requests.exceptions.RequestException as e:
+            logger.debug(f"HTTP RPC connection error: {e}")
             return None
-        except Exception as e:
-            logger.error(f"❌ RPC error: {e}")
-            self.connected = False
-            self._connect()  # Try to reconnect
+        except json.JSONDecodeError as e:
+            logger.error(f"❌ Invalid JSON response: {e}")
             return None
     
     # ==========================================
@@ -87,7 +61,7 @@ class ZionBlockchainRPCClient:
     def get_height(self) -> int:
         """Get current blockchain height"""
         try:
-            response = self._send_rpc("get_height")
+            response = self._send_rpc("getblockcount")
             if response and "result" in response:
                 return response["result"]
         except Exception as e:
@@ -97,7 +71,7 @@ class ZionBlockchainRPCClient:
     def get_block(self, height: int) -> Optional[Dict]:
         """Get block by height"""
         try:
-            response = self._send_rpc("get_block", [height])
+            response = self._send_rpc("getblock", [height])
             if response and "result" in response:
                 return response["result"]
         except Exception as e:
@@ -107,7 +81,7 @@ class ZionBlockchainRPCClient:
     def get_balance(self, address: str) -> float:
         """Get balance for address"""
         try:
-            response = self._send_rpc("get_balance", [address])
+            response = self._send_rpc("getbalance", [address])
             if response and "result" in response:
                 return response["result"]
         except Exception as e:
@@ -117,7 +91,7 @@ class ZionBlockchainRPCClient:
     def get_pending_transactions(self) -> List[Dict]:
         """Get pending transactions in mempool"""
         try:
-            response = self._send_rpc("get_pending_transactions")
+            response = self._send_rpc("getrawmempool", [True])  # verbose=true
             if response and "result" in response:
                 return response["result"]
         except Exception as e:
@@ -134,7 +108,7 @@ class ZionBlockchainRPCClient:
         Returns transaction hash if successful
         """
         try:
-            response = self._send_rpc("create_transaction", [from_addr, to_addr, amount, message])
+            response = self._send_rpc("sendtransaction", [from_addr, to_addr, amount, message])
             if response and "result" in response:
                 return response["result"]  # Returns tx hash
             else:
@@ -177,20 +151,16 @@ class ZionBlockchainRPCClient:
     def health_check(self) -> bool:
         """Check if blockchain is alive"""
         try:
-            response = self._send_rpc("get_height")
+            response = self._send_rpc("getblockcount")
             return response is not None and "result" in response
         except Exception as e:
             logger.error(f"Health check failed: {e}")
             return False
     
     def close(self):
-        """Close RPC connection"""
-        if self.socket:
-            try:
-                self.socket.close()
-            except:
-                pass
-        self.connected = False
+        """Close HTTP session"""
+        if self.session:
+            self.session.close()
 
 
 # ==========================================
