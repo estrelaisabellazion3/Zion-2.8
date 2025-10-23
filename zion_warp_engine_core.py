@@ -11,9 +11,9 @@
 - Nodes & Seeds
 - Rainbow Bridge (multi-chain)
 
-Version: 2.8.0 "Ad Astra Per Estrella"
+Version: 2.8.1 "Enhanced Resilience"
 Author: ZION Development Team
-Date: 2025-10-21
+Date: 2025-10-23
 """
 
 import asyncio
@@ -21,10 +21,16 @@ import logging
 import time
 import json
 import sys
-from typing import Dict, List, Optional, Tuple
+import os
+from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass, asdict
 import aiohttp
 from datetime import datetime
+from enum import Enum
+import psutil
+import socket
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import threading
 
 # ZION Core Imports
 from new_zion_blockchain import NewZionBlockchain
@@ -41,13 +47,16 @@ except ImportError:
     ZionRainbowBridge = None
     ChainType = None
 
-# Setup logging
+# Setup enhanced logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.FileHandler('warp_engine.log'),
-        logging.StreamHandler()
+        logging.StreamHandler(),
+        logging.handlers.RotatingFileHandler(
+            'warp_engine.log', maxBytes=10*1024*1024, backupCount=5
+        )
     ]
 )
 logger = logging.getLogger('WARP_ENGINE')
@@ -55,7 +64,26 @@ logger = logging.getLogger('WARP_ENGINE')
 # Sacred Constants (from ESTRELLA)
 GOLDEN_RATIO = 1.618033988749895
 SACRED_FREQUENCY = 432.0  # Hz
-WARP_ENGINE_VERSION = "2.8.0"
+WARP_ENGINE_VERSION = "2.8.1"
+
+
+class ComponentStatus(Enum):
+    """Component health status"""
+    HEALTHY = "healthy"
+    DEGRADED = "degraded"
+    UNHEALTHY = "unhealthy"
+    OFFLINE = "offline"
+
+
+@dataclass
+class HealthCheck:
+    """Health check result"""
+    component: str
+    status: ComponentStatus
+    last_check: float
+    response_time: float
+    error_message: Optional[str] = None
+    metrics: Dict[str, Any] = None
 
 
 @dataclass
@@ -101,6 +129,350 @@ class WARPEngineStatus:
     total_hashrate: float
     uptime_seconds: float
     consciousness_field: float = 1.0  # ESTRELLA integration
+    system_health: ComponentStatus = ComponentStatus.HEALTHY
+    memory_usage_mb: float = 0.0
+    cpu_usage_percent: float = 0.0
+
+
+class CircuitBreaker:
+    """Circuit breaker for fault tolerance"""
+    
+    def __init__(self, failure_threshold: int = 5, recovery_timeout: float = 60.0):
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.failure_count = 0
+        self.last_failure_time = 0
+        self.state = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
+    
+    async def call(self, func, *args, **kwargs):
+        """Execute function with circuit breaker protection"""
+        if self.state == "OPEN":
+            if time.time() - self.last_failure_time > self.recovery_timeout:
+                self.state = "HALF_OPEN"
+                logger.info("Circuit breaker entering HALF_OPEN state")
+            else:
+                raise Exception("Circuit breaker is OPEN")
+        
+        try:
+            result = await func(*args, **kwargs)
+            self._on_success()
+            return result
+        except Exception as e:
+            self._on_failure()
+            raise e
+    
+    def _on_success(self):
+        """Handle successful call"""
+        if self.state == "HALF_OPEN":
+            self.state = "CLOSED"
+            self.failure_count = 0
+            logger.info("Circuit breaker CLOSED after successful call")
+    
+    def _on_failure(self):
+        """Handle failed call"""
+        self.failure_count += 1
+        self.last_failure_time = time.time()
+        
+        if self.failure_count >= self.failure_threshold:
+            self.state = "OPEN"
+            logger.warning(f"Circuit breaker OPEN after {self.failure_count} failures")
+
+
+class WARPHealthMonitor:
+    """Health monitoring system"""
+    
+    def __init__(self, engine: 'ZionWARPEngine'):
+        self.engine = engine
+        self.health_checks: Dict[str, HealthCheck] = {}
+        self.check_interval = 30.0  # seconds
+        self.circuit_breakers: Dict[str, CircuitBreaker] = {}
+        
+        # Initialize circuit breakers for critical components
+        self.circuit_breakers['rpc'] = CircuitBreaker(failure_threshold=3, recovery_timeout=30.0)
+        self.circuit_breakers['p2p'] = CircuitBreaker(failure_threshold=5, recovery_timeout=60.0)
+        self.circuit_breakers['pools'] = CircuitBreaker(failure_threshold=10, recovery_timeout=120.0)
+    
+    async def start_monitoring(self):
+        """Start health monitoring loop"""
+        logger.info("🩺 Starting health monitoring...")
+        
+        while self.engine.running:
+            await self._perform_health_checks()
+            await asyncio.sleep(self.check_interval)
+    
+    async def _perform_health_checks(self):
+        """Perform all health checks"""
+        try:
+            # Blockchain health
+            await self._check_blockchain_health()
+            
+            # RPC health
+            await self._check_rpc_health()
+            
+            # P2P health
+            await self._check_p2p_health()
+            
+            # Pool health
+            await self._check_pool_health()
+            
+            # System resources
+            await self._check_system_health()
+            
+            # Update overall health
+            self._update_overall_health()
+            
+        except Exception as e:
+            logger.error(f"Health check error: {e}")
+    
+    async def _check_blockchain_health(self):
+        """Check blockchain component health"""
+        start_time = time.time()
+        
+        try:
+            # Check if blockchain is responsive
+            height = len(self.engine.blockchain.blocks)
+            balance_count = len(self.engine.blockchain.balances)
+            
+            response_time = (time.time() - start_time) * 1000
+            
+            self.health_checks['blockchain'] = HealthCheck(
+                component='blockchain',
+                status=ComponentStatus.HEALTHY,
+                last_check=time.time(),
+                response_time=response_time,
+                metrics={
+                    'height': height,
+                    'balances': balance_count,
+                    'db_size_mb': self._get_db_size_mb()
+                }
+            )
+            
+        except Exception as e:
+            self.health_checks['blockchain'] = HealthCheck(
+                component='blockchain',
+                status=ComponentStatus.UNHEALTHY,
+                last_check=time.time(),
+                response_time=(time.time() - start_time) * 1000,
+                error_message=str(e)
+            )
+    
+    async def _check_rpc_health(self):
+        """Check RPC server health"""
+        start_time = time.time()
+        
+        try:
+            # Use circuit breaker for RPC calls
+            async def rpc_health_check():
+                if not self.engine.rpc_server:
+                    raise Exception("RPC server not initialized")
+                
+                # Test RPC call
+                reader, writer = await asyncio.wait_for(
+                    asyncio.open_connection('localhost', self.engine.rpc_server.port),
+                    timeout=5.0
+                )
+                writer.close()
+                await writer.wait_closed()
+                return True
+            
+            await self.circuit_breakers['rpc'].call(rpc_health_check)
+            
+            response_time = (time.time() - start_time) * 1000
+            
+            self.health_checks['rpc'] = HealthCheck(
+                component='rpc',
+                status=ComponentStatus.HEALTHY,
+                last_check=time.time(),
+                response_time=response_time,
+                metrics={
+                    'port': self.engine.rpc_server.port,
+                    'connections': getattr(self.engine.rpc_server, 'active_connections', 0)
+                }
+            )
+            
+        except Exception as e:
+            self.health_checks['rpc'] = HealthCheck(
+                component='rpc',
+                status=ComponentStatus.UNHEALTHY,
+                last_check=time.time(),
+                response_time=(time.time() - start_time) * 1000,
+                error_message=str(e)
+            )
+    
+    async def _check_p2p_health(self):
+        """Check P2P network health"""
+        start_time = time.time()
+        
+        try:
+            async def p2p_health_check():
+                if not self.engine.p2p_network:
+                    raise Exception("P2P network not initialized")
+                
+                # Check if P2P is running
+                if not hasattr(self.engine.p2p_network, 'running') or not self.engine.p2p_network.running:
+                    raise Exception("P2P network not running")
+                
+                return True
+            
+            await self.circuit_breakers['p2p'].call(p2p_health_check)
+            
+            response_time = (time.time() - start_time) * 1000
+            
+            self.health_checks['p2p'] = HealthCheck(
+                component='p2p',
+                status=ComponentStatus.HEALTHY,
+                last_check=time.time(),
+                response_time=response_time,
+                metrics={
+                    'port': self.engine.p2p_network.port,
+                    'peers': len(self.engine.p2p_network.peers) if hasattr(self.engine.p2p_network, 'peers') else 0,
+                    'running': self.engine.p2p_network.running
+                }
+            )
+            
+        except Exception as e:
+            self.health_checks['p2p'] = HealthCheck(
+                component='p2p',
+                status=ComponentStatus.UNHEALTHY,
+                last_check=time.time(),
+                response_time=(time.time() - start_time) * 1000,
+                error_message=str(e)
+            )
+    
+    async def _check_pool_health(self):
+        """Check mining pool health"""
+        start_time = time.time()
+        
+        try:
+            async def pool_health_check():
+                active_pools = sum(1 for p in self.engine.pools.values() if p.active)
+                if active_pools == 0:
+                    raise Exception("No active mining pools")
+                return active_pools
+            
+            active_count = await self.circuit_breakers['pools'].call(pool_health_check)
+            
+            response_time = (time.time() - start_time) * 1000
+            
+            self.health_checks['pools'] = HealthCheck(
+                component='pools',
+                status=ComponentStatus.HEALTHY,
+                last_check=time.time(),
+                response_time=response_time,
+                metrics={
+                    'total_pools': len(self.engine.pools),
+                    'active_pools': active_count,
+                    'total_hashrate': sum(p.hashrate for p in self.engine.pools.values())
+                }
+            )
+            
+        except Exception as e:
+            self.health_checks['pools'] = HealthCheck(
+                component='pools',
+                status=ComponentStatus.UNHEALTHY,
+                last_check=time.time(),
+                response_time=(time.time() - start_time) * 1000,
+                error_message=str(e)
+            )
+    
+    async def _check_system_health(self):
+        """Check system resource health"""
+        try:
+            memory = psutil.virtual_memory()
+            cpu = psutil.cpu_percent(interval=1)
+            
+            # Determine health based on resource usage
+            if memory.percent > 90 or cpu > 95:
+                status = ComponentStatus.UNHEALTHY
+            elif memory.percent > 80 or cpu > 85:
+                status = ComponentStatus.DEGRADED
+            else:
+                status = ComponentStatus.HEALTHY
+            
+            self.health_checks['system'] = HealthCheck(
+                component='system',
+                status=status,
+                last_check=time.time(),
+                response_time=0.0,
+                metrics={
+                    'memory_percent': memory.percent,
+                    'memory_used_mb': memory.used / 1024 / 1024,
+                    'cpu_percent': cpu,
+                    'disk_usage': psutil.disk_usage('/').percent
+                }
+            )
+            
+        except Exception as e:
+            self.health_checks['system'] = HealthCheck(
+                component='system',
+                status=ComponentStatus.UNHEALTHY,
+                last_check=time.time(),
+                response_time=0.0,
+                error_message=str(e)
+            )
+    
+    def _update_overall_health(self):
+        """Update overall system health"""
+        checks = list(self.health_checks.values())
+        
+        if not checks:
+            return
+        
+        # Determine overall health
+        unhealthy_count = sum(1 for c in checks if c.status in [ComponentStatus.UNHEALTHY, ComponentStatus.OFFLINE])
+        degraded_count = sum(1 for c in checks if c.status == ComponentStatus.DEGRADED)
+        
+        if unhealthy_count > 0:
+            overall_status = ComponentStatus.UNHEALTHY
+        elif degraded_count > 0:
+            overall_status = ComponentStatus.DEGRADED
+        else:
+            overall_status = ComponentStatus.HEALTHY
+        
+        # Update engine status
+        status = self.engine.get_status()
+        status.system_health = overall_status
+        
+        # Log health changes
+        if unhealthy_count > 0:
+            logger.warning(f"🚨 System health: {overall_status.value.upper()} ({unhealthy_count} unhealthy components)")
+        elif degraded_count > 0:
+            logger.info(f"⚠️ System health: {overall_status.value.upper()} ({degraded_count} degraded components)")
+    
+    def _get_db_size_mb(self) -> float:
+        """Get blockchain database size in MB"""
+        try:
+            if os.path.exists(self.engine.blockchain.db_file):
+                size_bytes = os.path.getsize(self.engine.blockchain.db_file)
+                return size_bytes / 1024 / 1024
+            return 0.0
+        except Exception:
+            return 0.0
+    
+    def get_health_report(self) -> Dict[str, Any]:
+        """Get comprehensive health report"""
+        return {
+            'timestamp': datetime.now().isoformat(),
+            'overall_health': self.engine.get_status().system_health.value,
+            'checks': {
+                name: {
+                    'status': check.status.value,
+                    'last_check': check.last_check,
+                    'response_time_ms': check.response_time,
+                    'error': check.error_message,
+                    'metrics': check.metrics
+                }
+                for name, check in self.health_checks.items()
+            },
+            'circuit_breakers': {
+                name: {
+                    'state': cb.state,
+                    'failure_count': cb.failure_count,
+                    'last_failure': cb.last_failure_time
+                }
+                for name, cb in self.circuit_breakers.items()
+            }
+        }
 
 
 class ZionWARPEngine:
@@ -182,6 +554,9 @@ class ZionWARPEngine:
         
         # Status tracking
         self.running = False
+        
+        # Health monitoring system
+        self.health_monitor = WARPHealthMonitor(self)
         
         logger.info("\n" + "=" * 80)
         logger.info("✨ WARP ENGINE CORE READY ✨")
@@ -271,6 +646,16 @@ class ZionWARPEngine:
             logger.info("\n🌈 Starting Rainbow Bridge...")
             # Bridge start logic here
             logger.info("✅ Rainbow Bridge active")
+        
+        # Start health monitoring
+        logger.info("\n🩺 Starting Health Monitoring...")
+        asyncio.create_task(self.health_monitor.start_monitoring())
+        logger.info("✅ Health monitoring active")
+        
+        # Start API server
+        logger.info("\n🌐 Starting API Server...")
+        self.start_api_server(port=8080)
+        logger.info("✅ API Server active")
         
         logger.info("\n" + "=" * 80)
         logger.info("✨ WARP ENGINE OPERATIONAL ✨")
@@ -379,6 +764,30 @@ class ZionWARPEngine:
     
     def get_status(self) -> WARPEngineStatus:
         """Get current WARP engine status"""
+        # Get system metrics
+        memory_usage = 0.0
+        cpu_usage = 0.0
+        
+        try:
+            memory = psutil.virtual_memory()
+            memory_usage = memory.used / 1024 / 1024  # MB
+            cpu_usage = psutil.cpu_percent(interval=0.1)
+        except Exception:
+            pass  # Ignore system metric errors
+        
+        # Determine overall health
+        system_health = ComponentStatus.HEALTHY
+        if self.health_monitor.health_checks:
+            unhealthy_count = sum(1 for c in self.health_monitor.health_checks.values() 
+                                if c.status in [ComponentStatus.UNHEALTHY, ComponentStatus.OFFLINE])
+            degraded_count = sum(1 for c in self.health_monitor.health_checks.values() 
+                                if c.status == ComponentStatus.DEGRADED)
+            
+            if unhealthy_count > 0:
+                system_health = ComponentStatus.UNHEALTHY
+            elif degraded_count > 0:
+                system_health = ComponentStatus.DEGRADED
+        
         return WARPEngineStatus(
             blockchain_height=len(self.blockchain.blocks),
             blockchain_balances=len(self.blockchain.balances),
@@ -392,8 +801,75 @@ class ZionWARPEngine:
             bridge_active=self.bridge is not None,
             total_hashrate=sum(p.hashrate for p in self.pools.values()),
             uptime_seconds=time.time() - self.start_time,
-            consciousness_field=self.consciousness_field
+            consciousness_field=self.consciousness_field,
+            system_health=system_health,
+            memory_usage_mb=memory_usage,
+            cpu_usage_percent=cpu_usage
         )
+    
+    def start_api_server(self, port: int = 8080):
+        """Start simple HTTP API server for health monitoring"""
+        class WARPAPIHandler(BaseHTTPRequestHandler):
+            def __init__(self, *args, engine=None, **kwargs):
+                self.engine = engine
+                super().__init__(*args, **kwargs)
+            
+            def do_GET(self):
+                if self.path == '/health':
+                    self.send_response(200)
+                    self.send_header('Content-type', 'application/json')
+                    self.end_headers()
+                    
+                    status = self.engine.get_status()
+                    health_data = {
+                        'status': 'healthy' if status.system_health == ComponentStatus.HEALTHY else 'degraded',
+                        'timestamp': datetime.now().isoformat(),
+                        'uptime_seconds': status.uptime_seconds,
+                        'blockchain_height': status.blockchain_height,
+                        'rpc_active': status.rpc_active,
+                        'p2p_active': status.p2p_active,
+                        'p2p_peers': status.p2p_peers,
+                        'active_pools': status.active_pools,
+                        'memory_usage_mb': status.memory_usage_mb,
+                        'cpu_usage_percent': status.cpu_usage_percent,
+                        'consciousness_field': status.consciousness_field
+                    }
+                    
+                    self.wfile.write(json.dumps(health_data, indent=2).encode())
+                    
+                elif self.path == '/status':
+                    self.send_response(200)
+                    self.send_header('Content-type', 'application/json')
+                    self.end_headers()
+                    
+                    status = self.engine.get_status()
+                    status_data = asdict(status)
+                    status_data['timestamp'] = datetime.now().isoformat()
+                    
+                    self.wfile.write(json.dumps(status_data, indent=2).encode())
+                    
+                else:
+                    self.send_response(404)
+                    self.end_headers()
+                    self.wfile.write(b'{"error": "Not found"}')
+            
+            def log_message(self, format, *args):
+                # Suppress default HTTP server logs
+                return
+        
+        def run_server():
+            with HTTPServer(('localhost', port), lambda *args, **kwargs: WARPAPIHandler(*args, engine=self, **kwargs)) as httpd:
+                logger.info(f"🌐 WARP API Server started on http://localhost:{port}")
+                httpd.serve_forever()
+        
+        # Start API server in background thread
+        self.api_thread = threading.Thread(target=run_server, daemon=True)
+        self.api_thread.start()
+        print(f"✅ WARP API Server thread started on port {port}")
+        
+        # Give it a moment to start
+        time.sleep(0.5)
+        print(f"🌐 WARP API Server started on http://localhost:{port}")
     
     async def stop(self):
         """Graceful shutdown"""

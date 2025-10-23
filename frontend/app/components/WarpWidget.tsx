@@ -34,48 +34,120 @@ export default function WarpWidget({ className = "" }: WarpWidgetProps) {
   const [stats, setStats] = useState<WarpStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [showTransferForm, setShowTransferForm] = useState(false);
+  const [transferLoading, setTransferLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [transferForm, setTransferForm] = useState({
+    source_chain: 'ZION',
+    destination_chain: 'Ethereum',
+    asset: 'ZION',
+    amount: ''
+  });
 
-  // Mock data for demonstration
-  useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setTransactions([
-        {
-          id: 'warp_001',
-          source_chain: 'ZION',
-          destination_chain: 'Ethereum',
-          asset: 'ZION',
-          amount: 42.108,
-          status: 'completed',
-          timestamp: '2 hours ago',
-          tx_hash: '0xa1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6',
-          bridge_fee: 0.001,
-          warp_speed: true
+  // Handle transfer form submission
+  const handleTransferSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setTransferLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem('zion_auth_token');
+      if (!token) {
+        throw new Error('Authentication required');
+      }
+
+      const response = await fetch('/api/warp', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
-        {
-          id: 'warp_002',
-          source_chain: 'Bitcoin',
-          destination_chain: 'ZION',
-          asset: 'BTC',
-          amount: 0.00021,
-          status: 'confirmed',
-          timestamp: '1 day ago',
-          tx_hash: 'bc1qa1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6',
-          bridge_fee: 0.00001,
-          warp_speed: false
-        }
-      ]);
-
-      setStats({
-        total_transfers: 1247,
-        warp_speed_count: 892,
-        total_volume: 156780.50,
-        avg_time: 1850,
-        success_rate: 99.2
+        body: JSON.stringify(transferForm)
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Transfer failed');
+      }
+
+      const data = await response.json();
+
+      // Add new transaction to list
+      const newTx: WarpTransaction = {
+        id: data.transaction.id,
+        source_chain: data.transaction.source_chain,
+        destination_chain: data.transaction.destination_chain,
+        asset: data.transaction.asset,
+        amount: data.transaction.amount,
+        status: data.transaction.status,
+        timestamp: new Date(data.transaction.timestamp).toLocaleString(),
+        bridge_fee: data.transaction.bridge_fee,
+        warp_speed: data.transaction.warp_speed
+      };
+
+      setTransactions(prev => [newTx, ...prev]);
+      setShowTransferForm(false);
+      setTransferForm({
+        source_chain: 'ZION',
+        destination_chain: 'Ethereum',
+        asset: 'ZION',
+        amount: ''
+      });
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Transfer failed');
+    } finally {
+      setTransferLoading(false);
+    }
+  };
+
+  // Load WARP data from API
+  const loadWarpData = async () => {
+    try {
+      const token = localStorage.getItem('zion_auth_token');
+      if (!token) {
+        setError('Authentication required');
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch('/api/warp', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load WARP data');
+      }
+
+      const data = await response.json();
+
+      setTransactions(data.transactions.map((tx: any) => ({
+        id: tx.id,
+        source_chain: tx.source_chain,
+        destination_chain: tx.destination_chain,
+        asset: tx.asset,
+        amount: tx.amount,
+        status: tx.status,
+        timestamp: new Date(tx.timestamp).toLocaleString(),
+        tx_hash: tx.tx_hash,
+        bridge_fee: tx.bridge_fee,
+        warp_speed: tx.warp_speed
+      })));
+
+      setStats(data.stats);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load data');
+      console.error('WARP data load error:', err);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
+  };
+
+  useEffect(() => {
+    loadWarpData();
   }, []);
 
   const getStatusColor = (status: string) => {
@@ -177,65 +249,102 @@ export default function WarpWidget({ className = "" }: WarpWidgetProps) {
         >
           <h4 className="text-lg font-semibold text-cyan-300 mb-4">🚀 Initiate WARP Transfer</h4>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">From Chain</label>
-              <select className="w-full px-3 py-2 bg-black/50 border border-cyan-500/30 rounded-lg text-white focus:border-cyan-400 focus:outline-none">
-                <option>ZION Testnet</option>
-                <option>Bitcoin</option>
-                <option>Ethereum</option>
-                <option>Polygon</option>
-              </select>
+          {error && (
+            <div className="mb-4 p-3 bg-red-900/20 border border-red-700 rounded-lg text-red-300 text-sm">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleTransferSubmit}>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">From Chain</label>
+                <select
+                  value={transferForm.source_chain}
+                  onChange={(e) => setTransferForm(prev => ({ ...prev, source_chain: e.target.value }))}
+                  className="w-full px-3 py-2 bg-black/50 border border-cyan-500/30 rounded-lg text-white focus:border-cyan-400 focus:outline-none"
+                >
+                  <option>ZION</option>
+                  <option>Ethereum</option>
+                  <option>Bitcoin</option>
+                  <option>Polygon</option>
+                  <option>BSC</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">To Chain</label>
+                <select
+                  value={transferForm.destination_chain}
+                  onChange={(e) => setTransferForm(prev => ({ ...prev, destination_chain: e.target.value }))}
+                  className="w-full px-3 py-2 bg-black/50 border border-cyan-500/30 rounded-lg text-white focus:border-cyan-400 focus:outline-none"
+                >
+                  <option>Ethereum</option>
+                  <option>ZION</option>
+                  <option>Bitcoin</option>
+                  <option>Polygon</option>
+                  <option>BSC</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Asset</label>
+                <select
+                  value={transferForm.asset}
+                  onChange={(e) => setTransferForm(prev => ({ ...prev, asset: e.target.value }))}
+                  className="w-full px-3 py-2 bg-black/50 border border-cyan-500/30 rounded-lg text-white focus:border-cyan-400 focus:outline-none"
+                >
+                  <option>ZION</option>
+                  <option>BTC</option>
+                  <option>ETH</option>
+                  <option>USDC</option>
+                  <option>USDT</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Amount</label>
+                <input
+                  type="number"
+                  step="0.00000001"
+                  placeholder="0.00"
+                  value={transferForm.amount}
+                  onChange={(e) => setTransferForm(prev => ({ ...prev, amount: e.target.value }))}
+                  className="w-full px-3 py-2 bg-black/50 border border-cyan-500/30 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none"
+                  required
+                  disabled={transferLoading}
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">To Chain</label>
-              <select className="w-full px-3 py-2 bg-black/50 border border-cyan-500/30 rounded-lg text-white focus:border-cyan-400 focus:outline-none">
-                <option>Ethereum</option>
-                <option>ZION Testnet</option>
-                <option>Polygon</option>
-                <option>Bitcoin</option>
-              </select>
+            <div className="flex gap-3 mt-4">
+              <motion.button
+                type="submit"
+                className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-3 rounded-xl font-semibold text-white hover:from-cyan-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={transferLoading}
+              >
+                {transferLoading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Processing...
+                  </div>
+                ) : (
+                  '⚡ WARP Transfer'
+                )}
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={() => setShowTransferForm(false)}
+                className="px-6 py-3 bg-gray-600/30 border border-gray-700 rounded-xl text-gray-300 hover:bg-gray-600/50 transition-colors"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Cancel
+              </motion.button>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Asset</label>
-              <select className="w-full px-3 py-2 bg-black/50 border border-cyan-500/30 rounded-lg text-white focus:border-cyan-400 focus:outline-none">
-                <option>ZION</option>
-                <option>BTC</option>
-                <option>ETH</option>
-                <option>USDC</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Amount</label>
-              <input
-                type="number"
-                step="0.00000001"
-                placeholder="0.00"
-                className="w-full px-3 py-2 bg-black/50 border border-cyan-500/30 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-3 mt-4">
-            <motion.button
-              className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-3 rounded-xl font-semibold text-white hover:from-cyan-600 hover:to-purple-700 transition-all"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              ⚡ WARP Transfer
-            </motion.button>
-            <motion.button
-              onClick={() => setShowTransferForm(false)}
-              className="px-6 py-3 bg-gray-600/30 border border-gray-700 rounded-xl text-gray-300 hover:bg-gray-600/50 transition-colors"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Cancel
-            </motion.button>
-          </div>
+          </form>
         </motion.div>
       )}
 

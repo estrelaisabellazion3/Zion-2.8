@@ -1,0 +1,19 @@
+{
+  "mode": "testnet",
+  "pool_port": 3335,
+  "rpc_port": 8545,
+  "p2p_port": 8334,
+  "network_type": "testnet",
+  "database": "zion_testnet_pool.db",
+  "consciousness_game_db": "consciousness_testnet_game.db",
+  "block_reward": 50.0,
+  "difficulty": {
+    "randomx": 50,
+    "yescrypt": 4000,
+    "autolykos_v2": 35
+  },
+  "monitoring": {
+    "enabled": true,
+    "metrics_port": 9090
+  }
+}

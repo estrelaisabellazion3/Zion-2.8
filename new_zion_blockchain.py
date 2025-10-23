@@ -10,6 +10,7 @@ import time
 import secrets
 import asyncio
 import threading
+import argparse
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 import sqlite3
@@ -24,9 +25,16 @@ from seednodes import ZionNetworkConfig, get_premine_addresses, get_p2p_port, ge
 class NewZionBlockchain:
     """Nový ZION blockchain s novými premine adresami a persistent storage"""
     
-    def __init__(self, db_file=None, enable_p2p=True, p2p_port=None, enable_rpc=True, rpc_port=None):
-        # Use centralized configuration
-        config = ZionNetworkConfig.BLOCKCHAIN_CONFIG
+    def __init__(self, db_file=None, enable_p2p=True, p2p_port=None, enable_rpc=True, rpc_port=None, network="mainnet"):
+        # Use centralized configuration based on network
+        if network == "testnet":
+            config = ZionNetworkConfig.BLOCKCHAIN_CONFIG.copy()
+            config['db_file'] = 'zion_testnet_blockchain.db'
+            self.network = "testnet"
+        else:
+            config = ZionNetworkConfig.BLOCKCHAIN_CONFIG
+            self.network = "mainnet"
+            
         self.db_file = db_file or config['db_file']
         
         self.lock = threading.Lock()
@@ -50,13 +58,13 @@ class NewZionBlockchain:
         # P2P Network with centralized configuration
         self.p2p_network = None
         if enable_p2p:
-            p2p_port = p2p_port or get_p2p_port()
+            p2p_port = p2p_port or get_p2p_port(self.network)
             self.p2p_network = ZIONP2PNetwork(self, port=p2p_port)
         
         # RPC Server with centralized configuration  
         self.rpc_server = None
         if enable_rpc:
-            rpc_port = rpc_port or get_rpc_port()
+            rpc_port = rpc_port or get_rpc_port(self.network)
             self.rpc_server = ZIONRPCServer(self, port=rpc_port)
         # Security / consensus timing parameters from centralized config
         self.mtp_window = config['mtp_window']
@@ -991,18 +999,24 @@ class NewZionBlockchain:
         print(f"🆔 Latest Block: {self.blocks[-1]['hash'][:32]}..." if self.blocks else "No blocks")
 
 def main():
-    """Spustí ZION blockchain v produkčním módu - ŽÁDNÉ SIMULACE"""
-    print("🚀 ZION 2.7.5 Blockchain - PRODUCTION MODE")
+    """Spustí ZION blockchain v produkčním nebo testnet módu"""
+    parser = argparse.ArgumentParser(description='ZION Blockchain Server')
+    parser.add_argument('--testnet', action='store_true', help='Run in testnet mode')
+    args = parser.parse_args()
+    
+    network = "testnet" if args.testnet else "mainnet"
+    
+    print(f"🚀 ZION 2.7.5 Blockchain - {'TESTNET' if args.testnet else 'PRODUCTION'} MODE")
     print("⚠️  ŽÁDNÉ SIMULACE - pouze skutečný blockchain!")
-    print("🔗 Spouštím RPC server a P2P síť...")
+    print(f"🔗 Spouštím RPC server a P2P síť na {network}...")
 
-    # Vytvoření blockchainu v produkčním módu
-    blockchain = NewZionBlockchain()
+    # Vytvoření blockchainu
+    blockchain = NewZionBlockchain(network=network)
 
     print(f"📊 Genesis block loaded: {len(blockchain.blocks)} blocks")
     print(f"💰 Total supply: {blockchain.get_total_supply():,.0f} ZION")
-    print(f"🔗 RPC server: http://localhost:{get_rpc_port()}")
-    print(f"🌐 P2P network: {get_p2p_port()}")
+    print(f"🔗 RPC server: http://localhost:{get_rpc_port(network)}")
+    print(f"🌐 P2P network: {get_p2p_port(network)}")
 
     try:
         # Spuštění RPC serveru
@@ -1013,7 +1027,7 @@ def main():
             print("🌐 Starting P2P network...")
             # P2P network se spustí automaticky v konstruktoru
 
-        print("✅ ZION Blockchain PRODUCTION MODE active")
+        print(f"✅ ZION Blockchain {'TESTNET' if args.testnet else 'PRODUCTION'} MODE active")
         print("⏳ Čekám na mining pool připojení...")
 
         # Nekonečná smyčka pro udržení serveru živého

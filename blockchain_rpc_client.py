@@ -59,11 +59,20 @@ class ZionBlockchainRPCClient:
     # ==========================================
     
     def get_height(self) -> int:
-        """Get current blockchain height"""
+        """Get current blockchain height with stale data detection"""
         try:
             response = self._send_rpc("getblockcount")
             if response and "result" in response:
-                return response["result"]
+                height = response["result"]
+                # Check if height seems reasonable (not too old)
+                current_time = time.time()
+                # If height is 0 or negative, it's likely stale
+                if height <= 0:
+                    logger.warning(f"⚠️ RPC returned suspicious height: {height}")
+                    return -1
+                # Could add more sophisticated stale detection here
+                # For now, just return the height
+                return height
         except Exception as e:
             logger.error(f"Failed to get height: {e}")
         return -1

@@ -19,6 +19,7 @@ const loginSchema = z.object({
 });
 
 // In-memory user store (in production, use database)
+// This should be shared with login endpoint
 interface User {
   id: string;
   username: string;
@@ -30,9 +31,19 @@ interface User {
   lastLogin?: string;
   dailyLimit: number;
   totalVolume: number;
+  walletAddress?: string; // For wallet-based auth
 }
 
-const users: User[] = [];
+// Global users store (in production, use proper database)
+declare global {
+  var zionUsers: User[] | undefined;
+}
+
+if (!global.zionUsers) {
+  global.zionUsers = [];
+}
+
+const users = global.zionUsers;
 
 // Generate API key
 function generateApiKey(): string {

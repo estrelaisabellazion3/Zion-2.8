@@ -32,15 +32,14 @@ class ZionNetworkConfig:
     
     # PRODUCTION SEED NODES - REÁLNÉ IP ADRESY  
     PRODUCTION_SEEDS = [
-        SeedNode("91.98.122.165", 8333, "production", "europe"),     # Naš production server
-        SeedNode("127.0.0.1", 8334, "local", "localhost"),          # Local fallback na jiném portu
-        # TODO: Přidat více production nodů když budou dostupné
+        SeedNode("91.98.122.165", 8333, "production", "europe"),     # Primary production server
+        SeedNode("91.98.122.165", 8334, "production", "europe"),     # Secondary production server (different port)
     ]
     
     # TESTNET SEED NODES  
     TESTNET_SEEDS = [
         SeedNode("91.98.122.165", 8334, "testnet", "europe"),       # Testnet port
-        SeedNode("127.0.0.1", 8334, "local", "localhost"),          
+        SeedNode("127.0.0.1", 8334, "local", "localhost"),          # Local testnet fallback
     ]
     
     # DEVELOPMENT SEED NODES
@@ -53,7 +52,7 @@ class ZionNetworkConfig:
     PORTS = {
         'p2p_mainnet': 8333,
         'p2p_testnet': 8334, 
-        'rpc_mainnet': 8332,
+        'rpc_mainnet': 8545,  # Changed from 8332 to match pool expectation
         'rpc_testnet': 8335,
         'pool_stratum': 3333,  # Standard Stratum port
         'pool_api': 3334,      # API port (3333 + 1)
@@ -183,7 +182,8 @@ class ZionNetworkConfig:
         checks = {}
         
         # Kontrola seed nodes
-        checks['has_production_seeds'] = len(cls.PRODUCTION_SEEDS) > 0
+        checks['has_production_seeds'] = len(cls.PRODUCTION_SEEDS) >= 2  # Require at least 2 production seeds
+        checks['has_testnet_seeds'] = len(cls.TESTNET_SEEDS) >= 2
         checks['has_unique_ports'] = len(set(cls.PORTS.values())) == len(cls.PORTS)
         
         # Kontrola portů

@@ -13,21 +13,11 @@ import secrets
 import hashlib
 import logging
 import sqlite3
-import argparse
 from typing import Dict, Optional, Any, List
 from dataclasses import dataclass, field
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import threading
-import importlib
-
-# Optional Yescrypt C extension (accelerated validation)
-try:
-    import yescrypt_fast  # type: ignore
-    YESCRYPT_FAST_AVAILABLE = True
-except ImportError:
-    yescrypt_fast = None  # type: ignore
-    YESCRYPT_FAST_AVAILABLE = False
 
 # Prometheus monitoring
 from prometheus_client import Counter, Gauge, Histogram, start_http_server, Info
@@ -537,10 +527,7 @@ class ZIONPoolAPIHandler(BaseHTTPRequestHandler):
         self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
-        response_data = json.dumps(data, indent=2).encode('utf-8')
-        self.wfile.write(response_data)
-        # Store response data for asyncio handler
-        self.response_data = response_data
+        self.wfile.write(json.dumps(data, indent=2).encode('utf-8'))
 
     def send_error_response(self, status_code, message):
         """Send error response"""
@@ -557,300 +544,44 @@ class ZIONPoolAPIHandler(BaseHTTPRequestHandler):
         logger.info(f"API: {format % args}")
 
 class ZIONPoolAPIServer:
-    """Simple HTTP server for pool API using asyncio"""
+    """Simple HTTP server for pool API"""
 
     def __init__(self, pool_instance, port=3334):
         self.pool = pool_instance
         self.port = port
         self.server = None
-        self.task = None
+        self.thread = None
 
-    async def start(self):
-        """Start API server using asyncio"""
-        try:
-            print(f"Starting API server on port {self.port}")
-            # Create asyncio HTTP server
+    def start(self):
+        """Start API server in background thread"""
+        print(f"Starting API server on port {self.port}...")
+        def run_server():
             try:
-                self.server = await asyncio.start_server(
-                    self.handle_request, '0.0.0.0', self.port
-                )
-                print(f"API server created successfully")
+                # Create custom handler with pool instance
+                def handler_class(*args, **kwargs):
+                    return ZIONPoolAPIHandler(self.pool, *args, **kwargs)
+
+                self.server = HTTPServer(('0.0.0.0', self.port), handler_class)
+                print(f"Pool API server started on port {self.port}")
+                self.server.serve_forever()
             except Exception as e:
-                print(f"Failed to create API server: {e}")
-                raise
-            
-            print(f"API server created, starting serve_forever")
-            # Start serving - this will run forever
-            await self.server.serve_forever()
+                logger.error(f"API server error: {e}")
 
-        except Exception as e:
-            logger.error(f"API server error: {e}")
-            print(f"API server failed to start: {e}")
-            raise
-
-    async def handle_request(self, reader, writer):
-        """Handle HTTP request using asyncio"""
-        try:
-            # Read HTTP request
-            data = await reader.read(4096)
-            if not data:
-                return
-
-            # Parse HTTP request
-            request_lines = data.decode('utf-8').split('\n')
-            if not request_lines:
-                return
-
-            # Parse request line
-            request_line = request_lines[0].strip()
-            if not request_line:
-                return
-
-            parts = request_line.split()
-            if len(parts) < 2:
-                return
-
-            method = parts[0]
-            path = parts[1]
-
-            print(f"API Request: {method} {path}")
-
-            # Create mock handler for compatibility
-            class MockHandler:
-                def __init__(self, pool, method, path):
-                    self.pool = pool
-                    self.method = method
-                    self.path = path
-                    self.response_data = None
-
-                def do_GET(self):
-                    """Handle GET requests"""
-                    try:
-                        if self.path == '/api/stats':
-                            self.send_stats_response()
-                        elif self.path.startswith('/api/miner/'):
-                            address = self.path.split('/api/miner/')[-1]
-                            self.send_miner_stats_response(address)
-                        elif self.path == '/api/pool':
-                            self.send_pool_info_response()
-                        elif self.path == '/api/health':
-                            self.send_health_response()
-                        # 🎮 CONSCIOUSNESS GAME API ENDPOINTS
-                        elif self.path.startswith('/api/consciousness/profile/'):
-                            address = self.path.split('/api/consciousness/profile/')[-1]
-                            self.send_consciousness_profile(address)
-                        elif self.path == '/api/consciousness/leaderboard':
-                            self.send_consciousness_leaderboard()
-                        elif self.path == '/api/consciousness/levels':
-                            self.send_consciousness_levels()
-                        else:
-                            self.send_error_response(404, "Endpoint not found")
-                    except Exception as e:
-                        logger.error(f"API error: {e}")
-                        self.send_error_response(500, "Internal server error")
-
-                def send_stats_response(self):
-                    """Send pool statistics"""
-                    stats = self.pool.get_pool_stats()
-                    self.send_json_response(stats)
-
-                def send_miner_stats_response(self, address):
-                    """Send miner-specific statistics"""
-                    if not address:
-                        self.send_error_response(400, "Miner address required")
-                        return
-
-                    # Get current stats
-                    miner_stats = self.pool.get_miner_stats(address)
-                    if not miner_stats:
-                        self.send_error_response(404, "Miner not found")
-                        return
-
-                    # Get historical data
-                    history = self.pool.db.get_miner_history(address)
-
-                    response = {
-                        'address': miner_stats.address,
-                        'algorithm': miner_stats.algorithm,
-                        'total_shares': miner_stats.total_shares,
-                        'valid_shares': miner_stats.valid_shares,
-                        'invalid_shares': miner_stats.invalid_shares,
-                        'balance_pending': miner_stats.balance_pending,
-                        'balance_paid': miner_stats.balance_paid,
-                        'last_share_time': miner_stats.last_share_time,
-                        'connected_time': miner_stats.connected_time,
-                        'difficulty': miner_stats.difficulty,
-                        'history': history
-                    }
-
-                    self.send_json_response(response)
-
-                def send_pool_info_response(self):
-                    """Send general pool information"""
-                    info = {
-                        'name': 'ZION Universal Mining Pool',
-                        'version': '2.8.1',
-                        'algorithms': ['randomx', 'yescrypt', 'autolykos_v2'],
-                        'ports': {
-                            'stratum': self.pool.port,
-                            'api': self.pool.port + 1
-                        },
-                        'fees': {
-                            'pool_fee_percent': self.pool.pool_fee_percent * 100,
-                            'payout_threshold': self.pool.payout_threshold
-                        },
-                        'rewards': {
-                            'base_block_reward': self.pool.base_block_reward,
-                            'consciousness_multipliers': {
-                                'PHYSICAL': 1.0,
-                                'EMOTIONAL': 1.05,
-                                'MENTAL': 1.1,
-                                'SACRED': 1.25,
-                                'QUANTUM': 1.5,
-                                'COSMIC': 2.0,
-                                'ENLIGHTENED': 3.0,
-                                'TRANSCENDENT': 5.0,
-                                'ON_THE_STAR': 10.0
-                            },
-                            'eco_bonuses': {
-                                'randomx': 1.0,
-                                'yescrypt': 1.15,
-                                'autolykos_v2': 1.2
-                            }
-                        },
-                        'features': [
-                            'Variable Difficulty',
-                            'IP Banning',
-                            'Performance Monitoring',
-                            'Database Persistence',
-                            'REST API',
-                            'Eco-Friendly Mining'
-                        ]
-                    }
-                    self.send_json_response(info)
-
-                def send_health_response(self):
-                    """Send health check response"""
-                    health = {
-                        'status': 'healthy',
-                        'timestamp': time.time(),
-                        'uptime_seconds': time.time() - self.pool.performance_stats['start_time'],
-                        'active_connections': len(self.pool.miners),
-                        'total_miners': len(self.pool.miner_stats),
-                        'database_status': 'connected' if hasattr(self.pool, 'db') else 'disconnected'
-                    }
-                    self.send_json_response(health)
-
-                # 🎮 CONSCIOUSNESS GAME API METHODS
-
-                def send_consciousness_profile(self, address):
-                    """Send consciousness profile for miner"""
-                    if not address:
-                        self.send_error_response(400, "Miner address required")
-                        return
-
-                    try:
-                        profile = self.pool.consciousness_game.get_miner_stats(address)
-                        self.send_json_response(profile)
-                    except Exception as e:
-                        logger.error(f"Consciousness profile error: {e}")
-                        self.send_error_response(500, f"Error fetching consciousness profile: {e}")
-
-                def send_consciousness_leaderboard(self):
-                    """Send consciousness leaderboard (top 100 miners by XP)"""
-                    try:
-                        leaderboard = self.pool.consciousness_game.get_leaderboard(limit=100)
-                        self.send_json_response({'leaderboard': leaderboard})
-                    except Exception as e:
-                        logger.error(f"Consciousness leaderboard error: {e}")
-                        self.send_error_response(500, f"Error fetching leaderboard: {e}")
-
-                def send_consciousness_levels(self):
-                    """Send information about all consciousness levels"""
-                    try:
-                        from consciousness_mining_game import ConsciousnessLevel
-                        levels = []
-                        for level in ConsciousnessLevel:
-                            levels.append({
-                                'name': level.name,
-                                'multiplier': level.value['multiplier'],
-                                'xp_required': level.value['xp_required'],
-                                'description': level.value.get('description', '')
-                            })
-                        self.send_json_response({'levels': levels})
-                    except Exception as e:
-                        logger.error(f"Consciousness levels error: {e}")
-                        self.send_error_response(500, f"Error fetching levels: {e}")
-
-                def send_json_response(self, data, status_code=200):
-                    """Send JSON response"""
-                    self.response_data = json.dumps(data, indent=2).encode('utf-8')
-
-                def send_error_response(self, status_code, message):
-                    """Send error response"""
-                    error_data = {
-                        'error': {
-                            'code': status_code,
-                            'message': message
-                        }
-                    }
-                    self.send_json_response(error_data, status_code)
-
-            # Create handler and process request
-            handler = MockHandler(self.pool, method, path)
-            if method == 'GET':
-                handler.do_GET()
-            else:
-                handler.send_error_response(405, "Method not allowed")
-
-            # Send response
-            response_data = handler.response_data or b'{"error": "No response"}'
-            status_line = f"HTTP/1.1 {200 if handler.response_data else 500} OK\r\n"
-            headers = (
-                "Content-Type: application/json\r\n"
-                "Access-Control-Allow-Origin: *\r\n"
-                "\r\n"
-            )
-
-            response = status_line.encode() + headers.encode() + response_data
-            writer.write(response)
-            await writer.drain()
-            print(f"API Response sent: {len(response)} bytes")
-
-        except Exception as e:
-            logger.error(f"Request handling error: {e}")
-            print(f"API Error: {e}")
-            # Send error response
-            error_response = (
-                b"HTTP/1.1 500 Internal Server Error\r\n"
-                b"Content-Type: application/json\r\n"
-                b"Access-Control-Allow-Origin: *\r\n"
-                b"\r\n"
-                b'{"error": "Internal server error"}'
-            )
-            try:
-                writer.write(error_response)
-                await writer.drain()
-            except:
-                pass
-        finally:
-            writer.close()
-            await writer.wait_closed()
+        self.thread = threading.Thread(target=run_server, daemon=True)
+        self.thread.start()
 
     def stop(self):
         """Stop API server"""
         if self.server:
-            self.server.close()
+            self.server.shutdown()
+            self.server.server_close()
             print("📊 Pool API server stopped")
-        if self.task:
-            self.task.cancel()
 
 class ZionUniversalPool:
-    def __init__(self, port=None, network="mainnet"):
+    def __init__(self, port=None):
         # Use centralized pool configuration
         pool_config = ZionNetworkConfig.POOL_CONFIG
         
-        self.network = network
         self.port = port or pool_config['stratum_port']
         self.miners: Dict[tuple, dict] = {}
         self.miner_stats: Dict[str, MinerStats] = {}
@@ -882,9 +613,7 @@ class ZionUniversalPool:
         self.pool_admin_address = 'ZION_MAITREYA_BUDDHA_DAO_ADMIN_D7A371ABD1FF1C5D42AB02'  # Maitreya Buddha (Pool Admin)
         
         # Real blockchain integration via RPC (not local instance!)
-        # Use correct RPC port based on network
-        rpc_port = ZionNetworkConfig.get_port("rpc", network)
-        self.blockchain_rpc = ZionBlockchainRPCClient(host='localhost', port=rpc_port)
+        self.blockchain_rpc = ZionBlockchainRPCClient(host='localhost', port=8545)
         
         # Fallback: Create local blockchain for development (will auto-connect if RPC fails)
         self.blockchain = None
@@ -893,24 +622,9 @@ class ZionUniversalPool:
             self.blockchain = NewZionBlockchain(enable_rpc=False)
         
         # Get current height and block reward from blockchain
-        if self.blockchain_rpc.health_check():
-            rpc_height = self.blockchain_rpc.get_height()
-            if rpc_height >= 0:
-                # Check for stale RPC data - if height is suspiciously low for current time
-                # This could indicate RPC server is running but has old/stale data
-                current_time = time.time()
-                # Basic heuristic: if we're more than 10 minutes into the network and height is still 0 or 1
-                # it might be stale (genesis + maybe 1 block should be mined by now)
-                if current_time > 1609459200 and rpc_height <= 1:  # 1609459200 = Jan 1, 2021
-                    logger.warning(f"⚠️ RPC height {rpc_height} seems suspiciously low - possible stale RPC data")
-                    logger.warning("⚠️ Falling back to local blockchain instance")
-                    self.current_block_height = len(self.blockchain.blocks) - 1 if self.blockchain else 0
-                else:
-                    self.current_block_height = rpc_height
-                    logger.info(f"📡 Connected to blockchain via RPC at height {rpc_height}")
-            else:
-                logger.warning("⚠️ RPC health check passed but get_height failed - possible stale RPC")
-                self.current_block_height = len(self.blockchain.blocks) - 1 if self.blockchain else 0
+        if self.blockchain_rpc.connected:
+            self.current_block_height = self.blockchain_rpc.get_height()
+            logger.info(f"📡 Connected to blockchain via RPC at height {self.current_block_height}")
         else:
             self.current_block_height = len(self.blockchain.blocks) - 1 if self.blockchain else 0
             logger.info(f"📦 Using local blockchain at height {self.current_block_height}")
@@ -921,10 +635,8 @@ class ZionUniversalPool:
         logger.info(f"💰 Base block reward: {self.base_block_reward} ZION (before consciousness multiplier)")
 
         # Share validation
-        self.submitted_shares = {}  # Dict with timestamp for expiration: {share_key: timestamp}
+        self.submitted_shares = set()  # For duplicate detection
         self.share_window_size = 100  # Rolling window for difficulty adjustment
-        self.duplicate_cache_max_size = 10000  # Maximum entries in duplicate cache
-        self.duplicate_cache_cleanup_interval = 60  # Cleanup every 60 seconds
 
         # Algorithm difficulty from centralized config
         self.difficulty = pool_config['difficulty'].copy()
@@ -988,7 +700,7 @@ class ZionUniversalPool:
         logger.info("   🥚 Hiranyagarbha: 500M ZION for enlightened winner")
 
         # API server from centralized config
-        api_port = self.port + 1  # API port is always stratum port + 1
+        api_port = pool_config['api_port']
         self.api_server = ZIONPoolAPIServer(self, port=api_port)
 
         # Initialize RandomX engine for share validation (optional)
@@ -1014,43 +726,6 @@ class ZionUniversalPool:
                 return True
             except ValueError:
                 return False
-        return False
-
-    def _manage_duplicate_cache(self):
-        """Manage duplicate share cache: cleanup expired entries and enforce size limits"""
-        current_time = time.time()
-        
-        # Clean expired shares (older than 5 minutes)
-        expired_keys = [k for k, t in self.submitted_shares.items() if current_time - t > 300]
-        for k in expired_keys:
-            del self.submitted_shares[k]
-        
-        # Enforce size limit using LRU-style eviction (remove oldest entries)
-        if len(self.submitted_shares) > self.duplicate_cache_max_size:
-            # Sort by timestamp (oldest first) and remove excess
-            sorted_entries = sorted(self.submitted_shares.items(), key=lambda x: x[1])
-            excess_count = len(self.submitted_shares) - self.duplicate_cache_max_size
-            
-            for i in range(excess_count):
-                del self.submitted_shares[sorted_entries[i][0]]
-            
-            logger.info(f"🧹 Cleaned up {excess_count} old duplicate cache entries (size limit: {self.duplicate_cache_max_size})")
-
-    def is_duplicate_share(self, share_key: str) -> bool:
-        """Check if share is duplicate with optimized cache management"""
-        current_time = time.time()
-        
-        # Manage cache before checking
-        self._manage_duplicate_cache()
-        
-        # Check if share key exists
-        if share_key in self.submitted_shares:
-            # Update timestamp to prevent premature eviction
-            self.submitted_shares[share_key] = current_time
-            return True
-        
-        # Add new share to cache
-        self.submitted_shares[share_key] = current_time
         return False
 
     def convert_address_for_mining(self, address):
@@ -1206,48 +881,46 @@ class ZionUniversalPool:
 
             job = self.jobs[job_id]
 
-            # Prefer validating against the miner-submitted result to avoid implementation drift
+            # Try to use C extension for validation if available
             try:
-                submitted = bytes.fromhex(result)
-                if len(submitted) == 32:
-                    hash_result = submitted
-                else:
-                    raise ValueError("Submitted result has invalid length")
-            except Exception:
-                # If submitted result is unusable, try to recompute with local C extension (best effort)
-                if YESCRYPT_FAST_AVAILABLE and yescrypt_fast:
-                    try:
-                        header_data = f"{job_id}{nonce}{job.get('block_header', '')}".encode()
-                        hash_result = yescrypt_fast.hash(header_data)
-                    except Exception:
-                        logger.warning("Yescrypt C extension failed, falling back to Python simulation")
-                        hash_result = None
-                else:
-                    hash_result = None
+                import yescrypt_fast
+                
+                # Create header data for C validation
+                header_data = f"{job_id}{nonce}{job.get('block_header', '')}".encode()
+                hash_result = yescrypt_fast.hash(header_data)
+                
+                # Convert to target comparison (use lower 224 bits like miner)
+                hash_int = int.from_bytes(hash_result[:28], 'big')
+                target = (1 << 224) // difficulty  # Adjusted for Yescrypt difficulty
+                
+                is_valid = hash_int < target
+                logger.debug(f"C extension Yescrypt validation: {is_valid}")
+                return is_valid
+                
+            except ImportError:
+                # Fallback to Python implementation
+                logger.debug("Using Python fallback for Yescrypt validation")
+                
+                # Enhanced Python validation
+                validation_data = f"{job_id}{nonce}{result}{job.get('block_header', '')}"
+                validation_hash = hashlib.sha256(validation_data.encode()).hexdigest()
 
-                if hash_result is None:
-                    # Fallback to a conservative Python simulation (low accuracy)
-                    logger.debug("Using Python fallback for Yescrypt validation")
-                    validation_data = f"{job_id}{nonce}{result}{job.get('block_header', '')}"
-                    validation_hash = hashlib.sha256(validation_data.encode()).hexdigest()
-                    for i in range(8):
-                        validation_hash = hashlib.sha256(validation_hash.encode() + str(i).encode()).hexdigest()
-                    memory_data = validation_hash
-                    for _ in range(4):
-                        memory_data = hashlib.pbkdf2_hmac('sha256', memory_data.encode(), b'yescrypt_zion', 2048, 32).hex()
-                    # Convert to numerical comparison (reduced width)
-                    hash_value = int(memory_data[:16], 16)
-                    target = 2**64 // difficulty
-                    is_valid = hash_value < target
-                    logger.debug(f"Python Yescrypt validation: {is_valid}")
-                    return is_valid
+                # Yescrypt uses multiple rounds - simulate with additional hashing
+                for i in range(8):  # More rounds for better ASIC resistance
+                    validation_hash = hashlib.sha256(validation_hash.encode() + str(i).encode()).hexdigest()
 
-            # Target comparison using first 224 bits like miner
-            hash_int = int.from_bytes(hash_result[:28], 'big')
-            target = (1 << 224) // difficulty
-            is_valid = hash_int < target
-            logger.debug(f"Yescrypt validation (submitted/result-based) = {is_valid}")
-            return is_valid
+                # Memory-hard component simulation
+                memory_data = validation_hash
+                for _ in range(4):
+                    memory_data = hashlib.pbkdf2_hmac('sha256', memory_data.encode(), b'yescrypt_zion', 2048, 32).hex()
+
+                # Convert to numerical comparison
+                hash_value = int(memory_data[:16], 16)
+                target = 2**64 // difficulty
+
+                is_valid = hash_value < target
+                logger.debug(f"Python Yescrypt validation: {is_valid}")
+                return is_valid
 
         except Exception as e:
             logger.error(f"Yescrypt validation error: {e}")
@@ -1315,31 +988,18 @@ class ZionUniversalPool:
             # Mark that we're starting to mine this block (prevent duplicate calls)
             current_block._mining_in_progress = True
             try:
+                # Mine the block on the real blockchain
                 # Try RPC first, fallback to local blockchain
                 block_hash = None
                 
-                # Additional RPC health check before mining
-                rpc_still_healthy = self.blockchain_rpc.health_check()
-                if not rpc_still_healthy:
-                    logger.warning("⚠️ RPC became unavailable during block mining, using local blockchain")
-                    self.blockchain_rpc = None  # Mark as unavailable
-                
-                if self.blockchain_rpc and rpc_still_healthy:
+                if self.blockchain_rpc.connected:
                     logger.info(f"🔨 Mining block via RPC at {self.blockchain_rpc.host}:{self.blockchain_rpc.port}")
                     block_hash = self.blockchain_rpc.mine_block(self.pool_wallet_address)
-                    if block_hash:
-                        logger.info(f"✅ Block mined via RPC: {block_hash}")
-                    else:
-                        logger.warning("⚠️ RPC mining failed, falling back to local blockchain")
-                        if self.blockchain:
-                            block_hash = self.blockchain.mine_pending_transactions(self.pool_wallet_address)
-                            logger.info(f"✅ Block mined via local blockchain: {block_hash}")
                 elif self.blockchain:
                     logger.info(f"🔨 Mining block via local blockchain instance")
                     block_hash = self.blockchain.mine_pending_transactions(self.pool_wallet_address)
                 else:
                     logger.error("❌ No blockchain available (RPC disconnected and no local instance)")
-                    return False
                 
                 if block_hash:
                     current_block.status = "confirmed"
@@ -1393,28 +1053,8 @@ class ZionUniversalPool:
         """
         self.block_counter += 1
         
-        # Read actual blockchain height from RPC or local blockchain
-        if self.blockchain_rpc.health_check():
-            # Use RPC height if available
-            rpc_height = self.blockchain_rpc.get_height()
-            if rpc_height >= 0:
-                # Additional stale check during block tracking
-                if rpc_height == self.current_block_height and len(self.pool_blocks) > 1:
-                    logger.warning(f"⚠️ RPC height {rpc_height} unchanged since last check - possible stale RPC")
-                    # Continue with current height + 1 but log the issue
-                self.current_block_height = rpc_height + 1  # Next block to mine
-                logger.info(f"📡 Using RPC blockchain height: {rpc_height}, next block: {self.current_block_height}")
-            else:
-                logger.warning("⚠️ RPC health check passed but get_height returned invalid data")
-                self.current_block_height = 1  # Fallback
-        elif self.blockchain:
-            # Fallback to local blockchain
-            self.current_block_height = len(self.blockchain.blocks)  # Next block to mine
-            logger.info(f"📦 Using local blockchain height: {self.current_block_height}")
-        else:
-            # No blockchain available, start from 1
-            self.current_block_height = 1
-            logger.warning("⚠️ No blockchain available, starting from height 1")
+        # Read actual blockchain height
+        self.current_block_height = len(self.blockchain.blocks)  # Next block to mine
         
         # Get base reward from economic model (consciousness multiplier applied later)
         base_reward = self.base_block_reward
@@ -1642,6 +1282,22 @@ class ZionUniversalPool:
         connections_counter.inc()
         connected_miners_gauge.set(len(self.miners) + 1)  # +1 for this new connection
 
+        
+        # WELCOME MESSAGE - send immediately to client
+        try:
+            welcome = json.dumps({
+                "jsonrpc": "2.0",
+                "id": None,
+                "method": "mining.set_difficulty",
+                "params": [32]
+            }) + "\n"
+            
+            writer.write(welcome.encode('utf-8'))
+            await writer.drain()
+            logger.info(f"Sent welcome to {addr}")
+        except Exception as e:
+            logger.error(f"Failed to send welcome: {e}")
+        
         try:
             # Switch to line-based parsing to avoid concatenated JSON issues
             while True:
@@ -1881,10 +1537,8 @@ class ZionUniversalPool:
         # Create job for login response
         job = self.get_job_for_miner(addr)
 
-        # PowerPool-compatible handshake: send login result + difficulty + job notify
-        difficulty = self.difficulty.get(self.miners[addr]['algorithm'], self.difficulty.get('cpu', 1000))
-
-        login_response = json.dumps({
+        # XMRig expects exact login response format - NO error field when successful
+        response = json.dumps({
             "id": data.get("id"),
             "jsonrpc": "2.0",
             "result": {
@@ -1894,28 +1548,13 @@ class ZionUniversalPool:
             }
         }) + '\n'
 
-        set_diff_msg = json.dumps({
-            "id": None,
-            "jsonrpc": "2.0",
-            "method": "mining.set_difficulty",
-            "params": [difficulty]
-        }) + '\n'
-
-        job_notify_msg = json.dumps({
-            "id": None,
-            "jsonrpc": "2.0",
-            "method": "job",
-            "params": job
-        }) + '\n'
-
         logger.info(f"XMrig login successful for {addr}")
         print(f"✅ CPU miner login successful")
 
         # Start sending periodic jobs to maintain connection
         asyncio.create_task(self.send_periodic_jobs(addr))
 
-        # Bundle messages to mirror PowerPool behaviour
-        return login_response + set_diff_msg + job_notify_msg
+        return response
 
     async def handle_xmrig_submit(self, data, addr, writer):
         """Handle XMrig share submission with real validation and rewards"""
@@ -1935,16 +1574,13 @@ class ZionUniversalPool:
 
         miner = self.miners[addr]
         address = miner['login']
-        # Algorithm from submit params (correct Stratum method), fallback to miner login algorithm
-        algorithm = params.get('algo', miner.get('algorithm', 'randomx')).lower()
+        algorithm = miner.get('algorithm', 'randomx')
         difficulty = self.difficulty.get(algorithm, 1000)  # Default difficulty
 
-        # Check for duplicate shares (with expiration)
-        current_time = time.time()
+        # Check for duplicate shares
         share_key = f"{job_id}:{nonce}:{result}"
-        
-        if self.is_duplicate_share(share_key):
-            print(f"🚫 DUPLICATE SHARE from {addr} (submitted {current_time - self.submitted_shares[share_key]:.1f}s ago)")
+        if share_key in self.submitted_shares:
+            print(f"🚫 DUPLICATE SHARE from {addr}")
             self.record_share(address, algorithm, is_valid=False)
             return json.dumps({
                 "id": data.get('id'),
@@ -1986,6 +1622,7 @@ class ZionUniversalPool:
         # Keep only last 100 processing times for average calculation
         if len(self.share_processing_times) > 100:
             self.share_processing_times.pop(0)
+
         self.performance_stats['avg_share_processing_time'] = sum(self.share_processing_times) / len(self.share_processing_times)
 
         # Track share for IP banning
@@ -1993,7 +1630,7 @@ class ZionUniversalPool:
         
         if is_valid:
             # Record valid share
-            self.submitted_shares[share_key] = current_time
+            self.submitted_shares.add(share_key)
             self.record_share(address, algorithm, is_valid=True)
 
             # Save detailed share to database
@@ -2018,12 +1655,6 @@ class ZionUniversalPool:
             
             # Adjust difficulty if needed
             self.adjust_difficulty(addr, algorithm)
-
-            # 🎮 CONSCIOUSNESS GAME: Award XP for share submission!
-            try:
-                self.consciousness_game.on_share_submitted(address)
-            except Exception as e:
-                logger.error(f"Consciousness game share XP error: {e}")
 
             print(f"🎯 {algorithm.upper()} Share: job={job_id}, nonce={nonce}")
             print(f"✅ VALID {algorithm.upper()} SHARE ACCEPTED (Total: {total_shares})")
@@ -2169,48 +1800,12 @@ class ZionUniversalPool:
         return job
 
     def create_yescrypt_job(self):
-        """Create Yescrypt job for CPU miners using real blockchain data"""
+        """Create Yescrypt job for CPU miners"""
         self.job_counter += 1
         job_id = f"zion_ys_{self.job_counter:06d}"
 
-        # Try to get real block template from blockchain
-        block_header = None
         height = self.current_block_height + self.job_counter
-        
-        if self.blockchain and hasattr(self.blockchain, 'get_block_template'):
-            try:
-                template = self.blockchain.get_block_template()
-                block_header = template['block_header']
-                height = template['height']
-                print(f"🔗 Using real blockchain template for Yescrypt job: height={height}")
-            except Exception as e:
-                logger.warning(f"Failed to get blockchain template: {e}")
-        
-        # Fallback to RPC data if local blockchain failed
-        if block_header is None and self.blockchain_rpc and self.blockchain_rpc.connected:
-            try:
-                # Get latest block and create template-like data
-                latest_height = self.blockchain_rpc.get_height()
-                if latest_height >= 0:
-                    latest_block = self.blockchain_rpc.get_block(latest_height)
-                    if latest_block:
-                        # Create a simple block header from RPC data
-                        header_data = {
-                            'height': latest_height + 1,
-                            'previous_hash': latest_block['hash'],
-                            'timestamp': int(time.time()),
-                            'difficulty': 4  # Default difficulty
-                        }
-                        block_header = json.dumps(header_data, sort_keys=True).encode().hex()
-                        height = latest_height + 1
-                        print(f"📡 Using RPC blockchain data for Yescrypt job: height={height}")
-            except Exception as e:
-                logger.warning(f"Failed to get RPC blockchain data: {e}")
-        
-        # Final fallback to random data (for development/testing)
-        if block_header is None:
-            block_header = secrets.token_hex(80)
-            print(f"🎲 Using fallback random data for Yescrypt job (no blockchain available)")
+        block_header = secrets.token_hex(80)
 
         job = {
             'job_id': job_id,
@@ -2517,8 +2112,6 @@ class ZionUniversalPool:
         params = data.get('params', [])
         logger.info(f"📨 Mining.submit received from {addr}: params={params}")
 
-        start_time = time.time()
-
         if addr not in self.miners:
             return json.dumps({
                 'id': data.get('id'),
@@ -2562,10 +2155,8 @@ class ZionUniversalPool:
         logger.info(f"📩 Submit: worker={worker}, job={job_id}, nonce={nonce[:8]}...")  
 
         # Check for duplicate shares
-        current_time = time.time()
         share_key = f"{job_id}:{nonce}:{mix_hash}:{header_hash}"
-        
-        if self.is_duplicate_share(share_key):
+        if share_key in self.submitted_shares:
             print(f"🚫 DUPLICATE {algorithm.upper()} SHARE from {addr}")
             self.record_share(address, algorithm, is_valid=False)
             return json.dumps({
@@ -2596,48 +2187,19 @@ class ZionUniversalPool:
             # Fallback to KawPow validation
             is_valid = self.validate_kawpow_share(job_id, nonce, mix_hash, header_hash, difficulty)
 
-        processing_time = time.time() - start_time
-        share_result = mix_hash
-        if algorithm in ('yescrypt', 'randomx', 'autolykos_v2'):
-            share_result = result
-
         if is_valid:
             # Record valid share
-            self.submitted_shares[share_key] = current_time
+            self.submitted_shares.add(share_key)
             self.record_share(address, algorithm, is_valid=True)
-
-            # Persist valid share for payouts/auditing
-            try:
-                self.db.save_share(address, algorithm, job_id, nonce, share_result,
-                                   difficulty, True, processing_time, addr[0])
-            except Exception as db_err:
-                logger.error(f"Failed to persist valid share: {db_err}")
 
             miner['share_count'] = miner.get('share_count', 0) + 1
             total_shares = miner['share_count']
-            share_time = time.time()
-            miner['last_share'] = share_time
-
-            # Track share cadence for vardiff tuning
-            times = miner.setdefault('share_times', [])
-            last_share_time = miner.get('last_share_time')
-            if last_share_time is not None:
-                times.append(share_time - last_share_time)
-                if len(times) > 10:
-                    times.pop(0)
-            miner['last_share_time'] = share_time
 
             # 🎮 CONSCIOUSNESS GAME: Award XP for share submission!
             try:
                 self.consciousness_game.on_share_submitted(address)
             except Exception as e:
                 logger.error(f"Consciousness game share XP error: {e}")
-
-            # Adjust miner difficulty if necessary
-            try:
-                self.adjust_difficulty(addr, algorithm)
-            except Exception as diff_err:
-                logger.debug(f"Difficulty adjust skipped: {diff_err}")
 
             print(f"🎯 {algorithm.upper()} Share: job={job_id}, nonce={nonce}")
             print(f"✅ VALID {algorithm.upper()} SHARE ACCEPTED (Total: {total_shares})")
@@ -2654,17 +2216,6 @@ class ZionUniversalPool:
         else:
             # Invalid share
             self.record_share(address, algorithm, is_valid=False)
-            try:
-                self.db.save_share(address, algorithm, job_id, nonce, share_result,
-                                   difficulty, False, processing_time, addr[0])
-            except Exception as db_err:
-                logger.error(f"Failed to persist invalid share: {db_err}")
-
-            # Track invalid share for potential banning heuristics
-            try:
-                self.track_invalid_share(addr[0], False)
-            except Exception as track_err:
-                logger.debug(f"Invalid share tracking failed: {track_err}")
             print(f"❌ INVALID {algorithm.upper()} SHARE from {addr}")
             return json.dumps({
                 'id': data.get('id'),
@@ -2765,20 +2316,6 @@ class ZionUniversalPool:
             }
         }
 
-    async def periodic_duplicate_cache_cleanup(self):
-        """Periodically cleanup expired duplicate share cache entries"""
-        while True:
-            await asyncio.sleep(self.duplicate_cache_cleanup_interval)
-            try:
-                cache_size_before = len(self.submitted_shares)
-                self._manage_duplicate_cache()
-                cache_size_after = len(self.submitted_shares)
-                
-                if cache_size_before != cache_size_after:
-                    logger.info(f"🧹 Periodic duplicate cache cleanup: {cache_size_before} → {cache_size_after} entries")
-            except Exception as e:
-                logger.error(f"Error in periodic duplicate cache cleanup: {e}")
-
     async def periodic_stats_save(self):
         """Periodically save pool statistics to database"""
         while True:
@@ -2861,18 +2398,14 @@ class ZionUniversalPool:
         # Start periodic stats saving
         asyncio.create_task(self.periodic_stats_save())
         
-        # Start periodic duplicate cache cleanup
-        asyncio.create_task(self.periodic_duplicate_cache_cleanup())
-        
         # Start alerting system if Discord webhook configured
         discord_webhook = ZionNetworkConfig.POOL_CONFIG.get('discord_webhook_url')
         if discord_webhook:
             try:
-                pool_alerting = importlib.import_module('zion_pool_alerting')
-                start_pool_with_alerting = getattr(pool_alerting, 'start_pool_with_alerting')
+                from zion_pool_alerting import start_pool_with_alerting
                 self.alerting = await start_pool_with_alerting(self, discord_webhook)
                 print("🔔 Discord alerting system enabled")
-            except (ModuleNotFoundError, AttributeError) as e:
+            except Exception as e:
                 logger.warning(f"Failed to start alerting system: {e}")
                 print("⚠️ Alerting system disabled (check configuration)")
 
@@ -2888,16 +2421,13 @@ class ZionUniversalPool:
         print(f"Current Blockchain Height: {self.current_block_height}")
         print(f"Database: zion_pool.db (persistent storage enabled)")
 
-        # Start API server in background task
+        # Start API server
         try:
-            print(f"Starting API server...")
-            # Start API server in background task
-            self.api_task = asyncio.create_task(self.api_server.start())
-            print(f"Pool API server task started on port {self.port + 1}")
+            self.api_server.start()
+            print(f"Pool API server started on port {self.port + 1}")
         except Exception as e:
-            logger.error(f"Failed to start API server task: {e}")
-            print(f"Failed to start API server task: {e}")
-            raise
+            logger.error(f"Failed to start API server: {e}")
+            print(f"Failed to start API server: {e}")
 
         # Start cleanup task
         asyncio.create_task(self.cleanup_inactive_miners())
@@ -2910,23 +2440,7 @@ class ZionUniversalPool:
             print(f"Server error: {e}")
 
 async def main():
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='ZION Universal Mining Pool')
-    parser.add_argument('--testnet', action='store_true', help='Run in testnet mode')
-    args = parser.parse_args()
-    
-    # Set port and network based on mode
-    if args.testnet:
-        port = 3335  # Testnet pool port
-        network = "testnet"
-        print("🧪 ZION Universal Pool - TESTNET MODE")
-    else:
-        port = 3333  # Mainnet pool port
-        network = "mainnet"
-        print("🚀 ZION Universal Pool - PRODUCTION MODE")
-    
-    pool = ZionUniversalPool(port=port, network=network)
+    pool = ZionUniversalPool(port=3333)
     await pool.start_server()
 
 if __name__ == "__main__":
