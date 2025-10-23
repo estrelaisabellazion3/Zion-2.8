@@ -26,6 +26,7 @@ import struct
 import os
 import sys
 from collections import deque
+import glob
 
 # Logging setup
 logging.basicConfig(
@@ -206,10 +207,15 @@ class ZionGPUMiner:
         self.program: Optional[cl.Program] = None
         self.program_alv2: Optional[cl.Program] = None
         self.queue: Optional[cl.CommandQueue] = None
+        self.gpu_name: Optional[str] = None
         
         self.mining = False
         self.pool_socket: Optional[socket.socket] = None
         self.mining_thread: Optional[threading.Thread] = None
+        self._pool_broken: bool = False
+        self._last_pool_attempt: float = 0.0
+        self._last_temp_read: float = 0.0
+        self._last_ab_read: float = 0.0
         
         self.stats = {
             'total_hashes': 0,
@@ -221,6 +227,14 @@ class ZionGPUMiner:
             'current_nonce': 0,
             'submit_latency_ms_last': None,
             'submit_latency_ms_avg': None,
+            'kernel_time_ms_last': None,
+            'kernel_time_ms_avg': None,
+            'gpu_temp_c': None,
+            'afterburner_temp_c': None,
+            'afterburner_tasks_per_sec': None,
+            'afterburner_efficiency_pct': None,
+            'gpu_name': None,
+            'batch_size': None,
         }
         
         self.config = {
@@ -303,7 +317,8 @@ class ZionGPUMiner:
                 logger.error("❌ No GPU devices found")
                 return False
 
-            logger.info(f"✅ Using device: {self.devices[0].name}")
+            self.gpu_name = self.devices[0].name
+            logger.info(f"✅ Using device: {self.gpu_name}")
             return True
 
         except Exception as e:
@@ -336,7 +351,11 @@ class ZionGPUMiner:
                 props = [(cl.context_properties.PLATFORM, platform_for_device)]
                 self.context = cl.Context(properties=props, devices=[device])
 
-            self.queue = cl.CommandQueue(self.context)
+            # Enable profiling if supported to measure kernel times
+            try:
+                self.queue = cl.CommandQueue(self.context, properties=cl.command_queue_properties.PROFILING_ENABLE)
+            except Exception:
+                self.queue = cl.CommandQueue(self.context)
 
             # Compile programs - target OpenCL 1.2 for compatibility
             logger.info("🔧 Compiling OpenCL kernel...")
@@ -344,6 +363,7 @@ class ZionGPUMiner:
             self.program_alv2 = cl.Program(self.context, ALV2_PLACEHOLDER_OPENCL_KERNEL).build(options=["-cl-std=CL1.2"]) 
 
             logger.info(f"✅ GPU {device_id} initialized: {device.name}")
+            self.stats['gpu_name'] = device.name
             return True
 
         except Exception as e:
@@ -424,12 +444,12 @@ class ZionGPUMiner:
             found_nonce_buf = cl.Buffer(self.context, cl.mem_flags.WRITE_ONLY, size=4)
             found_hash_buf = cl.Buffer(self.context, cl.mem_flags.WRITE_ONLY, size=8 * 4)
             
-            # Run mining kernel
+            # Run mining kernel with auto-determined local work group
             kernel = self.program.cosmic_harmony_mine
             global_work_size = (nonce_count,)
             local_work_size = None  # Let driver decide for compatibility
 
-            kernel(self.queue, global_work_size, local_work_size,
+            evt = kernel(self.queue, global_work_size, local_work_size,
                    header_buf, np.uint32(header_u32.size * 4),
                    np.uint32(nonce_start), np.uint32(nonce_count),
                    output_buf,
@@ -438,9 +458,18 @@ class ZionGPUMiner:
                    found_hash_buf,
                    np.uint32(target & 0xFFFFFFFF))
             
-            self.queue.finish()
-            
-            # Check if found
+            # Wait for kernel completion and record timing if available
+            try:
+                evt.wait()
+                if hasattr(evt, 'profile'):
+                    kt_ms = (evt.profile.end - evt.profile.start) / 1e6
+                    self.stats['kernel_time_ms_last'] = kt_ms
+                    prev = self.stats.get('kernel_time_ms_avg')
+                    self.stats['kernel_time_ms_avg'] = kt_ms if prev is None else (0.8 * prev + 0.2 * kt_ms)
+            except Exception:
+                pass
+
+            # Async read without blocking
             out_flag = np.empty(1, dtype=np.int32)
             cl.enqueue_copy(self.queue, out_flag, found_flag_buf).wait()
 
@@ -541,6 +570,7 @@ class ZionGPUMiner:
             
         except Exception as e:
             logger.error(f"❌ Share submission failed: {e}")
+            self._pool_broken = True
             return False
     
     def start_mining(self) -> bool:
@@ -553,6 +583,7 @@ class ZionGPUMiner:
         
         if not self.connect_to_pool():
             logger.warning("⚠️  Pool connection failed, continuing in simulation mode")
+            self._pool_broken = True
         
         # self.mining already set in connect_to_pool if successful; ensure True regardless for simulation
         self.mining = True
@@ -586,7 +617,8 @@ class ZionGPUMiner:
         """Main mining loop"""
         try:
             nonce = 0
-            batch_size = 256
+            batch_size = 2048  # Larger batch for better GPU utilization
+            self.stats['batch_size'] = batch_size
             
             while self.mining:
                 job_copy = None
@@ -637,21 +669,55 @@ class ZionGPUMiner:
                         except Exception as ce:
                             logger.debug(f"CPU-verify error: {ce}")
                     if submit_hash:
-                        self.submit_share(job_copy['job_id'], found_nonce, submit_hash)
+                        ok = self.submit_share(job_copy['job_id'], found_nonce, submit_hash)
+                        if not ok:
+                            # mark pool broken to trigger reconnect
+                            self._pool_broken = True
                 
                 # Log stats every 10 seconds
                 if nonce % (batch_size * 100) == 0:
+                    # Update GPU temperature and Afterburner metrics
+                    self._update_hw_metrics()
                     lat_last = self.stats.get('submit_latency_ms_last')
                     lat_avg = self.stats.get('submit_latency_ms_avg')
                     lat_s = "n/a" if lat_last is None else f"{lat_last:.0f}ms"
                     lat_a = "n/a" if lat_avg is None else f"{lat_avg:.0f}ms"
+                    kt = self.stats.get('kernel_time_ms_last')
+                    kt_s = "n/a" if kt is None else f"{kt:.2f}ms"
+                    t_gpu = self.stats.get('gpu_temp_c')
+                    t_gpu_s = "n/a" if t_gpu is None else f"{t_gpu:.0f}°C"
+                    ab_t = self.stats.get('afterburner_temp_c')
+                    ab_t_s = "n/a" if ab_t is None else f"{ab_t:.0f}°C"
+                    ab_eff = self.stats.get('afterburner_efficiency_pct')
+                    ab_eff_s = "n/a" if ab_eff is None else f"{ab_eff:.0f}%"
                     logger.info(
-                        f"⛏️  Mining: {self.stats['hashrate']:.0f} H/s, Nonce: {nonce:,}, "
-                        f"Shares A/R: {self.stats['shares_found']}/{self.stats.get('shares_rejected',0)} | "
-                        f"Latency: {lat_s} avg {lat_a}"
+                        f"⛏️  {self.stats['hashrate']:.0f} H/s | Nonce {nonce:,} | "
+                        f"A/R {self.stats['shares_found']}/{self.stats.get('shares_rejected',0)} | "
+                        f"RTT {lat_s} avg {lat_a} | Kt {kt_s} | GPU {t_gpu_s} | AB {ab_t_s} {ab_eff_s}"
                     )
                 
-                time.sleep(0.01)  # Small delay to prevent CPU spinning
+                # Reconnect handling on broken socket
+                if self._pool_broken:
+                    now = time.time()
+                    if now - self._last_pool_attempt > 5.0:
+                        self._last_pool_attempt = now
+                        logger.warning("🔁 Pool connection lost, attempting reconnect...")
+                        try:
+                            if self.pool_socket:
+                                try:
+                                    self.pool_socket.close()
+                                except Exception:
+                                    pass
+                                self.pool_socket = None
+                            if self.connect_to_pool():
+                                logger.info("✅ Reconnected to pool")
+                                self._pool_broken = False
+                            else:
+                                logger.error("❌ Reconnect failed, will retry")
+                        except Exception as re:
+                            logger.error(f"❌ Reconnect exception: {re}")
+
+                time.sleep(0.001)  # Minimal sleep - let GPU batch optimize
                 
         except Exception as e:
             logger.error(f"❌ Mining loop error: {e}")
@@ -682,6 +748,8 @@ class ZionGPUMiner:
     
     def get_stats(self) -> Dict:
         """Get mining statistics"""
+        # refresh lightweight metrics
+        self._update_hw_metrics(force=False)
         return {
             'timestamp': datetime.now().isoformat(),
             'mining': self.mining,
@@ -689,6 +757,16 @@ class ZionGPUMiner:
             'hashrate': f"{self.stats['hashrate']:.0f} H/s",
             'shares': self.stats['shares_found'],
             'uptime': time.time() - self.stats['start_time'] if self.stats['start_time'] else 0,
+            'submit_latency_ms_last': self.stats.get('submit_latency_ms_last'),
+            'submit_latency_ms_avg': self.stats.get('submit_latency_ms_avg'),
+            'kernel_time_ms_last': self.stats.get('kernel_time_ms_last'),
+            'kernel_time_ms_avg': self.stats.get('kernel_time_ms_avg'),
+            'gpu_temp_c': self.stats.get('gpu_temp_c'),
+            'afterburner_temp_c': self.stats.get('afterburner_temp_c'),
+            'afterburner_tasks_per_sec': self.stats.get('afterburner_tasks_per_sec'),
+            'afterburner_efficiency_pct': self.stats.get('afterburner_efficiency_pct'),
+            'gpu_name': self.stats.get('gpu_name') or self.gpu_name,
+            'batch_size': self.stats.get('batch_size'),
         }
 
     # ===================== STRATUM RECEIVER =====================
@@ -698,6 +776,8 @@ class ZionGPUMiner:
             while self.mining:
                 line = fobj.readline()
                 if not line:
+                    # Socket likely closed
+                    self._pool_broken = True
                     break
                 line = line.strip()
                 if not line:
@@ -790,6 +870,55 @@ class ZionGPUMiner:
                                 logger.warning(f"❌ Share rejected: {err}")
         except Exception as e:
             logger.error(f"Receiver loop error: {e}")
+            # mark as broken to trigger reconnect
+            self._pool_broken = True
+
+    # ===================== HW METRICS =====================
+    def _update_hw_metrics(self, force: bool = True):
+        """Update GPU temperature and Afterburner metrics with throttling."""
+        now = time.time()
+        # GPU temp every ~2s unless forced
+        if force or (now - self._last_temp_read) > 2.0:
+            self._last_temp_read = now
+            try:
+                t = self._read_gpu_temperature()
+                if t is not None:
+                    self.stats['gpu_temp_c'] = t
+            except Exception:
+                pass
+        # Afterburner metrics every ~10s
+        if self.afterburner is not None and (force or (now - self._last_ab_read) > 10.0):
+            self._last_ab_read = now
+            try:
+                ab = self.afterburner.get_performance_stats()
+                if isinstance(ab, dict):
+                    self.stats['afterburner_temp_c'] = ab.get('afterburner_temperature')
+                    self.stats['afterburner_tasks_per_sec'] = ab.get('tasks_per_second')
+                    eff = ab.get('compute_efficiency')
+                    if eff is not None:
+                        self.stats['afterburner_efficiency_pct'] = eff * 100.0
+            except Exception:
+                pass
+
+    def _read_gpu_temperature(self) -> Optional[float]:
+        """Attempt to read AMD GPU temperature from sysfs. Returns Celsius or None."""
+        # Common paths: /sys/class/drm/card*/device/hwmon/hwmon*/temp*_input
+        try:
+            candidates = []
+            for card in range(0, 10):
+                glob_pat = f"/sys/class/drm/card{card}/device/hwmon/hwmon*/temp*_input"
+                candidates.extend(glob.glob(glob_pat))
+            for path in candidates:
+                try:
+                    with open(path, 'r') as f:
+                        milli_c = int(f.read().strip())
+                        if milli_c > 0:
+                            return milli_c / 1000.0
+                except Exception:
+                    continue
+        except Exception:
+            pass
+        return None
 
     # ===================== ALv2 GPU SEARCH =====================
     def mine_alv2_placeholder_gpu(self, header32: bytes, nonce_start: int, nonce_count: int, target32: bytes) -> Tuple[bool, int, bytes]:
