@@ -23,6 +23,8 @@ recovery.txt
 *.db
 *.sqlite
 *.sqlite3
+*.db-shm
+*.db-wal
 zion_real_blockchain*.db
 
 # Python
