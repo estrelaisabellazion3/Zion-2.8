@@ -18,7 +18,7 @@ export class ZionProductionClient {
       timestamp,
       source: 'production-91.98.122.165',
       simulation: false,
-      version: '2.7.5-production'
+      version: '2.8.1-production'
     };
 
     try {
@@ -33,10 +33,13 @@ export class ZionProductionClient {
           miners_connected: miningData.miners || 0,
           blocks_found: miningData.blocks || 0,
           difficulty: miningData.difficulty || 0,
-          algorithm: 'RandomX',
+          algorithms: ['randomx', 'yescrypt', 'autolykos2'],
+          current_algorithm: 'randomx',
           pool_address: miningData.address || '',
           shares_accepted: miningData.shares_accepted || 0,
-          shares_rejected: miningData.shares_rejected || 0
+          shares_rejected: miningData.shares_rejected || 0,
+          consciousness_miners: miningData.consciousness_miners || 0,
+          total_xp_awarded: miningData.total_xp || 0
         };
       }
     } catch (error) {
@@ -56,7 +59,9 @@ export class ZionProductionClient {
           difficulty: blockchainData.difficulty || 0,
           network_hashrate: blockchainData.hashrate || 0,
           tx_count: blockchainData.tx_count || 0,
-          mempool_size: blockchainData.tx_pool_size || 0
+          mempool_size: blockchainData.tx_pool_size || 0,
+          warp_transfers: blockchainData.warp_transfers || 0,
+          lightning_channels: blockchainData.lightning_channels || 0
         };
       }
     } catch (error) {
@@ -70,11 +75,14 @@ export class ZionProductionClient {
       });
       if (bridgeResponse.ok) {
         const bridgeData = await bridgeResponse.json();
-        stats.bridge = {
+        stats.warp = {
           chains: bridgeData.chains || [],
           transfers_total: bridgeData.transfers || 0,
           volume_24h: bridgeData.volume || 0,
-          status: bridgeData.status || 'error'
+          status: bridgeData.status || 'error',
+          average_transfer_time: bridgeData.avg_time || 0,
+          success_rate: bridgeData.success_rate || 0,
+          supported_assets: bridgeData.assets || []
         };
       }
     } catch (error) {

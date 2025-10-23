@@ -53,7 +53,7 @@ const config: Config = {
   },
   plugins: [
     // Add glow effects for ZION theme
-    function({ addUtilities }) {
+    function({ addUtilities }: { addUtilities: Function }) {
       const newUtilities = {
         '.glow-green': {
           'box-shadow': '0 0 20px rgba(0, 255, 0, 0.5)',

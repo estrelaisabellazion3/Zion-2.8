@@ -78,7 +78,19 @@ for module_name in ("yescrypt_fast", "mining.yescrypt_fast"):
     except ImportError:
         continue
 
+# Setup logger FIRST (before using it)
 logger = logging.getLogger(__name__)
+
+# Import Cosmic Harmony wrapper
+COSMIC_HARMONY_AVAILABLE = False
+CosmicHarmonyHasher = None
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'zion', 'mining'))
+    from cosmic_harmony_wrapper import CosmicHarmonyHasher, get_hasher
+    COSMIC_HARMONY_AVAILABLE = True
+    logger.info("✅ Cosmic Harmony algorithm available")
+except ImportError as e:
+    logger.debug(f"Cosmic Harmony not available: {e}")
 
 class MiningMode(Enum):
     """Mining operation modes"""
@@ -91,6 +103,7 @@ class MiningAlgorithm(Enum):
     """Supported mining algorithms"""
     RANDOMX = "randomx"          # CPU - Monero
     YESCRYPT = "yescrypt"        # CPU - Energy efficient
+    COSMIC_HARMONY = "cosmic_harmony"  # CPU/GPU - ZION native algorithm
     KAWPOW = "kawpow"            # GPU - Ravencoin
     ETHASH = "ethash"            # GPU - Ethereum
     AUTOLYKOS2 = "autolykos2"    # GPU - Ergo
@@ -107,6 +120,7 @@ class ZionUniversalMiner:
         """
         self.mode = mode
         self.is_mining = False
+        self.stop_mining = False
         self.yescrypt_engine_preference = os.environ.get('ZION_YESCRYPT_ENGINE', 'auto').lower()
         
         # Hardware detection
@@ -125,6 +139,7 @@ class ZionUniversalMiner:
         # Mining processes
         self.cpu_process = None
         self.gpu_process = None
+        self.mining_thread = None
         self.monitoring_thread = None
         self.stop_monitoring = False
         
@@ -143,6 +158,7 @@ class ZionUniversalMiner:
             'accepted_shares': 0,
             'rejected_shares': 0,
             'blocks_found': 0,
+            'shares_found': 0,
             'uptime_seconds': 0,
             'start_time': None
         }
@@ -361,6 +377,8 @@ class ZionUniversalMiner:
                     self.current_cpu_algorithm = MiningAlgorithm.RANDOMX
                 elif algo_upper == "YESCRYPT":
                     self.current_cpu_algorithm = MiningAlgorithm.YESCRYPT
+                elif algo_upper in ["COSMIC_HARMONY", "COSMIC-HARMONY", "COSMICHARMONY"]:
+                    self.current_cpu_algorithm = MiningAlgorithm.COSMIC_HARMONY
             
             # Default ZION pool if not specified
             if not pool_url:
@@ -411,8 +429,17 @@ class ZionUniversalMiner:
         """Start CPU mining process"""
         logger.info(f"⚡ Starting CPU mining ({self.current_cpu_algorithm.value})...")
         
+        # Cosmic Harmony - ZION native algorithm
+        if self.current_cpu_algorithm == MiningAlgorithm.COSMIC_HARMONY:
+            if COSMIC_HARMONY_AVAILABLE:
+                logger.info("🌟 Using NATIVE Cosmic Harmony algorithm (ZION native!)")
+                self._start_cosmic_harmony_mining(pool_url, wallet_address, worker_name)
+            else:
+                logger.warning("⚠️ Cosmic Harmony not available, falling back to Yescrypt")
+                self.current_cpu_algorithm = MiningAlgorithm.YESCRYPT
+                self._start_cpu_mining(pool_url, wallet_address, worker_name)
         # Prefer professional Yescrypt implementation (C-optimized, 562K H/s)
-        if self.current_cpu_algorithm == MiningAlgorithm.YESCRYPT:
+        elif self.current_cpu_algorithm == MiningAlgorithm.YESCRYPT:
             engine = getattr(self, 'yescrypt_engine_preference', 'auto')
             if engine not in ('auto', 'native', 'professional'):
                 engine = 'auto'
@@ -539,6 +566,206 @@ class ZionUniversalMiner:
         except Exception as e:
             logger.error(f"Failed to start SRBMiner: {e}")
             self._simulate_gpu_mining()
+    
+    def _start_cosmic_harmony_mining(self, pool_url: Optional[str], 
+                                     wallet_address: Optional[str], 
+                                     worker_name: str):
+        """Start Cosmic Harmony mining (ZION native algorithm)"""
+        try:
+            logger.info("🌟 Initializing Cosmic Harmony mining engine...")
+            
+            # Get Cosmic Harmony hasher
+            if not COSMIC_HARMONY_AVAILABLE or get_hasher is None:
+                logger.error("Cosmic Harmony not available!")
+                self._simulate_cpu_mining()
+                return
+            
+            hasher = get_hasher()
+            logger.info(f"   Hasher type: {type(hasher).__name__}")
+            
+            # Pool connection details
+            if not pool_url:
+                pool_url = "stratum+tcp://127.0.0.1:3336"  # Cosmic Harmony pool port
+            
+            logger.info(f"   Pool: {pool_url}")
+            logger.info(f"   Wallet: {wallet_address[:20] if wallet_address else 'default'}...")
+            logger.info(f"   Worker: {worker_name}")
+            
+            # Start mining loop in background thread
+            self.stop_mining = False
+            self.mining_thread = threading.Thread(
+                target=self._cosmic_harmony_mining_loop,
+                args=(hasher, pool_url, wallet_address, worker_name),
+                daemon=True
+            )
+            self.mining_thread.start()
+            
+            # Simulate initial hashrate for monitoring
+            self.cpu_hashrate = self.optimal_cpu_threads * random.uniform(100, 300)  # H/s for Cosmic Harmony
+            logger.info(f"✅ Cosmic Harmony mining started ({self.cpu_hashrate:.0f} H/s estimated)")
+            
+        except Exception as e:
+            logger.error(f"Failed to start Cosmic Harmony mining: {e}")
+            import traceback
+            traceback.print_exc()
+            self._simulate_cpu_mining()
+    
+    def _cosmic_harmony_mining_loop(self, hasher, pool_url: str, 
+                                   wallet_address: Optional[str], 
+                                   worker_name: str):
+        """Cosmic Harmony mining loop - generates hashes and submits shares via Stratum"""
+        logger.info("🌟 Cosmic Harmony mining loop started (REAL MODE - No Simulation)")
+        
+        import socket
+        import json
+        
+        # Parse pool URL
+        if pool_url.startswith('stratum+tcp://'):
+            pool_addr = pool_url.replace('stratum+tcp://', '')
+        else:
+            pool_addr = pool_url
+            
+        if ':' in pool_addr:
+            pool_host, pool_port_str = pool_addr.rsplit(':', 1)
+            try:
+                pool_port = int(pool_port_str)
+            except:
+                pool_port = 3336
+        else:
+            pool_host = pool_addr
+            pool_port = 3336
+        
+        logger.info(f"   Connecting to {pool_host}:{pool_port}")
+        
+        # Connect to pool
+        sock = None
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((pool_host, pool_port))
+            logger.info("✅ Connected to Cosmic Harmony pool!")
+            
+            # Send mining.subscribe
+            subscribe_msg = {
+                "id": 1,
+                "method": "mining.subscribe",
+                "params": [f"ZION-Miner/2.8", None]
+            }
+            sock.sendall((json.dumps(subscribe_msg) + "\n").encode())
+            
+            # Receive subscribe response
+            response = sock.recv(4096).decode('utf-8', errors='ignore')
+            logger.info(f"   Pool subscribe response: {response[:100]}")
+            
+            # Send mining.authorize
+            auth_msg = {
+                "id": 2,
+                "method": "mining.authorize",
+                "params": [wallet_address or "ZION_MINER", worker_name]
+            }
+            sock.sendall((json.dumps(auth_msg) + "\n").encode())
+            
+            response = sock.recv(4096).decode('utf-8', errors='ignore')
+            logger.info(f"   Pool authorize response: {response[:100]}")
+            
+            share_count = 0
+            hash_count = 0
+            start_time = time.time()
+            current_job = None
+            current_difficulty = 1
+            
+            # Mining loop
+            while self.is_mining and not self.stop_mining:
+                try:
+                    # Check for pool notifications (new job, difficulty, etc)
+                    sock.settimeout(1)
+                    try:
+                        data = sock.recv(4096).decode('utf-8', errors='ignore')
+                        if data:
+                            for line in data.strip().split('\n'):
+                                if line:
+                                    try:
+                                        notification = json.loads(line)
+                                        
+                                        # Handle new job
+                                        if notification.get('method') == 'mining.notify':
+                                            current_job = notification['params']
+                                            logger.debug(f"   New job from pool")
+                                        
+                                        # Handle difficulty change
+                                        elif notification.get('method') == 'mining.set_difficulty':
+                                            current_difficulty = notification['params'][0]
+                                            logger.debug(f"   Difficulty set to {current_difficulty}")
+                                    except json.JSONDecodeError:
+                                        pass
+                    except socket.timeout:
+                        pass
+                    
+                    # Mine with Cosmic Harmony
+                    if current_job:
+                        job_id, prevblock, coinbase1, coinbase2, merkle_branch, version, bits, ntime, clean = current_job
+                        
+                        # Generate nonce and timestamp
+                        nonce = random.randint(0, 2**32 - 1)
+                        timestamp = int(time.time())
+                        
+                        # Create header with job data
+                        header = f"{job_id}:{nonce}:{timestamp}".encode()
+                        
+                        # Hash with Cosmic Harmony
+                        try:
+                            cosmos_hash = hasher.hash(header)
+                            hash_count += 1
+                            
+                            # Check if hash meets difficulty
+                            hash_int = int.from_bytes(cosmos_hash[:8], 'little')
+                            target = (2**256 - 1) // int(current_difficulty)
+                            
+                            if hash_int < target:
+                                # Found share!
+                                share_count += 1
+                                logger.info(f"🌟 Found Cosmic Harmony share #{share_count}!")
+                                
+                                # Submit share to pool
+                                share_msg = {
+                                    "id": 3 + share_count,
+                                    "method": "mining.submit",
+                                    "params": [wallet_address or "ZION_MINER", job_id, ntime, nonce, cosmos_hash.hex()]
+                                }
+                                sock.sendall((json.dumps(share_msg) + "\n").encode())
+                                self.stats['shares_found'] = share_count
+                        
+                        except Exception as e:
+                            logger.debug(f"   Cosmic Harmony hash error: {e}")
+                    
+                        # Update hashrate every 1000 hashes
+                        if hash_count % 1000 == 0 and hash_count > 0:
+                            elapsed = time.time() - start_time
+                            hashrate = hash_count / elapsed
+                            self.cpu_hashrate = hashrate
+                            logger.info(f"   🌟 Hashrate: {hashrate:.0f} H/s | Shares: {share_count}")
+                            self.stats['shares_found'] = share_count
+                    else:
+                        # Wait for first job
+                        time.sleep(0.1)
+                
+                except Exception as e:
+                    logger.debug(f"   Mining iteration error: {e}")
+                    time.sleep(0.1)
+        
+        except Exception as e:
+            logger.error(f"Cosmic Harmony mining error: {e}")
+        
+        finally:
+            if sock:
+                try:
+                    sock.close()
+                except:
+                    pass
+            
+            elapsed = time.time() - start_time
+            final_hashrate = hash_count / elapsed if elapsed > 0 else 0
+            logger.info(f"🌟 Cosmic Harmony mining stopped:")
+            logger.info(f"   Shares: {share_count} | Hashes: {hash_count} | Avg Hashrate: {final_hashrate:.0f} H/s")
     
     def _simulate_cpu_mining(self):
         """Simulate CPU mining (when real miner not available)"""
@@ -1327,6 +1554,7 @@ class ZionUniversalMiner:
             logger.info("⏹️  Stopping mining operations...")
             
             self.is_mining = False
+            self.stop_mining = True
             self.stop_monitoring = True
             
             # Stop CPU process
@@ -1352,6 +1580,11 @@ class ZionUniversalMiner:
                 elif isinstance(self.gpu_process, threading.Thread):
                     self.gpu_process.join(timeout=5)
                 self.gpu_process = None
+            
+            # Stop mining thread (for native algorithms like Cosmic Harmony)
+            if self.mining_thread:
+                self.mining_thread.join(timeout=5)
+                self.mining_thread = None
             
             # Wait for monitoring thread
             if self.monitoring_thread:

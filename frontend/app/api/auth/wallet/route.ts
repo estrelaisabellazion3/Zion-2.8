@@ -29,15 +29,8 @@ interface User {
 }
 
 // Global users store
-declare global {
-  var zionUsers: User[] | undefined;
-}
-
-if (!global.zionUsers) {
-  global.zionUsers = [];
-}
-
-const users = global.zionUsers;
+// Using a simple in-memory store for demo purposes
+let zionUsers: User[] = [];
 
 // Generate API key
 function generateApiKey(): string {
@@ -96,7 +89,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find or create user by wallet address
-    let user = users.find(u => u.walletAddress === walletAddress);
+    let user = zionUsers.find((u: User) => u.walletAddress === walletAddress);
 
     if (!user) {
       // Create new user for this wallet
@@ -112,7 +105,7 @@ export async function POST(request: NextRequest) {
         dailyLimit: 5000.0, // Higher limit for wallet users
         totalVolume: 0.0,
       };
-      users.push(user);
+      zionUsers.push(user);
     }
 
     // Update last login

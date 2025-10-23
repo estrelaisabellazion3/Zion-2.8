@@ -3,8 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 const ZION_CORE_BASE = process.env.ZION_CORE_BASE || "http://localhost:8889";
 
 /**
- * ZION 2.7 TestNet API Proxy
+ * ZION 2.8.1 "Estrella" TestNet API Proxy
  * Routes frontend requests to Python-native ZION backend
+ * 
+ * New in 2.8.1:
+ * - WARP Bridge integration
+ * - Consciousness Mining Game
+ * - Lightning Network payments
+ * - Multi-algorithm mining pool
+ * - Production monitoring
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -13,13 +20,43 @@ export async function GET(request: NextRequest) {
   try {
     // Map frontend requests to ZION Core endpoints
     const coreEndpoints = {
+      // Core system endpoints
       'stats': '/api/stats',
       'mining': '/api/mining/stats', 
       'gpu': '/api/gpu/stats',
       'lightning': '/api/lightning/stats',
       'blockchain': '/api/blockchain/stats',
       'health': '/health',
-      'modules': '/health'
+      'modules': '/health',
+      
+      // WARP Bridge endpoints (2.8.1)
+      'warp-status': '/api/warp/status',
+      'warp-transfer': '/api/warp/transfer',
+      'warp-history': '/api/warp/history',
+      'warp-supported-chains': '/api/warp/chains',
+      
+      // Consciousness Mining Game (2.8.1)
+      'consciousness-status': '/api/consciousness/status',
+      'consciousness-miners': '/api/consciousness/miners',
+      'consciousness-achievements': '/api/consciousness/achievements',
+      'consciousness-leaderboard': '/api/consciousness/leaderboard',
+      
+      // Lightning Network (2.8.1)
+      'lightning-channels': '/api/lightning/channels',
+      'lightning-payments': '/api/lightning/payments',
+      'lightning-invoices': '/api/lightning/invoices',
+      'lightning-balance': '/api/lightning/balance',
+      
+      // Multi-algorithm Mining Pool (2.8.1)
+      'pool-stats': '/api/pool/stats',
+      'pool-miners': '/api/pool/miners',
+      'pool-blocks': '/api/pool/blocks',
+      'pool-algorithms': '/api/pool/algorithms',
+      
+      // Production Monitoring (2.8.1)
+      'monitoring-health': '/api/monitoring/health',
+      'monitoring-metrics': '/api/monitoring/metrics',
+      'monitoring-logs': '/api/monitoring/logs'
     };
     
     const coreEndpoint = coreEndpoints[endpoint as keyof typeof coreEndpoints] || '/api/stats';
@@ -45,10 +82,10 @@ export async function GET(request: NextRequest) {
     const enrichedData = {
       ...normalized,
       _meta: {
-        source: 'zion-core-v2.5',
+        source: 'zion-core-v2.8.1',
         endpoint: coreEndpoint,
         timestamp: new Date().toISOString(),
-        frontend_version: '2.5.0'
+        frontend_version: '2.8.1'
       }
     };
 
@@ -89,8 +126,30 @@ export async function POST(request: NextRequest) {
       'start_mining': '/api/gpu/start',
       'stop_mining': '/api/gpu/stop', 
       'benchmark_gpu': '/api/gpu/benchmark',
-      // Lightning operations
+      
+      // WARP Bridge actions (2.8.1)
+      'warp_transfer': '/api/warp/transfer',
+      'warp_estimate_fee': '/api/warp/estimate-fee',
+      'warp_get_quote': '/api/warp/quote',
+      
+      // Consciousness Game actions (2.8.1)
+      'consciousness_meditate': '/api/consciousness/meditate',
+      'consciousness_claim_achievement': '/api/consciousness/claim-achievement',
+      'consciousness_upgrade_level': '/api/consciousness/upgrade',
+      
+      // Lightning Network actions (2.8.1)
       'lightning_pay': '/api/lightning/payments',
+      'lightning_create_invoice': '/api/lightning/invoices',
+      'lightning_decode_invoice': '/api/lightning/decode',
+      'lightning_channel_open': '/api/lightning/channels/open',
+      'lightning_channel_close': '/api/lightning/channels/close',
+      
+      // Mining Pool actions (2.8.1)
+      'pool_switch_algorithm': '/api/pool/switch-algorithm',
+      'pool_get_worker_stats': '/api/pool/worker-stats',
+      'pool_submit_share': '/api/pool/submit-share',
+      
+      // Legacy actions
       'mining_status': '/api/mining/stats'
     };
     
@@ -171,7 +230,66 @@ function getFallbackData(endpoint: string) {
         balance: 1000000, 
         peers: 5,
         status: 'online'
+      },
+      // New in 2.8.1
+      warp: {
+        status: 'operational',
+        supportedChains: ['zion', 'ethereum', 'polygon', 'bsc', 'solana'],
+        activeTransfers: 0,
+        totalTransferred: 0
+      },
+      consciousness: {
+        totalMiners: 2,
+        totalXP: 14090,
+        activeLevel: 'MENTAL',
+        achievementsUnlocked: 5
       }
+    },
+    warp: {
+      status: 'operational',
+      supportedChains: ['zion', 'ethereum', 'polygon', 'arbitrum', 'optimism', 'avalanche', 'bsc', 'solana'],
+      activeTransfers: 0,
+      totalTransferred: 0,
+      averageTransferTime: 969,
+      successRate: 100
+    },
+    consciousness: {
+      miners: [
+        { address: 'ZION123...', level: 'MENTAL', xp: 5090, achievements: 3 },
+        { address: 'ZION456...', level: 'MENTAL', xp: 9000, achievements: 2 }
+      ],
+      leaderboard: [
+        { rank: 1, address: 'ZION123...', xp: 5090 },
+        { rank: 2, address: 'ZION456...', xp: 9000 }
+      ],
+      achievements: [
+        { id: 'first_mine', name: 'First Mine', description: 'Mine your first block', unlocked: true },
+        { id: 'consciousness_awakened', name: 'Consciousness Awakened', description: 'Reach MENTAL level', unlocked: true }
+      ]
+    },
+    lightning: {
+      channels: [
+        { id: 'channel1', capacity: 1000000, localBalance: 500000, remoteBalance: 500000, active: true },
+        { id: 'channel2', capacity: 2000000, localBalance: 1500000, remoteBalance: 500000, active: true }
+      ],
+      totalCapacity: 3000000,
+      totalLocalBalance: 2000000,
+      totalRemoteBalance: 1000000,
+      activeChannels: 2,
+      pendingChannels: 0,
+      nodeAlias: 'ZION-TESTNET',
+      nodeId: '02abcdef...'
+    },
+    pool: {
+      algorithms: ['randomx', 'yescrypt', 'autolykos2'],
+      totalMiners: 2,
+      totalHashrate: 15130000,
+      blocksFound: 5,
+      currentDifficulty: 123456,
+      miners: [
+        { address: 'ZION123...', hashrate: 15000000, shares: 107, algorithm: 'randomx' },
+        { address: 'ZION456...', hashrate: 130000, shares: 4, algorithm: 'yescrypt' }
+      ]
     },
     mining: {
       status: 'mining',
@@ -202,7 +320,9 @@ function getFallbackData(endpoint: string) {
         blockchain: 'ready',
         mining: 'mining', 
         gpu: 'ready',
-        lightning: 'ready'
+        lightning: 'ready',
+        warp: 'operational',
+        consciousness: 'active'
       }
     }
   };

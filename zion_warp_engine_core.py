@@ -574,11 +574,11 @@ class ZionWARPEngine:
             host="127.0.0.1",
             port=3333,
             protocol="xmrig",
-            algorithms=["yescrypt", "randomx", "autolykos2"],
+            algorithms=["cosmic_harmony", "yescrypt", "randomx", "autolykos2"],  # 🌟 Native ZION algo!
             wallet=premine.get('ZION_DEVELOPMENT_TEAM_FUND_378614887FEA27791540F45', 'ZION_POOL_LOCAL')
         )
         self.pools['universal_local'] = pool1
-        logger.info(f"  📌 Pool 1: {pool1.name} @ {pool1.host}:{pool1.port}")
+        logger.info(f"  📌 Pool 1: {pool1.name} @ {pool1.host}:{pool1.port} [Cosmic Harmony ⭐]")
         
         # Pool 2: SSH Remote Pool (port 3333) - 91.98.122.165
         pool2 = PoolConnection(
@@ -586,11 +586,11 @@ class ZionWARPEngine:
             host="91.98.122.165",
             port=3333,
             protocol="xmrig",
-            algorithms=["yescrypt", "randomx", "autolykos2"],
+            algorithms=["cosmic_harmony", "yescrypt", "randomx", "autolykos2"],  # 🌟 Native ZION algo!
             wallet=premine.get('ZION_NETWORK_INFRASTRUCTURE_SITA_B5F3BE9968A1D90', 'ZION_POOL_SSH')
         )
         self.pools['universal_ssh'] = pool2
-        logger.info(f"  📌 Pool 2: {pool2.name} @ {pool2.host}:{pool2.port}")
+        logger.info(f"  📌 Pool 2: {pool2.name} @ {pool2.host}:{pool2.port} [Cosmic Harmony ⭐]")
         
         logger.info(f"✅ {len(self.pools)} mining pools configured")
     

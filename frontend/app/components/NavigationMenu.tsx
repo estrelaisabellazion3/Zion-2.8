@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import AuthButton from "./AuthButton";
 
 const NavigationMenu = () => {
   const pathname = usePathname();
@@ -100,6 +101,14 @@ const NavigationMenu = () => {
         <div className="flex items-center gap-2">
           {/* Dashboard Dropdown */}
           <DashboardDropdown currentPath={pathname} />
+          {/* Auth Button */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <AuthButton />
+          </motion.div>
           {/* Network Status */}
           <motion.div 
             className="flex items-center gap-2 text-sm"
