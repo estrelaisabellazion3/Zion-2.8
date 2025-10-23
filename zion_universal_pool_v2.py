@@ -876,6 +876,7 @@ class ZionUniversalPool:
             'yescrypt': None,
             'autolykos2': None
         }
+        self.active_jobs_queue = []  # Keep last 5 jobs for reconnect replay
         self.job_counter = 0
         self.share_counter = 0
         self.block_counter = 0
@@ -1763,7 +1764,7 @@ class ZionUniversalPool:
                     del self.miners[addr]
 
     async def handle_client(self, reader, writer):
-        """Handle incoming miner connections"""
+        """Handle incoming miner connections with timeout and heartbeat"""
         addr = writer.get_extra_info('peername')
         logger.info(f"New connection from {addr}")
         print(f"👷 New miner connected from {addr}")
@@ -1775,20 +1776,42 @@ class ZionUniversalPool:
         connections_counter.inc()
         connected_miners_gauge.set(len(self.miners) + 1)  # +1 for this new connection
 
+        last_activity = time.time()
+        heartbeat_interval = 30  # seconds
+        read_timeout = 60  # seconds - readline will timeout after this
+
         try:
-            # Switch to line-based parsing to avoid concatenated JSON issues
+            # Switch to line-based parsing with timeout
             while True:
-                line = await reader.readline()
-                if not line:
-                    break
-                raw = line.decode('utf-8').strip()
-                if not raw:
-                    continue
-                print(f"🧾 RAW <- {addr}: {raw}")
-                response = await self.handle_message(raw, addr, writer)
-                if response:
-                    writer.write(response.encode('utf-8'))
-                    await writer.drain()
+                try:
+                    # Read with timeout (60s)
+                    line = await asyncio.wait_for(reader.readline(), timeout=read_timeout)
+                    if not line:
+                        logger.info(f"EOF from {addr} (connection closed cleanly)")
+                        break
+                    last_activity = time.time()
+                    raw = line.decode('utf-8').strip()
+                    if not raw:
+                        continue
+                    print(f"🧾 RAW <- {addr}: {raw}")
+                    response = await self.handle_message(raw, addr, writer)
+                    if response:
+                        writer.write(response.encode('utf-8'))
+                        await writer.drain()
+                except asyncio.TimeoutError:
+                    # No data received within read_timeout
+                    now = time.time()
+                    if now - last_activity > read_timeout:
+                        logger.warning(f"Read timeout from {addr} (no data for {read_timeout}s)")
+                        print(f"⏱️  Read timeout from {addr}")
+                        break
+                    # If heartbeat not sent in heartbeat_interval, send ping
+                    if now - last_activity > heartbeat_interval:
+                        logger.debug(f"Sending heartbeat to {addr}")
+                        ping = json.dumps({"jsonrpc": "2.0", "method": "client.get_version", "params": []}) + '\n'
+                        writer.write(ping.encode('utf-8'))
+                        await writer.drain()
+                        last_activity = now
 
         except Exception as e:
             logger.error(f"Error handling miner {addr}: {e}")
@@ -1796,8 +1819,11 @@ class ZionUniversalPool:
         finally:
             logger.info(f"Miner {addr} disconnected")
             print(f"👋 Miner {addr} disconnected")
-            writer.close()
-            await writer.wait_closed()
+            try:
+                writer.close()
+                await writer.wait_closed()
+            except Exception:
+                pass
 
             # Remove miner from tracking
             if addr in self.miners:
@@ -1902,7 +1928,7 @@ class ZionUniversalPool:
         logger.warning(f"Banned IP {ip}: {reason}")
         
     def adjust_difficulty(self, addr, algorithm):
-        """Variable difficulty adjustment based on miner performance"""
+        """Variable difficulty adjustment based on miner performance with safety caps"""
         if not self.vardiff['enabled'] or addr not in self.miners:
             return
             
@@ -1920,16 +1946,22 @@ class ZionUniversalPool:
         current_diff = miner.get('difficulty', self.difficulty.get(algorithm, 1000))
         min_diff = self.vardiff['min_diff'].get(algorithm, 100)
         max_diff = self.vardiff['max_diff'].get(algorithm, 10000)
+        
+        # Safety caps to prevent aggressive ramping
+        ABSOLUTE_MAX_DIFF = 50000  # Hard cap to prevent DOS-like ramping
+        MAX_RAMP_FACTOR = 1.5  # Max multiplier per adjustment (not 2.0)
+        MIN_RAMP_FACTOR = 0.75  # Min divisor per adjustment
+        
         target_time = self.vardiff['target_time']
         variance = self.vardiff['variance_percent'] / 100
         
-        # Calculate new difficulty
+        # Calculate new difficulty with ramp factor limits
         if avg_time < target_time * (1 - variance):
-            # Too fast - increase difficulty
-            new_diff = min(current_diff * 1.3, max_diff)
+            # Too fast - increase difficulty (capped at 1.5x per adjustment)
+            new_diff = min(current_diff * MAX_RAMP_FACTOR, max_diff, ABSOLUTE_MAX_DIFF)
         elif avg_time > target_time * (1 + variance):
             # Too slow - decrease difficulty  
-            new_diff = max(current_diff * 0.75, min_diff)
+            new_diff = max(current_diff * MIN_RAMP_FACTOR, min_diff)
         else:
             # In target range - no change
             return
@@ -1938,11 +1970,11 @@ class ZionUniversalPool:
         if algorithm in ['yescrypt', 'autolykos_v2']:
             new_diff *= 0.95  # 5% easier for eco algorithms
             
-        new_diff = int(new_diff)
+        new_diff = int(min(new_diff, ABSOLUTE_MAX_DIFF))  # Final cap
         
         if new_diff != current_diff:
             miner['difficulty'] = new_diff
-            print(f"📊 VarDiff {addr[0]}:{addr[1]} {algorithm}: {current_diff} → {new_diff} (avg: {avg_time:.1f}s)")
+            print(f"📊 VarDiff {addr[0]}:{addr[1]} {algorithm}: {current_diff} → {new_diff} (avg: {avg_time:.1f}s, cap: {ABSOLUTE_MAX_DIFF})")
             
             # Send new difficulty to miner
             if miner.get('protocol') == 'stratum':
@@ -2562,7 +2594,7 @@ class ZionUniversalPool:
             }) + '\n'
 
     async def handle_stratum_subscribe(self, data, addr):
-        """Handle mining.subscribe for SRBMiner KawPow"""
+        """Handle mining.subscribe for SRBMiner KawPow, with job replay on reconnect"""
         extranonce1 = self.miners[addr]['extranonce1']
         extranonce2_size = self.miners[addr]['extranonce2_size']
 
@@ -2572,7 +2604,23 @@ class ZionUniversalPool:
             'error': None
         }
         print(f"📤 Subscribe response: extranonce1={extranonce1}")
-        return json.dumps(response) + '\n'
+        
+        # Prepare response bundle with last job (if available, for reconnect replay)
+        bundled_response = json.dumps(response) + '\n'
+        
+        # If we have queued jobs, send the latest one immediately after subscribe
+        # This helps reconnecting miners get back to work quickly
+        if self.active_jobs_queue:
+            last_job = self.active_jobs_queue[-1]
+            job_notify = json.dumps({
+                'id': None,
+                'method': 'mining.notify',
+                'params': last_job['notify_params']
+            }) + '\n'
+            bundled_response += job_notify
+            logger.info(f"📜 Replaying last job {last_job['job_id']} on reconnect for {addr}")
+        
+        return bundled_response
 
     async def handle_stratum_authorize(self, data, addr):
         """Handle mining.authorize and send initial job"""
@@ -2700,6 +2748,17 @@ class ZionUniversalPool:
         }) + '\n'
 
         bundled = auth_resp + set_diff_msg + notify_msg
+        
+        # Store job in queue for reconnect replay (keep last 5 jobs)
+        job_record = {
+            'job_id': job['job_id'],
+            'notify_params': notify_params,
+            'timestamp': time.time()
+        }
+        self.active_jobs_queue.append(job_record)
+        if len(self.active_jobs_queue) > 5:
+            self.active_jobs_queue.pop(0)  # Remove oldest
+        
         try:
             logger.info(f"📤 Auth+notify prepared: algo={self.miners[addr].get('algorithm')} job={job['job_id']} diff={diff}")
         except Exception:
