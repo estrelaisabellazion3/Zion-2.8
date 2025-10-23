@@ -2011,6 +2011,8 @@ class ZionUniversalPool:
             algorithm = 'autolykos_v2'
         elif 'yescrypt' in password.lower():
             algorithm = 'yescrypt'
+        elif 'cosmic' in password.lower():
+            algorithm = 'cosmic_harmony'
         elif 'kawpow' in password.lower():
             algorithm = 'kawpow'
         else:
@@ -2069,6 +2071,17 @@ class ZionUniversalPool:
                 job['height'],
                 True  # clean_jobs
             ]
+        elif algorithm == 'cosmic_harmony':
+            job = self.create_cosmic_harmony_job()
+            # Cosmic Harmony: [job_id, block_header, target32, height, clean_jobs]
+            notify_params = [
+                job['job_id'],
+                job['block_header'],
+                job['target32'],
+                job['height'],
+                True
+            ]
+        
         else:  # kawpow
             job = self.create_kawpow_job()
             diff = self.miners[addr]['difficulty']
@@ -2127,7 +2140,7 @@ class ZionUniversalPool:
 
         # KawPow-style submit uses 5 parameters, Autolykos/CPU modes use 4
         expected_params = 5
-        if algorithm in ('autolykos_v2', 'yescrypt', 'randomx'):
+        if algorithm in ('autolykos_v2', 'yescrypt', 'randomx', 'cosmic_harmony'):
             expected_params = 4
 
         if len(params) < expected_params:
@@ -2184,6 +2197,9 @@ class ZionUniversalPool:
             # Autolykos v2 uses different parameter format than KawPow
             result = mix_hash  # Use mix_hash as result for Autolykos v2
             is_valid = self.validate_autolykos_v2_share(job_id, nonce, result, difficulty)
+        elif algorithm == 'cosmic_harmony':
+            result = mix_hash
+            is_valid = self.validate_cosmic_harmony_share(job_id, nonce, result, difficulty)
         else:
             # Fallback to KawPow validation
             is_valid = self.validate_kawpow_share(job_id, nonce, mix_hash, header_hash, difficulty)
@@ -2279,6 +2295,135 @@ class ZionUniversalPool:
             target = 1
         # Big-endian 4 bytes
         return f"{target:08x}"
+
+    def create_cosmic_harmony_job(self):
+        """Create Cosmic Harmony job for native ZION miners"""
+        self.job_counter += 1
+        job_id = f"zion_ch_{self.job_counter:06d}"
+
+        height = self.current_block_height + self.job_counter
+        # Use 80-byte header (typical block header size) as hex
+        block_header = secrets.token_hex(80)
+
+        # Compute 32-bit target from configured difficulty (state[0] <= target32)
+        diff = self.difficulty.get('cosmic_harmony', self.difficulty.get('gpu', 50))
+        try:
+            diff_val = int(diff) if isinstance(diff, (int, float, str)) else 50
+            diff_val = max(1, diff_val)
+        except Exception:
+            diff_val = 50
+        base32 = 0xFFFFFFFF
+        target32 = max(1, base32 // diff_val)
+        target_hex = f"{target32:08x}"
+
+        job = {
+            'job_id': job_id,
+            'algorithm': 'cosmic_harmony',
+            'height': height,
+            'block_header': block_header,
+            'target32': target_hex,
+            'created': time.time(),
+            'difficulty': diff
+        }
+
+        self.jobs[job_id] = job
+        print(f"🌟 Cosmic Harmony job created: {job_id} height={height}")
+        return job
+
+    def validate_cosmic_harmony_share(self, job_id: str, nonce: str, result: str, difficulty: int) -> bool:
+        """
+        Validate Cosmic Harmony share against the simplified GPU kernel logic.
+        - Reconstruct the 5-stage hash exactly as in OpenCL kernel
+        - Check state[0] <= target32, and result bytes match expected
+        """
+        try:
+            if job_id not in self.jobs:
+                return False
+
+            job = self.jobs[job_id]
+            header_hex = job.get('block_header', '')
+            if not header_hex:
+                return False
+            try:
+                header = bytes.fromhex(header_hex)
+            except ValueError:
+                return False
+
+            # Parse nonce (hex) to int
+            try:
+                nonce_int = int(nonce, 16)
+            except ValueError:
+                return False
+
+            # Helpers for 32-bit ops
+            def u32(x):
+                return x & 0xFFFFFFFF
+            def rotl(x, n):
+                return u32(((x << n) | (x >> (32 - n))))
+            def mix(a, b, c):
+                return u32(rotl(a ^ b, 5) + c)
+
+            # Init state
+            state = [
+                0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+                0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+            ]
+
+            # XOR header u32 words into state
+            # Pad header to multiple of 4 bytes
+            if len(header) % 4 != 0:
+                header += b"\x00" * (4 - (len(header) % 4))
+            import struct
+            words = list(struct.unpack('<' + 'I' * (len(header)//4), header))
+            for i in range(min(len(words), 8)):
+                state[i] = u32(state[i] ^ words[i])
+
+            # Mix in nonce
+            state[0] = u32(state[0] ^ u32(nonce_int))
+            state[1] = u32(state[1] ^ u32(nonce_int >> 16))
+
+            # 12 rounds
+            for _ in range(12):
+                for i in range(8):
+                    state[i] = mix(state[i], state[(i+1) % 8], state[(i+2) % 8])
+                # Diagonal swap
+                for i in range(4):
+                    state[i], state[i+4] = state[i+4], state[i]
+
+            # XOR fold
+            xor_mix = 0
+            for v in state:
+                xor_mix ^= v
+            for i in range(8):
+                state[i] = u32(state[i] ^ xor_mix)
+
+            # Golden ratio multiply
+            phi = 0x9E3779B9
+            for i in range(8):
+                state[i] = u32(state[i] * phi)
+
+            # Rebuild expected result bytes (little-endian per uint32)
+            expected = b''.join(int(v).to_bytes(4, 'little') for v in state)
+
+            # Parse submitted result
+            try:
+                result_bytes = bytes.fromhex(result)
+            except ValueError:
+                return False
+
+            if len(result_bytes) < 32:
+                return False
+
+            # Target check (32-bit)
+            diff_val = max(1, int(difficulty))
+            target32 = max(1, 0xFFFFFFFF // diff_val)
+            is_target = (state[0] & 0xFFFFFFFF) <= target32
+
+            return is_target and (result_bytes[:32] == expected[:32])
+
+        except Exception as e:
+            logger.error(f"Cosmic Harmony validation error: {e}")
+            return False
 
     def get_pool_stats(self) -> Dict[str, Any]:
         """Get comprehensive pool statistics"""

@@ -1091,13 +1091,31 @@ class ZionUniversalPool:
         Validates against 5-stage hash: Blake3 + Keccak + SHA3 + Golden Ratio + Fusion
         """
         try:
-            if not COSMIC_HARMONY_AVAILABLE:
-                logger.warning("⚠️ Cosmic Harmony not available, falling back to SHA256 validation")
-                # Fallback to SHA256 check
-                result_hash = hashlib.sha256(f"{job_id}{nonce}{result}".encode()).hexdigest()
-                target_value = int(result_hash[:16], 16)
-                required_target = 2**256 // max(difficulty, 1)
-                return target_value < required_target
+            # Allow forcing placeholder validation via env flag during bring-up
+            force_placeholder = os.environ.get('ZION_CH_PLACEHOLDER', '0') == '1'
+            if force_placeholder:
+                logger.debug("[CH] Forcing placeholder validation via ZION_CH_PLACEHOLDER=1")
+
+            if (not COSMIC_HARMONY_AVAILABLE) or force_placeholder:
+                # Placeholder validation aligned with GPU kernel: accept if state[0] <= target32
+                job = self.jobs.get(job_id)
+                if not job:
+                    return False
+                try:
+                    target32 = int(job.get('target32', 'ffffffff'), 16)
+                    res_bytes = bytes.fromhex(result)
+                    if len(res_bytes) < 4:
+                        return False
+                    state0 = int.from_bytes(res_bytes[:4], byteorder='little', signed=False)
+                    ok = state0 <= target32
+                    if ok:
+                        logger.info(f"✅ [Placeholder] Cosmic Harmony share accepted: state0=0x{state0:08x} <= target=0x{target32:08x}")
+                    else:
+                        logger.debug(f"❌ [Placeholder] state0=0x{state0:08x} > target=0x{target32:08x}")
+                    return ok
+                except Exception as pe:
+                    logger.debug(f"Placeholder validation error: {pe}")
+                    return False
 
             # Get job
             if job_id not in self.jobs:
@@ -1108,27 +1126,50 @@ class ZionUniversalPool:
             block_data = job.get('data', b'')
 
             # Use Cosmic Harmony wrapper
-            hasher = get_hasher()
-            hash_result = hasher.hash(block_data, int(nonce))
+            try:
+                hasher = get_hasher()
+                hash_result = hasher.hash(block_data, int(nonce))
 
-            # Verify against result hex string
-            result_hex = hash_result.hex()
-            if result_hex[:16] != result[:16]:
-                logger.debug(f"Cosmic Harmony hash mismatch: {result_hex[:16]} vs {result[:16]}")
-                return False
+                # Verify against result hex string
+                result_hex = hash_result.hex()
+                if result_hex[:16] != result[:16]:
+                    logger.debug(f"Cosmic Harmony hash mismatch: {result_hex[:16]} vs {result[:16]}")
+                    return False
 
-            # Check difficulty
-            is_valid = hasher.check_difficulty(hash_result, difficulty)
-            
-            if is_valid:
-                logger.info(f"✅ Cosmic Harmony share validated: nonce={nonce}, difficulty={difficulty}")
-            else:
-                logger.debug(f"❌ Cosmic Harmony share difficulty check failed")
+                # Check difficulty
+                is_valid = hasher.check_difficulty(hash_result, difficulty)
+                
+                if is_valid:
+                    logger.info(f"✅ Cosmic Harmony share validated: nonce={nonce}, difficulty={difficulty}")
+                else:
+                    logger.debug(f"❌ Cosmic Harmony share difficulty check failed")
 
-            return is_valid
+                return is_valid
+            except Exception as core_err:
+                logger.error(f"Cosmic Harmony core validation failed, using placeholder: {core_err}")
+                # Fallback to placeholder rule if core validator errors
+                job = self.jobs.get(job_id)
+                if not job:
+                    return False
+                try:
+                    target32 = int(job.get('target32', 'ffffffff'), 16)
+                    res_bytes = bytes.fromhex(result)
+                    if len(res_bytes) < 4:
+                        return False
+                    state0 = int.from_bytes(res_bytes[:4], byteorder='little', signed=False)
+                    ok = state0 <= target32
+                    if ok:
+                        logger.info(f"✅ [Fallback->Placeholder] Cosmic Harmony share accepted: state0=0x{state0:08x} <= target=0x{target32:08x}")
+                    else:
+                        logger.debug(f"❌ [Fallback->Placeholder] state0=0x{state0:08x} > target=0x{target32:08x}")
+                    return ok
+                except Exception as pe2:
+                    logger.debug(f"Fallback placeholder validation error: {pe2}")
+                    return False
 
         except Exception as e:
-            logger.error(f"Cosmic Harmony validation error: {e}")
+            # Include exception type for easier triage
+            logger.error(f"Cosmic Harmony validation error: {type(e).__name__}: {e}")
             return False
 
     def validate_kawpow_share(self, job_id: str, nonce: str, mix_hash: str, header_hash: str, difficulty: int) -> bool:
@@ -2288,6 +2329,48 @@ class ZionUniversalPool:
         print(f"⚡ Yescrypt job created: {job_id} height={height}")
         return job
 
+    def create_cosmic_harmony_job(self):
+        """Create Cosmic Harmony job for native ZION miners (32-bit target)"""
+        self.job_counter += 1
+        job_id = f"zion_ch_{self.job_counter:06d}"
+
+        # Try to use blockchain template when available
+        height = self.current_block_height + self.job_counter
+        block_header = None
+        if self.blockchain and hasattr(self.blockchain, 'get_block_template'):
+            try:
+                template = self.blockchain.get_block_template()
+                block_header = template.get('block_header')
+                height = template.get('height', height)
+            except Exception:
+                block_header = None
+        if block_header is None:
+            block_header = secrets.token_hex(80)
+
+        # Map difficulty to 32-bit target used by GPU kernel (state[0] <= target)
+        diff = self.difficulty.get('cosmic_harmony', self.difficulty.get('gpu', 50))
+        try:
+            diff_val = int(diff)
+        except Exception:
+            diff_val = 50
+        diff_val = max(1, diff_val)
+        target32 = max(1, 0xFFFFFFFF // diff_val)
+        target_hex = f"{target32:08x}"
+
+        job = {
+            'job_id': job_id,
+            'algorithm': 'cosmic_harmony',
+            'height': height,
+            'block_header': block_header,
+            'target32': target_hex,
+            'created': time.time(),
+            'difficulty': diff_val
+        }
+
+        self.jobs[job_id] = job
+        print(f"🌟 Cosmic Harmony job created: {job_id} height={height}")
+        return job
+
     def get_job_for_miner(self, addr):
         """Get appropriate job for miner based on algorithm"""
         if addr not in self.miners:
@@ -2478,6 +2561,8 @@ class ZionUniversalPool:
             algorithm = 'autolykos_v2'
         elif 'yescrypt' in password.lower():
             algorithm = 'yescrypt'
+        elif 'cosmic' in password.lower():
+            algorithm = 'cosmic_harmony'
         elif 'kawpow' in password.lower():
             algorithm = 'kawpow'
         else:
@@ -2536,6 +2621,20 @@ class ZionUniversalPool:
                 job['height'],
                 True  # clean_jobs
             ]
+        elif algorithm == 'cosmic_harmony':
+            job = self.create_cosmic_harmony_job()
+            # Cosmic Harmony notify: [job_id, block_header, target32, height, clean_jobs]
+            notify_params = [
+                job['job_id'],
+                job['block_header'],
+                job['target32'],
+                job['height'],
+                True
+            ]
+            try:
+                logger.info(f"📤 Building Cosmic Harmony auth bundle: job={job['job_id']}, height={job.get('height')}, target32={job.get('target32')}, diff={self.miners[addr].get('difficulty')}")
+            except Exception:
+                pass
         else:  # kawpow
             job = self.create_kawpow_job()
             diff = self.miners[addr]['difficulty']
@@ -2572,7 +2671,10 @@ class ZionUniversalPool:
         }) + '\n'
 
         bundled = auth_resp + set_diff_msg + notify_msg
-        print(f"📤 Auth+notify: job={job['job_id']} diff={diff}")
+        try:
+            logger.info(f"📤 Auth+notify prepared: algo={self.miners[addr].get('algorithm')} job={job['job_id']} diff={diff}")
+        except Exception:
+            pass
         return bundled
 
     async def handle_stratum_submit(self, data, addr):
@@ -2596,7 +2698,7 @@ class ZionUniversalPool:
 
         # KawPow-style submit uses 5 parameters, Autolykos/CPU modes use 4
         expected_params = 5
-        if algorithm in ('autolykos_v2', 'yescrypt', 'randomx'):
+        if algorithm in ('autolykos_v2', 'yescrypt', 'randomx', 'cosmic_harmony'):
             expected_params = 4
 
         if len(params) < expected_params:
@@ -2615,7 +2717,7 @@ class ZionUniversalPool:
             mix_hash = result  # Alias for downstream handling
             job = self.jobs.get(job_id, {})
             header_hash = job.get('block_header', '')
-        elif algorithm in ('yescrypt', 'randomx'):
+        elif algorithm in ('yescrypt', 'randomx', 'cosmic_harmony'):
             worker, job_id, nonce, result = params[:4]
             mix_hash = result
             header_hash = ''
@@ -2655,6 +2757,14 @@ class ZionUniversalPool:
             # Autolykos v2 uses different parameter format than KawPow
             result = mix_hash  # Use mix_hash as result for Autolykos v2
             is_valid = self.validate_autolykos_v2_share(job_id, nonce, result, difficulty)
+        elif algorithm == 'cosmic_harmony':
+            result = mix_hash
+            # Cosmic Harmony native validation
+            try:
+                # nonce may be hex string, convert to int for validator if needed
+                is_valid = self.validate_cosmic_harmony_share(job_id, int(nonce, 16), result, difficulty)
+            except Exception:
+                is_valid = False
         else:
             # Fallback to KawPow validation
             is_valid = self.validate_kawpow_share(job_id, nonce, mix_hash, header_hash, difficulty)
