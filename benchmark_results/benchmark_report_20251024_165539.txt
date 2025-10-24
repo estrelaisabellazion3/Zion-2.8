@@ -1,0 +1,39 @@
+
+================================================================================
+📊 ZION MINING BENCHMARK REPORT
+📅 2025-10-24 16:55:39
+================================================================================
+
+🔹 ZION Cosmic Harmony GPU
+   Algorithm: cosmic_harmony
+   Duration: 30.6s
+   ⚡ Avg Hashrate: 624,700 H/s (0.625 MH/s)
+   📈 Peak: 637,062 H/s
+   📉 Min: 574,644 H/s
+   📦 Shares: 1335 (✅ 1335, ❌ 0)
+   ✓ Acceptance: 100.0%
+   🌡️  Avg GPU Temp: 56.0°C
+   ⚡ Avg Power: 178.0W
+   🎯 Efficiency: 3,509 H/W
+   📊 Samples: 123
+
+
+🔹 ZION Universal Miner CPU
+   Algorithm: randomx
+   Duration: 45.3s
+   ⚡ Avg Hashrate: 4,491 H/s (0.004 MH/s)
+   📈 Peak: 4,532 H/s
+   📉 Min: 4,449 H/s
+   📦 Shares: 0 (✅ 0, ❌ 0)
+   ✓ Acceptance: 0.0%
+   📊 Samples: 2
+
+================================================================================
+
+📊 Performance Comparison:
+   1. ZION Cosmic Harmony GPU: 100.0% of best
+   2. ZION Universal Miner CPU: 0.7% of best
+
+💡 Optimization Recommendations:
+
+================================================================================
