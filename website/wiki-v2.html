@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZION Wiki - Sacred Knowledge Library v2.8.2</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/matrix-style.css">
+    <link rel="stylesheet" href="css/sacred-geometry.css">
+    <link rel="stylesheet" href="css/wiki-style.css">
+    
+    <style>
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            margin-right: 5px;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .version-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .pool-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid var(--matrix-green);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--matrix-green);
+            font-family: 'Orbitron', monospace;
+        }
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .event-feed {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--matrix-green);
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .event-item {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: rgba(0, 255, 0, 0.03);
+            border-left: 3px solid var(--matrix-green);
+            border-radius: 4px;
+        }
+        .event-item.block-found {
+            border-left-color: #FFD700;
+            background: rgba(255, 215, 0, 0.05);
+        }
+        .event-item.payment {
+            border-left-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-rain"></canvas>
+    
+    <!-- Sacred Geometry Background -->
+    <div class="sacred-geometry-bg"></div>
+    
+    <!-- Navigation -->
+    <nav class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="brand-icon">⬡</span>
+                <span class="brand-text">ZION</span>
+                <span class="brand-subtitle">Wiki</span>
+                <span class="version-badge">v2.8.2 Nebula</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="#sacred-books">Sacred Books</a>
+                <a href="#mining">Mining</a>
+                <a href="#multi-pool">Multi-Pool</a>
+                <a href="#roadmap">Roadmap</a>
+                <a href="#technical">Technical</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Wiki Layout -->
+    <div class="wiki-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="wiki-sidebar">
+            <div class="sidebar-search">
+                <input type="text" id="wiki-search" placeholder="Search wiki..." />
+                <button id="search-btn">🔍</button>
+            </div>
+            
+            <div class="sidebar-categories">
+                <!-- Live Pool Stats -->
+                <div class="category-group">
+                    <h3 class="category-title active" data-category="pool-live">
+                        <span class="live-indicator"></span>
+                        <span class="icon">📊</span>
+                        Live Pool Stats
+                    </h3>
+                    <ul class="category-items" id="pool-live-list">
+                        <li><a href="#pool-dashboard">Pool Dashboard</a></li>
+                        <li><a href="#real-time-events">Real-time Events</a></li>
+                        <li><a href="#miner-stats">Miner Statistics</a></li>
+                        <li><a href="#block-explorer">Block Explorer</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Sacred Books Section -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="sacred-books">
+                        <span class="icon">📚</span>
+                        Sacred Books
+                    </h3>
+                    <ul class="category-items" id="sacred-books-list" style="display: none;">
+                        <li><a href="#smaragdove-desky" data-book="smaragdove-desky">Smaragdové Desky</a></li>
+                        <li><a href="#trinity-one-love" data-book="trinity-one-love">Trinity One Love</a></li>
+                        <li><a href="#starobyly-sip" data-book="starobyly-sip">Starožitný Šíp</a></li>
+                        <li><a href="#tajemstvi-amenti" data-book="tajemstvi-amenti">Tajemství Amenti</a></li>
+                        <li><a href="#dohrmanovo-proroctvi" data-book="dohrmanovo-proroctvi">Dohrmanovo Proroctví</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Mining Section -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="mining">
+                        <span class="icon">⛏️</span>
+                        Mining Guides
+                    </h3>
+                    <ul class="category-items" id="mining-list" style="display: none;">
+                        <li><a href="#quick-start">Quick Start Guide</a></li>
+                        <li><a href="#cpu-mining">CPU Mining (XMRig)</a></li>
+                        <li><a href="#gpu-mining">GPU Mining (SRBMiner)</a></li>
+                        <li><a href="#cosmic-harmony">Cosmic Harmony Algorithm</a></li>
+                        <li><a href="#consciousness-mining">Consciousness Mining</a></li>
+                        <li><a href="#pool-setup">Pool Configuration</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Multi-Pool Orchestration -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="multi-pool">
+                        <span class="icon">🔄</span>
+                        Multi-Pool System
+                    </h3>
+                    <ul class="category-items" id="multi-pool-list" style="display: none;">
+                        <li><a href="#orchestration-overview" data-doc="MULTI_POOL_ORCHESTRATION_README">Orchestration Overview</a></li>
+                        <li><a href="#intelligent-switching">Intelligent Pool Switching</a></li>
+                        <li><a href="#geographic-balancing">Geographic Load Balancing</a></li>
+                        <li><a href="#ai-optimization">AI-Powered Optimization</a></li>
+                        <li><a href="#payment-automation">Automated Payments</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Roadmap & Planning -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="roadmap">
+                        <span class="icon">🗺️</span>
+                        Roadmap 2025-2030
+                    </h3>
+                    <ul class="category-items" id="roadmap-list" style="display: none;">
+                        <li><a href="#master-roadmap" data-doc="ROADMAP">Master Roadmap</a></li>
+                        <li><a href="#q4-2025">Q4 2025 (Current)</a></li>
+                        <li><a href="#2026-milestones">2026 Milestones</a></li>
+                        <li><a href="#mainnet-2027">Mainnet 2027</a></li>
+                        <li><a href="#multi-chain" data-doc="MULTI_CHAIN_TECHNICAL_ROADMAP">Multi-Chain Integration</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Technical Documentation -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="technical">
+                        <span class="icon">⚙️</span>
+                        Technical Docs
+                    </h3>
+                    <ul class="category-items" id="technical-list" style="display: none;">
+                        <li><a href="#blockchain-specs">Blockchain Specifications</a></li>
+                        <li><a href="#cosmic-harmony-tech">Cosmic Harmony Tech</a></li>
+                        <li><a href="#websocket-api">WebSocket API</a></li>
+                        <li><a href="#payment-system">Payment System</a></li>
+                        <li><a href="#deployment" data-doc="DEPLOYMENT_GUIDE_2.8.2">Deployment Guide</a></li>
+                        <li><a href="#operational-report" data-doc="OPERATIONAL_REPORT_2025-10-24">Operational Report</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Development -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="development">
+                        <span class="icon">💻</span>
+                        Development
+                    </h3>
+                    <ul class="category-items" id="development-list" style="display: none;">
+                        <li><a href="#project-structure">Project Structure</a></li>
+                        <li><a href="#src-overview">src/ Overview</a></li>
+                        <li><a href="#testing">Testing Suite</a></li>
+                        <li><a href="#benchmarking">Benchmarking Tools</a></li>
+                        <li><a href="#local-setup" data-doc="LOCAL_DEPLOYMENT_SUCCESS_2025-10-24">Local Setup</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Consciousness Game -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="consciousness">
+                        <span class="icon">🧘</span>
+                        Consciousness System
+                    </h3>
+                    <ul class="category-items" id="consciousness-list" style="display: none;">
+                        <li><a href="#level-system">Level System (L1-L9)</a></li>
+                        <li><a href="#xp-progression">XP Progression</a></li>
+                        <li><a href="#golden-egg">Golden Egg Quest</a></li>
+                        <li><a href="#achievements">Achievements</a></li>
+                        <li><a href="#meditation">Meditation Bonus</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="wiki-content">
+            <div class="breadcrumbs">
+                <span class="crumb">Wiki</span>
+                <span class="separator">></span>
+                <span class="crumb current" id="current-category">Live Pool Stats</span>
+                <span class="separator" id="page-separator" style="display: none;">></span>
+                <span class="crumb current" id="current-page" style="display: none;"></span>
+            </div>
+            
+            <article id="wiki-article">
+                <!-- Default Landing Page - Live Pool Dashboard -->
+                <div id="wiki-home" class="wiki-page">
+                    <h1 class="page-title glitch" data-text="ZION Wiki v2.8.2">ZION Wiki v2.8.2</h1>
+                    <p class="page-subtitle">Multi-Pool Orchestration • Consciousness Mining • Real-time Events</p>
+                    
+                    <!-- Live Pool Stats -->
+                    <h2>🔴 Live Pool Statistics</h2>
+                    <div class="pool-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="pool-hashrate">Loading...</div>
+                            <div class="stat-label">Pool Hashrate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="active-miners">--</div>
+                            <div class="stat-label">Active Miners</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="blocks-found">--</div>
+                            <div class="stat-label">Blocks Found (24h)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="network-difficulty">--</div>
+                            <div class="stat-label">Network Difficulty</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Real-time Events Feed -->
+                    <h2>📡 Real-time Events</h2>
+                    <div class="event-feed" id="event-feed">
+                        <div class="event-item">
+                            <span style="color: var(--text-muted);">Connecting to pool events...</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Feature Cards -->
+                    <h2 style="margin-top: 3rem;">🌟 ZION 2.8.2 "Nebula" Features</h2>
+                    <div class="welcome-grid">
+                        <div class="welcome-card">
+                            <div class="card-icon">🔄</div>
+                            <h2>Multi-Pool Orchestration</h2>
+                            <p>AI-powered pool switching, geographic load balancing, distributed mining coordination across multiple pools</p>
+                            <a href="#orchestration-overview" class="btn-primary">Explore →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">⛏️</div>
+                            <h2>Real-time Mining</h2>
+                            <p>Live monitoring, WebSocket events, automated payments, consciousness-enhanced rewards</p>
+                            <a href="#pool-dashboard" class="btn-primary">Monitor →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">🎨</div>
+                            <h2>Cosmic Harmony</h2>
+                            <p>Native ZION mining algorithm combining sacred geometry with cryptographic security</p>
+                            <a href="#cosmic-harmony" class="btn-primary">Learn More →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">📚</div>
+                            <h2>Sacred Wisdom</h2>
+                            <p>Ancient texts: Smaragdové Desky, Trinity One Love, WingMakers, Amenti mysteries</p>
+                            <a href="#sacred-books" class="btn-primary">Read →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">🗺️</div>
+                            <h2>2025-2030 Roadmap</h2>
+                            <p>Mainnet 2027, multi-chain bridges, DAO governance, global expansion plan</p>
+                            <a href="#master-roadmap" class="btn-primary">View Plan →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">🧘</div>
+                            <h2>Consciousness Mining</h2>
+                            <p>9 levels (L1→L9), meditation bonuses, XP progression, Golden Egg quest</p>
+                            <a href="#level-system" class="btn-primary">Ascend →</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Links -->
+                    <h2 style="margin-top: 3rem;">🚀 Quick Start</h2>
+                    <div style="background: rgba(0,255,0,0.05); border: 1px solid var(--matrix-green); padding: 2rem; border-radius: 8px;">
+                        <h3>Start Mining in 3 Steps:</h3>
+                        <ol style="line-height: 2;">
+                            <li><strong>Download Miner:</strong> <a href="#cpu-mining">XMRig (CPU)</a> or <a href="#gpu-mining">SRBMiner (GPU)</a></li>
+                            <li><strong>Configure Pool:</strong> <code>pool.zion-blockchain.org:3336</code></li>
+                            <li><strong>Start Mining:</strong> Watch your consciousness level grow!</li>
+                        </ol>
+                        <p style="margin-top: 1rem;">
+                            <strong>Current Status:</strong> 
+                            <span style="color: var(--matrix-green);">✓ Pool Active</span> • 
+                            <span style="color: var(--matrix-green);">✓ Payments Automated</span> • 
+                            <span style="color: var(--matrix-green);">✓ AI Orchestration Running</span>
+                        </p>
+                    </div>
+                    
+                    <div class="quote-container" style="margin-top: 3rem;">
+                        <blockquote class="sacred-quote">
+                            "We are not human beings having a spiritual experience. We are spiritual beings having a human experience."
+                            <cite>— Pierre Teilhard de Chardin</cite>
+                        </blockquote>
+                    </div>
+                    
+                    <!-- Project Stats -->
+                    <h2 style="margin-top: 3rem;">📊 Project Statistics</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(0,255,0,0.03); padding: 1.5rem; border-radius: 8px;">
+                            <h3 style="margin: 0; color: var(--matrix-green);">Version</h3>
+                            <p style="font-size: 1.5rem; margin: 0.5rem 0 0 0;">2.8.2 "Nebula"</p>
+                        </div>
+                        <div style="background: rgba(0,255,0,0.03); padding: 1.5rem; border-radius: 8px;">
+                            <h3 style="margin: 0; color: var(--matrix-green);">Total Supply</h3>
+                            <p style="font-size: 1.5rem; margin: 0.5rem 0 0 0;">144B ZION</p>
+                        </div>
+                        <div style="background: rgba(0,255,0,0.03); padding: 1.5rem; border-radius: 8px;">
+                            <h3 style="margin: 0; color: var(--matrix-green);">Block Reward</h3>
+                            <p style="font-size: 1.5rem; margin: 0.5rem 0 0 0;">5,479.45 ZION</p>
+                        </div>
+                        <div style="background: rgba(0,255,0,0.03); padding: 1.5rem; border-radius: 8px;">
+                            <h3 style="margin: 0; color: var(--matrix-green);">Mainnet Target</h3>
+                            <p style="font-size: 1.5rem; margin: 0.5rem 0 0 0;">Q1 2027</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dynamic content loaded here by wiki-engine.js -->
+            </article>
+            
+            <!-- Table of Contents (for longer articles) -->
+            <aside class="toc-sidebar">
+                <h3>On This Page</h3>
+                <nav id="toc-nav">
+                    <a href="#live-pool-statistics">Live Pool Statistics</a>
+                    <a href="#real-time-events">Real-time Events</a>
+                    <a href="#zion-282-nebula-features">Features</a>
+                    <a href="#quick-start">Quick Start</a>
+                </nav>
+            </aside>
+        </main>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>ZION 2.8.2</h4>
+                    <a href="#master-roadmap">Master Roadmap</a>
+                    <a href="#multi-pool">Multi-Pool System</a>
+                    <a href="#cosmic-harmony">Cosmic Harmony</a>
+                    <a href="#deployment">Deployment Guide</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Mining</h4>
+                    <a href="#quick-start">Quick Start</a>
+                    <a href="#cpu-mining">CPU Mining</a>
+                    <a href="#gpu-mining">GPU Mining</a>
+                    <a href="#pool-dashboard">Pool Dashboard</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <a href="#blockchain-specs">Blockchain Specs</a>
+                    <a href="#websocket-api">WebSocket API</a>
+                    <a href="#payment-system">Payment System</a>
+                    <a href="#testing">Testing Suite</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <a href="https://github.com/estrelaisabellazion3/Zion-2.8">GitHub</a>
+                    <a href="#">Discord</a>
+                    <a href="#">Telegram</a>
+                    <a href="#">Forum</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 ZION Blockchain v2.8.2 "Nebula". Sacred Technology for Conscious Evolution.</p>
+                <p class="sacred-quote">"JAI RAM SITA HANUMAN - ON THE STAR!" ⭐</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="js/matrix-rain.js"></script>
+    <script src="js/sacred-geometry.js"></script>
+    <script src="js/wiki-engine-complete.js"></script>
+    <script>
+        // Load documentation into wiki
+        function loadDocumentation(docKey) {
+            if (window.docsMapping && window.docsMapping[docKey]) {
+                const docPath = window.docsMapping[docKey];
+                loadDocFromPath(docPath, docKey);
+            } else {
+                console.warn('Documentation key not found:', docKey);
+            }
+        }
+        
+        async function loadDocFromPath(path, title) {
+            const article = document.getElementById('wiki-article');
+            if (!article) return;
+            
+            article.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--matrix-green);">
+                <p>📄 Loading: ${title}...</p>
+            </div>`;
+            
+            try {
+                const response = await fetch(`../${path}`);
+                const content = await response.text();
+                if (path.endsWith('.md')) {
+                    renderMarkdownContent(article, content);
+                } else {
+                    article.textContent = content;
+                }
+            } catch(e) {
+                article.innerHTML = `<div style="padding: 2rem; color: var(--text-muted);">
+                    <p>📚 ${title}</p>
+                    <p>Content from: ${path}</p>
+                </div>`;
+            }
+        }
+        
+        function renderMarkdownContent(el, md) {
+            let html = md
+                .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+                .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+            el.innerHTML = html;
+        }
+    </script>
+    
+    <!-- WebSocket Live Events -->
+    <script>
+        // Connect to pool WebSocket for live events
+        let ws = null;
+        
+        function connectPoolEvents() {
+            try {
+                ws = new WebSocket('ws://localhost:8765');
+                
+                ws.onopen = () => {
+                    console.log('✅ Connected to pool events');
+                    updateEventFeed('✅ Connected to ZION Pool Events', 'success');
+                };
+                
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        handlePoolEvent(data);
+                    } catch (e) {
+                        console.error('Error parsing event:', e);
+                    }
+                };
+                
+                ws.onclose = () => {
+                    console.log('❌ Disconnected from pool events');
+                    updateEventFeed('❌ Disconnected. Reconnecting...', 'error');
+                    setTimeout(connectPoolEvents, 5000);
+                };
+                
+                ws.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                };
+                
+            } catch (e) {
+                console.error('Failed to connect:', e);
+                updateEventFeed('⚠️ Pool events unavailable (offline mode)', 'warning');
+            }
+        }
+        
+        function handlePoolEvent(data) {
+            if (data.type === 'block_found') {
+                updateEventFeed(`🎉 Block #${data.data.height} found! Reward: ${data.data.reward} ZION`, 'block-found');
+                updateBlocksFound();
+            } else if (data.type === 'payment') {
+                updateEventFeed(`💸 Payment: ${data.data.amount} ZION to ${data.data.address.substring(0, 12)}...`, 'payment');
+            } else if (data.type === 'miner_connected') {
+                updateEventFeed(`🔌 Miner connected: ${data.data.algorithm}`, 'info');
+                updateActiveMiners();
+            } else if (data.type === 'hashrate_update') {
+                updatePoolHashrate(data.data.pool_hashrate);
+                updateActiveMiners(data.data.active_miners);
+            }
+        }
+        
+        function updateEventFeed(message, type = 'info') {
+            const feed = document.getElementById('event-feed');
+            if (!feed) return;
+            
+            const event = document.createElement('div');
+            event.className = `event-item ${type}`;
+            event.innerHTML = `
+                <span style="color: var(--text-muted); font-size: 0.85rem;">${new Date().toLocaleTimeString()}</span>
+                <br>${message}
+            `;
+            
+            feed.insertBefore(event, feed.firstChild);
+            
+            // Keep only last 10 events
+            while (feed.children.length > 10) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+        
+        function updatePoolHashrate(hashrate) {
+            const el = document.getElementById('pool-hashrate');
+            if (el && hashrate) {
+                if (hashrate > 1000000) {
+                    el.textContent = (hashrate / 1000000).toFixed(2) + ' MH/s';
+                } else if (hashrate > 1000) {
+                    el.textContent = (hashrate / 1000).toFixed(2) + ' KH/s';
+                } else {
+                    el.textContent = hashrate.toFixed(0) + ' H/s';
+                }
+            }
+        }
+        
+        function updateActiveMiners(count) {
+            const el = document.getElementById('active-miners');
+            if (el && count !== undefined) {
+                el.textContent = count;
+            }
+        }
+        
+        function updateBlocksFound() {
+            const el = document.getElementById('blocks-found');
+            if (el) {
+                const current = parseInt(el.textContent) || 0;
+                el.textContent = current + 1;
+            }
+        }
+        
+        // Connect on page load
+        window.addEventListener('load', () => {
+            setTimeout(connectPoolEvents, 1000);
+        });
+    </script>
+</body>
+</html>
