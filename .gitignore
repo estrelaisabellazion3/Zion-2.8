@@ -27,6 +27,12 @@ recovery.txt
 *.db-wal
 zion_real_blockchain*.db
 
+# Test reports (keep in reports/ dir, ignore root)
+/*.json
+cosmic_harmony_test_report_*.json
+mining_test_report_*.json
+mining_validation_report*.json
+
 # Python
 __pycache__/
 *.py[cod]
