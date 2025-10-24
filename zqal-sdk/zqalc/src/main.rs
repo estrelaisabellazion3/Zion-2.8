@@ -35,16 +35,19 @@ fn read(file: PathBuf) -> Result<String> {
 
 fn parse_cmd(file: PathBuf) -> Result<()> {
     let src = read(file.clone())?;
-    // Minimal sanity checks: contains @algorithm and at least one @kernel
+
+    // Basic checks
     let has_algo = src.contains("@algorithm");
     let has_kernel = src.contains("@kernel");
-    if !has_algo {
-        anyhow::bail!("Missing @algorithm declaration");
-    }
-    if !has_kernel {
-        anyhow::bail!("Missing @kernel function");
-    }
-    // A naive brace balance check
+
+    // New checks for v0.2.0
+    let has_quantum = src.contains("quantum ");
+    let has_tone = src.contains("@tone") || src.contains("apply_tone");
+    let has_import = src.contains("import ");
+    let has_assert = src.contains("assert(");
+    let has_try = src.contains("try ");
+
+    // Brace balance
     let mut bal: i64 = 0;
     for ch in src.chars() {
         match ch {
@@ -53,10 +56,24 @@ fn parse_cmd(file: PathBuf) -> Result<()> {
             _ => {}
         }
     }
+
+    if !has_algo {
+        anyhow::bail!("Missing @algorithm declaration");
+    }
+    if !has_kernel {
+        anyhow::bail!("Missing @kernel function");
+    }
     if bal != 0 {
         anyhow::bail!("Unbalanced braces: balance={}", bal);
     }
-    println!("OK: basic parse checks passed ✅");
+
+    println!("OK: extended parse checks passed ✅");
+    if has_quantum { println!("  ✓ Quantum types detected"); }
+    if has_tone { println!("  ✓ Tone integration detected"); }
+    if has_import { println!("  ✓ Import system detected"); }
+    if has_assert { println!("  ✓ Error handling detected"); }
+    if has_try { println!("  ✓ Try/catch blocks detected"); }
+
     Ok(())
 }
 

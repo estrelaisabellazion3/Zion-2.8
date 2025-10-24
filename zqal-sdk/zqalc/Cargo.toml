@@ -1,9 +1,9 @@
 [package]
 name = "zqalc"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["ZION Contributors"]
-description = "Minimal CLI for ZQAL - parse & basic checks"
+description = "Extended CLI for ZQAL v0.2.0 - Quantum & Tone Integration"
 license = "MIT"
 
 [dependencies]
