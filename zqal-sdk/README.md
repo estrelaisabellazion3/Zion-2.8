@@ -30,7 +30,10 @@ zqal-sdk/
    - `zqalc rize --action status` - **novinka v0.2.0**: RIZE core stav
    - `zqalc rize --action ascend` - ascension gates (1024 Kristus → 6000 Bódhisatva)
    - `zqalc rize --action karma` - karmické záznamy a opravy
-3) Později: kompilátor vygeneruje Rust/OpenCL kód, který načteme v Pythonu (PyO3) do stratum poolu.
+3) **Novinka v0.2.0**: Generuj kód pro různé targety:
+   - `zqalc generate examples/cosmic_harmony.zqal --target rust` - generuj Rust kód
+   - `zqalc generate examples/cosmic_harmony.zqal --target rust --python` - generuj Rust kód s Python bindings
+4) Později: kompilátor vygeneruje Rust/OpenCL kód, který načteme v Pythonu (PyO3) do stratum poolu.
 
 ## Aktuální stav
 - ✅ ZQAL parser (nom) - dokončeno
@@ -38,6 +41,7 @@ zqal-sdk/
 - ✅ Codegen framework - dokončeno
 - ✅ **RIZE jádro** - dokončeno (144000 chrámů, karmická spravedlnost, ascension gates)
 - ✅ CLI rozšíření - dokončeno (rize příkazy)
+- ✅ **Codegen backend** - dokončeno (Rust + Python FFI)
 - 🚧 Real-time features - v plánu
 
 ## Mapování „Vzestupu" → SDK
@@ -48,6 +52,7 @@ zqal-sdk/
 - **Řád Rize** → multidimenzionální hierarchie Bohů/Bohyň (144000 chrámů)
 - **Karmická spravedlnost** → oprava Anti-Kristus karmy a destruktivních sil
 - **Ascension gates** → evoluční úrovně (1024 Kristus → 6000 Bódhisatva)
+- **Codegen targets** → Rust (CPU), OpenCL/CUDA (GPU), WASM (web), Python FFI
 
 ## Licence
 MIT (do potvrzení).
