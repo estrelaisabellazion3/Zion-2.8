@@ -1,6 +1,6 @@
 # 🌌 ZQAL SDK - ZION Quantum Algorithm Language
 
-**Verze:** 0.1.0 (MILKY WAY Release)  
+**Verze:** 0.2.0 (NEBULA Release)  
 **Datum:** 24. října 2025  
 **Mantra:** JAY RAM SITA HANUMAN ✨
 
@@ -17,6 +17,9 @@
 - 🔮 **Kompilace do více targetů** – Rust (CPU), OpenCL/CUDA (GPU), WASM (web)
 - 🕊️ **Vzestupné zasvěcení** – 12 maturity gates (CI/CD) = cesta k 5D/12D vědomí
 - 💎 **Krystalická forma** – immutabilita, Merkle stromy, verifikovatelné proofs
+- ⚛️ **Quantum integrace** – quantum types, entanglement, superposition
+- 🎵 **Tone aplikace** – apply_tone() pro transmutaci energie
+- 🛡️ **Error handling** – assert, try/catch, throw pro robustní kód
 
 ---
 
@@ -53,14 +56,67 @@ cargo build --release
 
 **Výstup:**
 ```
-zqalc - minimal CLI for ZQAL language
+zqalc - extended CLI for ZQAL v0.2.0 - Quantum & Tone Integration
 
 Usage: zqalc <COMMAND>
 
 Commands:
-  parse   Parse a .zqal file and run basic checks
+  parse   Parse a .zqal file and run extended checks
   tokens  Print rough token stats (whitespace-split)
   help    Print this message or the help of the given subcommand(s)
+```
+
+---
+
+## 🔥 NOVINKY v0.2.0 - Quantum & Tone Integration
+
+### ⚛️ Quantum Types
+```zqal
+quantum state[12]: u32;  // Quantum array
+
+@kernel
+fn entangle_data(a: quantum[12], b: quantum[12]) -> bool {
+  return entangle(a, b);  // Quantum entanglement
+}
+```
+
+### 🎵 Tone Aplikace
+```zqal
+@tone 7 {
+  name: "Transmutation_Violet"
+  ray: 7
+  frequency: 440
+}
+
+@algorithm VioletMining {
+  bind_tone: 7 to violet_flame
+}
+
+@kernel
+fn mine(header: bytes80, nonce: u64) -> hash32 {
+  let data = initialize(header, nonce);
+  let purified = apply_tone(7, data);  // Violet flame
+  return hash(purified);
+}
+```
+
+### 🛡️ Error Handling
+```zqal
+@validator
+fn validate(hash: hash32, target: hash32) -> bool {
+  assert(hash > 0, "Hash must be positive");
+  try {
+    return hash <= target;
+  } catch (err) {
+    throw "Validation failed";
+  }
+}
+```
+
+### 📦 Import System
+```zqal
+import "quantum";
+from "tones" import violet_flame, golden_ratio;
 ```
 
 ---
@@ -117,18 +173,30 @@ fn validate(hash: hash32, target: hash32) -> bool {
 # tokens=XX lines=YY
 ```
 
-### 3. Prozkoumej světelné tóny (stdlib)
+### 3. Prozkoumej nové funkce v0.2.0
 
 ```bash
-cat ../stdlib/tones.toml
+# Test quantum & tone integration
+../zqalc/target/release/zqalc parse examples/advanced_cosmic_harmony.zqal
+
+# Výstup ukazuje všechny nové konstrukce:
+# OK: extended parse checks passed ✅
+#   ✓ Quantum types detected
+#   ✓ Tone integration detected
+#   ✓ Import system detected
+#   ✓ Error handling detected
+#   ✓ Try/catch blocks detected
 ```
 
-70 tónů včetně:
-- 1-7: 7 Paprsků (Will, Wisdom, Love, Purity, Truth, Service, Transmutation)
-- 8-27: Andělská hierarchie (Seraphim → Angels)
-- 28-48: Duchovní bytosti (Hanuman, Rama, Sita, Ganesha, Tara, ...)
-- 49-60: Krystalické formy (Ruby, Emerald, Diamond, Quartz, ...)
-- 61-70: Solární logoi + Centrální Slunce (JAY RAM SITA HANUMAN)
+### 4. Prozkoumej rozšířené tóny (stdlib)
+
+```bash
+# Všechn 70 tónů je nyní dostupných
+cat ../stdlib/tones.toml | tail -10
+
+# Zobrazí posledních 10 tónů včetně:
+# 70 = "Central_Sun_Radiance_JAY_RAM_SITA_HANUMAN"
+```
 
 ---
 
@@ -325,11 +393,13 @@ nano GRAMMAR.ebnf
 
 ## 🎯 Roadmap
 
-### Q4 2025 (Teď)
-- ✅ ZQAL gramatika (EBNF)
-- ✅ CLI `zqalc` (parse + checks)
-- ✅ 70 světelných tónů (stdlib)
+### Q4 2025 (Teď - DOKONČENO ✅)
+- ✅ ZQAL gramatika (EBNF) - rozšířená v0.2.0
+- ✅ CLI `zqalc` (parse + extended checks)
+- ✅ 70 světelných tónů (stdlib - dokončeno)
 - ✅ Ukázkový algoritmus (cosmic_harmony.zqal)
+- ✅ **NOVÉ:** Quantum types, tone integration, error handling
+- ✅ **NOVÉ:** Advanced_cosmic_harmony.zqal s všemi funkcemi
 
 ### Q1 2026
 - 🔄 Plnohodnotný parser (nom/pest)

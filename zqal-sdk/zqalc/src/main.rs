@@ -3,6 +3,9 @@ use std::path::PathBuf;
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 
+mod ast;
+mod parser;
+
 /// zqalc - minimal CLI for ZQAL language
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -17,6 +20,8 @@ enum Commands {
     Parse { file: PathBuf },
     /// Print rough token stats (whitespace-split)
     Tokens { file: PathBuf },
+    /// Build a proto-AST and print as JSON
+    Ast { file: PathBuf },
 }
 
 fn main() -> Result<()> {
@@ -24,6 +29,7 @@ fn main() -> Result<()> {
     match cli.command {
         Commands::Parse { file } => parse_cmd(file),
         Commands::Tokens { file } => tokens_cmd(file),
+        Commands::Ast { file } => ast_cmd(file),
     }
 }
 
@@ -81,5 +87,12 @@ fn tokens_cmd(file: PathBuf) -> Result<()> {
     let src = read(file)?;
     let tokens: Vec<&str> = src.split_whitespace().collect();
     println!("tokens={} lines={}", tokens.len(), src.lines().count());
+    Ok(())
+}
+
+fn ast_cmd(file: PathBuf) -> Result<()> {
+    let src = read(file.clone())?;
+    let tree = parser::build_ast(&src)?;
+    println!("{}", serde_json::to_string_pretty(&tree)?);
     Ok(())
 }
