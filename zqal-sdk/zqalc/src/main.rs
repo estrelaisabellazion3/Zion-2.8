@@ -5,6 +5,7 @@ use clap::{Parser, Subcommand};
 
 mod ast;
 mod parser;
+mod type_checker;
 
 /// zqalc - minimal CLI for ZQAL language
 #[derive(Parser, Debug)]
@@ -22,6 +23,8 @@ enum Commands {
     Tokens { file: PathBuf },
     /// Build a proto-AST and print as JSON
     Ast { file: PathBuf },
+    /// Run type checking and semantic analysis
+    Check { file: PathBuf },
 }
 
 fn main() -> Result<()> {
@@ -30,6 +33,7 @@ fn main() -> Result<()> {
         Commands::Parse { file } => parse_cmd(file),
         Commands::Tokens { file } => tokens_cmd(file),
         Commands::Ast { file } => ast_cmd(file),
+        Commands::Check { file } => check_cmd(file),
     }
 }
 
@@ -94,5 +98,21 @@ fn ast_cmd(file: PathBuf) -> Result<()> {
     let src = read(file.clone())?;
     let tree = parser::build_ast(&src)?;
     println!("{}", serde_json::to_string_pretty(&tree)?);
+    Ok(())
+}
+
+fn check_cmd(file: PathBuf) -> Result<()> {
+    let src = read(file.clone())?;
+    let tree = parser::build_ast(&src)?;
+
+    let mut checker = type_checker::TypeChecker::new();
+    checker.check(&tree)?;
+
+    println!("OK: type checking passed ✅");
+    println!("  ✓ Algorithm: {}", tree.algorithm.as_ref().map(|a| &a.name).unwrap_or(&"none".to_string()));
+    println!("  ✓ Functions: {}", tree.functions.len());
+    println!("  ✓ Quantum declarations: {}", tree.quantum.len());
+    println!("  ✓ Tone declarations: {}", tree.tones.len());
+
     Ok(())
 }

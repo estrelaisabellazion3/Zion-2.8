@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Ast {
     pub algorithm: Option<Algorithm>,
     pub functions: Vec<Function>,
@@ -8,19 +8,19 @@ pub struct Ast {
     pub tones: Vec<ToneDecl>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Span {
     pub start: usize,
     pub end: usize,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Algorithm {
     pub name: String,
     pub span: Span,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Function {
     pub kind: FunctionKind,
     pub name: String,
@@ -28,7 +28,7 @@ pub struct Function {
     pub span: Span,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum FunctionKind {
     Kernel,
@@ -36,7 +36,7 @@ pub enum FunctionKind {
     Reward,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct QuantumDecl {
     pub name: String,
     pub size: u32,
@@ -44,7 +44,7 @@ pub struct QuantumDecl {
     pub span: Span,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ToneDecl {
     pub id: u32,
     pub span: Span,
