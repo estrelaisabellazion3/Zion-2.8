@@ -12,16 +12,9 @@ use anyhow::Result;
 use crate::ast::{Algorithm, Ast, Function, FunctionKind, QuantumDecl, Span, ToneDecl};
 
 pub fn build_ast(src: &str) -> Result<Ast> {
-    println!("DEBUG: Parsing source:\n{}", src);
     match parse_zqal(src) {
-        Ok((_, ast)) => {
-            println!("DEBUG: Parse successful");
-            Ok(ast)
-        },
-        Err(e) => {
-            println!("DEBUG: Parse error: {:?}", e);
-            Err(anyhow::anyhow!("Parse error: {:?}", e))
-        },
+        Ok((_, ast)) => Ok(ast),
+        Err(e) => Err(anyhow::anyhow!("Parse error: {:?}", e)),
     }
 }
 
@@ -35,20 +28,36 @@ fn parse_zqal(input: &str) -> IResult<&str, Ast> {
     let mut tones: Vec<ToneDecl> = Vec::new();
 
     let mut remaining = input;
-    // Try to parse functions only for now
     while !remaining.trim().is_empty() {
-        match parse_function(remaining) {
-            Ok((rest, func)) => {
+        // Try to parse any declaration
+        let result = alt((
+            map(parse_algorithm, |a| Declaration::Algorithm(a)),
+            map(parse_function, |f| Declaration::Function(f)),
+            map(parse_quantum_decl, |q| Declaration::Quantum(q)),
+            map(parse_tone_decl, |t| Declaration::Tone(t)),
+            map(parse_import, |_| Declaration::Import),
+            map(parse_const, |_| Declaration::Const),
+        ))(remaining);
+
+        match result {
+            Ok((rest, decl)) => {
                 remaining = rest;
-                functions.push(func);
+                match decl {
+                    Declaration::Algorithm(a) => algorithm = Some(a),
+                    Declaration::Function(f) => functions.push(f),
+                    Declaration::Quantum(q) => quantum.push(q),
+                    Declaration::Tone(t) => tones.push(t),
+                    _ => {} // Skip imports and consts for now
+                }
+                // Skip whitespace after declaration
                 remaining = multispace0(remaining)?.0;
             }
             Err(_) => {
-                // Skip this line
+                // If no declaration matches, skip this line and continue
                 if let Some(newline_pos) = remaining.find('\n') {
                     remaining = &remaining[newline_pos + 1..];
                 } else {
-                    break;
+                    break; // No more content
                 }
             }
         }
@@ -87,15 +96,12 @@ fn parse_algorithm(input: &str) -> IResult<&str, Algorithm> {
 }
 
 fn parse_function(input: &str) -> IResult<&str, Function> {
-    println!("DEBUG: parse_function called with: {:?}", &input[..50]);
     let (input, _) = multispace0(input)?; // Skip leading whitespace
-    println!("DEBUG: after multispace0: {:?}", &input[..50]);
     let (input, kind) = alt((
         map(tag("@kernel"), |_| FunctionKind::Kernel),
         map(tag("@validator"), |_| FunctionKind::Validator),
         map(tag("@reward"), |_| FunctionKind::Reward),
     ))(input)?;
-    println!("DEBUG: parsed kind: {:?}", kind);
     let (input, _) = multispace1(input)?;
     let (input, _) = tag("fn")(input)?;
     let (input, _) = multispace1(input)?;
