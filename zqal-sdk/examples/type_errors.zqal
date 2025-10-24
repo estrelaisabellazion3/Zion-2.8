@@ -1,0 +1,18 @@
+@algorithm TestErrors {
+  version: "1.0.0"
+}
+
+quantum state[12]: u32;
+quantum state[12]: u32;  // Duplicate quantum declaration
+
+@kernel
+fn test_func() -> u32 {
+  return 42;
+}
+
+@kernel
+fn test_func() -> u32 {  // Duplicate function
+  return 24;
+}
+
+tone 999;  // Invalid tone ID (>70)

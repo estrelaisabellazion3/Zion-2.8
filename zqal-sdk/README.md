@@ -22,10 +22,36 @@ zqal-sdk/
 ## Rychlý start (koncept)
 
 1) Napiš algoritmus v `.zqal` (viz `examples/cosmic_harmony.zqal`).
-2) Spusť CLI `zqalc` pro základní kontrolu:
-   - `zqalc parse zqal-sdk/examples/cosmic_harmony.zqal`
-   - `zqalc tokens zqal-sdk/examples/cosmic_harmony.zqal`
+2) Spusť CLI `zqalc` pro kontrolu a validaci:
+   - `zqalc parse zqal-sdk/examples/cosmic_harmony.zqal` - základní parsing
+   - `zqalc tokens zqal-sdk/examples/cosmic_harmony.zqal` - tokenizace
+   - `zqalc ast zqal-sdk/examples/cosmic_harmony.zqal` - AST výstup
+   - `zqalc check zqal-sdk/examples/cosmic_harmony.zqal` - **novinka v0.2.0**: type checking a sémantická analýza
 3) Později: kompilátor vygeneruje Rust/OpenCL kód, který načteme v Pythonu (PyO3) do stratum poolu.
+
+## Aktuální stav (v0.2.0 "Nebula")
+
+✅ **Dokončeno:**
+- Nom-based AST parser s kompletní podporou ZQAL syntaxe
+- Type checking systém s:
+  - Symbol tables pro proměnné a funkce
+  - Vestavěné kvantové funkce (entangle, collapse, superpose, measure)
+  - Tone funkce (apply_tone)
+  - Hash funkce (hash)
+  - Detekce duplicitních deklarací
+  - Validace typů (u32, u64, f64, bool, hash32, bytes80, arrays)
+- CLI nástroje: parse, tokens, ast, check
+- Úspěšné testování na příkladech cosmic_harmony.zqal
+
+🚧 **Probíhá:**
+- Codegen backendy (Rust, OpenCL, WASM)
+- VS Code extension s LSP podporou
+- Pokročilá sémantická analýza
+
+📋 **Plánováno:**
+- Runtime execution engine
+- Performance benchmarking
+- Integration s ZION blockchain
 
 ## Mapování „Vzestupu“ → SDK
 - 5D vědomí → deterministický běh, idempotence, observabilita
