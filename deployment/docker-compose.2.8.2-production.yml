@@ -1,0 +1,128 @@
+version: '3.8'
+
+services:
+  # WARP Engine - Core mining engine
+  warp-engine:
+    image: python:3.11-slim
+    container_name: zion-2.8.2-warp
+    working_dir: /app
+    volumes:
+      - ./src/core/zion_warp_engine_core.py:/app/warp_engine.py
+      - ./data/warp:/app/data
+      - ./logs:/app/logs
+    ports:
+      - "8080:8080"
+    environment:
+      - ZION_ENV=production
+      - ZION_LOG_LEVEL=info
+      - WARP_PORT=8080
+    command: python warp_engine.py
+    restart: unless-stopped
+    networks:
+      - zion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Mining Pool - Stratum protocol
+  mining-pool:
+    image: python:3.11-slim
+    container_name: zion-2.8.2-pool
+    working_dir: /app
+    volumes:
+      - ./src/core/zion_universal_pool_v2.py:/app/pool.py
+      - ./data/pool:/app/data
+      - ./logs:/app/logs
+    ports:
+      - "3333:3333"
+      - "8181:8181"
+    environment:
+      - ZION_ENV=production
+      - ZION_LOG_LEVEL=info
+      - POOL_PORT=3333
+      - POOL_ADMIN_PORT=8181
+    command: python pool.py
+    restart: unless-stopped
+    networks:
+      - zion-network
+    depends_on:
+      - warp-engine
+
+  # RPC Server - JSON-RPC 2.0
+  rpc-server:
+    image: python:3.11-slim
+    container_name: zion-2.8.2-rpc
+    working_dir: /app
+    volumes:
+      - ./src/core/zion_rpc_server.py:/app/rpc_server.py
+      - ./data/rpc:/app/data
+      - ./logs:/app/logs
+    ports:
+      - "8545:8545"
+    environment:
+      - ZION_ENV=production
+      - ZION_LOG_LEVEL=info
+      - RPC_PORT=8545
+    command: python rpc_server.py
+    restart: unless-stopped
+    networks:
+      - zion-network
+    depends_on:
+      - warp-engine
+
+  # WebSocket Server - Real-time updates
+  websocket-server:
+    image: python:3.11-slim
+    container_name: zion-2.8.2-websocket
+    working_dir: /app
+    volumes:
+      - ./src/orchestration/zion_websocket_server.py:/app/ws_server.py
+      - ./data/websocket:/app/data
+      - ./logs:/app/logs
+    ports:
+      - "8888:8888"
+    environment:
+      - ZION_ENV=production
+      - ZION_LOG_LEVEL=info
+      - WS_PORT=8888
+    command: python ws_server.py
+    restart: unless-stopped
+    networks:
+      - zion-network
+    depends_on:
+      - warp-engine
+
+  # Dashboard - Next.js Frontend
+  dashboard:
+    image: node:18-slim
+    container_name: zion-2.8.2-dashboard
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://91.98.122.165:8545
+      - NEXT_PUBLIC_WS_URL=ws://91.98.122.165:8888
+    command: sh -c "npm install --production && npm run build && npm start"
+    restart: unless-stopped
+    networks:
+      - zion-network
+    depends_on:
+      - rpc-server
+      - websocket-server
+
+networks:
+  zion-network:
+    driver: bridge
+
+volumes:
+  zion-data-warp:
+  zion-data-pool:
+  zion-data-rpc:
+  zion-data-websocket:
+  zion-logs:
