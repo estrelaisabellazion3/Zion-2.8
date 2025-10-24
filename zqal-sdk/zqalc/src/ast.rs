@@ -9,8 +9,15 @@ pub struct Ast {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct Span {
+    pub start: usize,
+    pub end: usize,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Algorithm {
     pub name: String,
+    pub span: Span,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -18,6 +25,7 @@ pub struct Function {
     pub kind: FunctionKind,
     pub name: String,
     pub return_type: Option<String>,
+    pub span: Span,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -33,9 +41,11 @@ pub struct QuantumDecl {
     pub name: String,
     pub size: u32,
     pub ty: String,
+    pub span: Span,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ToneDecl {
     pub id: u32,
+    pub span: Span,
 }

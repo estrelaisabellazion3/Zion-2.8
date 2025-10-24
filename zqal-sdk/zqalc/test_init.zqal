@@ -1,0 +1,5 @@
+@kernel
+fn initialize(header: bytes80, nonce: u64) -> [u32; 12] {
+  let mut s = [0u32; 12];
+  return s;
+}

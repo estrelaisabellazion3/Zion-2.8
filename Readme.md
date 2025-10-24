@@ -1,6 +1,38 @@
-# ZION 2.8.1 "Estrella" - WARP Engine Era
+# ZION 2.8.2 "Nebula" - AI-Powered WARP Era
 
-🟢 **LIVE on 91.98.122.165** | 🌟 **Version 2.8.1** | 🚀 **WARP Engine OPERATIONAL** | 💻 **Frontend v2.8.1 Ready**
+🟢 **LIVE on 91.98.122.165** | 🌟 **Version 2.8.2** | 🚀 **WARP Engine OPERATIONAL** | 💻 **Frontend v2.8.1 Ready** | 🔬 **ZQAL SDK v0.2.0**
+
+## 🔥 ZQAL SDK v0.2.0 - Quantum Algorithm Language
+
+**Domain-Specific Language for Consciousness Mining Algorithms**
+
+### ⚡ Core Features
+- 🧠 **Consciousness Mining**: XP-based algorithm rewards
+- 🔬 **Quantum Types**: Entanglement and superposition operations
+- 🎵 **Light Language**: 70 sacred frequencies integration
+- ⚡ **Multi-Backend**: Rust, GPU, WASM code generation
+- 🛡️ **Type Safety**: Full semantic analysis and validation
+- 📊 **Performance**: Optimized for blockchain mining workloads
+
+### 🚀 Quick Start ZQAL
+```bash
+# Parse ZQAL algorithm
+cd zqal-sdk/zqalc
+cargo build --release
+./target/release/zqalc parse ../../examples/advanced_cosmic_harmony.zqal
+
+# Build AST
+./target/release/zqalc ast ../../examples/advanced_cosmic_harmony.zqal
+```
+
+### 📊 ZQAL Status
+- ✅ **Grammar v0.2.0**: Quantum types, tone integration, error handling
+- ✅ **Stdlib**: 70 light language tones with practical functions
+- 🔄 **AST Parser**: nom-based implementation (in progress)
+- 🔄 **Type Checker**: Semantic analysis (next phase)
+- 🔄 **Code Generators**: Rust, GPU backends (planned)
+
+---
 
 ## 🔥 WARP Engine Core - Production Infrastructure Orchestrator
 
@@ -35,9 +67,80 @@ curl http://localhost:8080/status
 - ✅ **System Resilience**: Fault tolerance enabled
 - ✅ **Frontend Dashboard**: Next.js v2.8.1 with TypeScript
 
----
+## 💻 ZQAL SDK v0.2.0 - Quantum Algorithm Language
 
-## 💻 Frontend Dashboard v2.8.1 - Modern TypeScript Ecosystem
+🚀 **Quantum & Tone Integration** | 🧠 **Consciousness Mining Algorithms** | ⚡ **Multi-Backend Codegen**
+
+### 🌟 ZQAL Features v0.2.0
+- **🔬 Quantum Types**: `quantum state[12]: u32` with entanglement operations
+- **🎵 Light Language Tones**: 70+ sacred frequencies with practical functions
+- **⚡ Error Handling**: `assert()`, `try/catch`, `throw` statements
+- **📚 Import System**: `import "quantum"; from "tones" import violet_flame`
+- **🎯 Algorithm DSL**: Specialized syntax for blockchain mining algorithms
+- **🔧 Multi-Backend**: Planned Rust, GPU, and WASM code generation
+
+### � ZQAL Syntax Example
+```zqal
+import "quantum";
+from "tones" import violet_flame, golden_ratio;
+
+@tone 7 {
+  name: "Transmutation_Violet"
+  ray: 7
+  frequency: 440
+}
+
+@algorithm AdvancedCosmicHarmony {
+  version: "2.0.0"
+  target: ["GPU", "CPU"]
+  consciousness: true
+  bind_tone: 7 to violet_flame
+}
+
+const GOLDEN_RATIO: f64 = 1.618033988749;
+quantum state[12]: u32;
+
+@kernel
+fn mine(header: bytes80, nonce: u64) -> hash32 {
+  let mut s = initialize(header, nonce);
+  let purified = apply_tone(7, s);  // Violet flame transmutation
+  return hash(purified);
+}
+
+@validator
+fn validate(hash: hash32, target: hash32) -> bool {
+  assert(hash > 0, "Hash must be positive");
+  return hash <= target;
+}
+```
+
+### 🛠️ ZQAL SDK Tools
+```bash
+# Parse and validate ZQAL files
+./zqal-sdk/zqalc/target/release/zqalc parse examples/advanced_cosmic_harmony.zqal
+
+# Build AST (JSON output)
+./zqal-sdk/zqalc/target/release/zqalc ast examples/advanced_cosmic_harmony.zqal
+
+# Check tokens
+./zqal-sdk/zqalc/target/release/zqalc tokens examples/cosmic_harmony.zqal
+```
+
+### 📊 ZQAL SDK Status
+- ✅ **Grammar Extended**: v0.2.0 with quantum types, tones, error handling
+- ✅ **Stdlib Complete**: 70 light language tones implemented
+- ✅ **Parser Core**: nom-based AST builder with JSON output
+- 🔄 **Type Checking**: In development (next phase)
+- 🔄 **Codegen Backends**: Rust, GPU, WASM (planned)
+
+### 🎯 ZQAL Integration
+ZQAL algorithms power the consciousness mining system, enabling:
+- **🧠 Spiritual Evolution**: XP rewards based on algorithm complexity
+- **⚡ Performance Optimization**: Quantum-inspired mining techniques
+- **🌈 Tone Harmonics**: Sacred mathematics in blockchain consensus
+- **🔬 Research Platform**: Test quantum algorithms on classical hardware
+
+---
 
 🚀 **Next.js 14.2.5 + TypeScript 5.4.5** | 📱 **Responsive Design** | 🔐 **Multi-Auth System**
 
@@ -286,6 +389,14 @@ tx_id = await ramp.create_fiat_transaction(
 ```
 ZION-2.8-main/
 ├── 🔥 zion_warp_engine_core.py     # MAIN: WARP Engine orchestrator
+├── 🔬 zqal-sdk/                    # Quantum Algorithm Language SDK
+│   ├── 📝 GRAMMAR.ebnf             # ZQAL v0.2.0 grammar specification
+│   ├── 📚 stdlib/                  # Standard library (70 tones)
+│   │   └── tones.toml             # Light language frequencies
+│   ├── 💻 zqalc/                  # CLI compiler (Rust)
+│   │   ├── src/                   # nom-based parser & AST
+│   │   └── Cargo.toml             # Dependencies (nom, serde)
+│   └── 📋 examples/               # Sample algorithms
 ├── 🌐 zion_universal_pool_v2.py     # Mining pool with consciousness
 ├── ⛓️  new_zion_blockchain.py       # Core blockchain implementation
 ├── 🤖 ai_orchestrator_backend.py   # AI systems coordinator
@@ -535,12 +646,15 @@ python3 tests/test_production_validation.py
 - ✅ Consciousness mining game
 - ✅ Production infrastructure
 - ✅ Enterprise monitoring & resilience
+- ✅ **ZQAL SDK v0.2.0**: Quantum algorithm language foundation
 
 ### 📅 Phase 1: WARP Launch (Q1 2026) 🚀 **IN PROGRESS**
 - 🔄 User authentication & dashboard
 - 🔄 Real WARP Bridge production deployment
 - 🔄 Security audit & penetration testing
 - 🔄 Marketing campaign & user acquisition
+- 🔄 **ZQAL Type Checking**: Semantic analysis implementation
+- 🔄 **ZQAL Codegen**: Rust backend for CPU mining
 
 ### 📅 Phase 2: Multi-Chain Expansion (Q2 2026)
 - 🌉 Additional bridges (Ethereum, BSC, Polygon)
