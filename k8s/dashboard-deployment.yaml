@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zion-dashboard
+  namespace: zion-nebula
+  labels:
+    app: zion-dashboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: zion-dashboard
+  template:
+    metadata:
+      labels:
+        app: zion-dashboard
+    spec:
+      containers:
+      - name: zion-dashboard
+        image: zion-nebula:latest
+        ports:
+        - containerPort: 5000
+          name: http
+        envFrom:
+        - configMapRef:
+            name: zion-config
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: zion-secrets
+              key: DB_PASSWORD
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: zion-secrets
+              key: REDIS_PASSWORD
+        command: ["python", "zion_monitoring_system.py"]
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "400m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10

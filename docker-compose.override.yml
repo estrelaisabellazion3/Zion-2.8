@@ -1,0 +1,36 @@
+version: '3.8'
+
+# Development overrides for docker-compose.zqal.yml
+services:
+  zqal-sdk:
+    environment:
+      - RUST_LOG=debug
+      - PYTHONPATH=/app
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - ../zqal-sdk:/app/zqal-sdk:ro
+      - ../zion_websocket_server.py:/app/zion_websocket_server.py:ro
+      - ../zion_monitoring_system.py:/app/zion_monitoring_system.py:ro
+      - ../zion_realtime_orchestrator.py:/app/zion_realtime_orchestrator.py:ro
+    command: ["python", "test_realtime_orchestrator.py"]
+
+  zion-node:
+    environment:
+      - LOG_LEVEL=DEBUG
+      - ZION_NETWORK=testnet
+    volumes:
+      - ../zion:/app/zion:ro
+      - ../config:/app/config:ro
+
+  mining-pool:
+    environment:
+      - LOG_LEVEL=DEBUG
+      - MINING_DIFFICULTY=100  # Lower difficulty for testing
+    volumes:
+      - ../zion:/app/zion:ro
+      - ../scripts:/app/scripts:ro
+
+  web-monitor:
+    volumes:
+      - ../zion_websocket_monitor.html:/usr/share/nginx/html/index.html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro

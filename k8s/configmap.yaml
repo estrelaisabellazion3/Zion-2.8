@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zion-config
+  namespace: zion-nebula
+  labels:
+    app: zion-blockchain
+data:
+  # ZION Blockchain Configuration
+  ZION_NETWORK: "nebula"
+  ZION_VERSION: "2.8.2"
+  ZION_P2P_PORT: "8333"
+  ZION_RPC_PORT: "8332"
+
+  # Mining Pool Configuration
+  POOL_PORT: "3333"
+  POOL_DIFFICULTY: "0.001"
+  POOL_REWARD_SHARE: "0.02"
+
+  # WebSocket Configuration
+  WEBSOCKET_PORT: "8080"
+  SOCKETIO_PORT: "8081"
+
+  # Monitoring Configuration
+  MONITORING_INTERVAL: "30"
+  METRICS_RETENTION: "3600"
+
+  # AI Configuration
+  AI_MODEL_PATH: "/app/models"
+  AI_UPDATE_INTERVAL: "300"
+
+  # Database Configuration
+  DB_HOST: "zion-postgres"
+  DB_PORT: "5432"
+  DB_NAME: "zion_nebula"
+  DB_USER: "zion_user"
+
+  # Redis Configuration
+  REDIS_HOST: "zion-redis"
+  REDIS_PORT: "6379"
+
+  # Warp Engine Configuration
+  WARP_BRIDGE_ENABLED: "true"
+  WARP_CONSCIOUSNESS_MINING: "true"

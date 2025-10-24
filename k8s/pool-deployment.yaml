@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zion-pool
+  namespace: zion-nebula
+  labels:
+    app: zion-pool
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: zion-pool
+  template:
+    metadata:
+      labels:
+        app: zion-pool
+    spec:
+      containers:
+      - name: zion-pool
+        image: zion-nebula:latest
+        ports:
+        - containerPort: 3333
+          name: stratum
+        envFrom:
+        - configMapRef:
+            name: zion-config
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: zion-secrets
+              key: DB_PASSWORD
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: zion-secrets
+              key: REDIS_PASSWORD
+        command: ["python", "zion_universal_pool_v2.py"]
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          tcpSocket:
+            port: 3333
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          tcpSocket:
+            port: 3333
+          initialDelaySeconds: 10
+          periodSeconds: 10

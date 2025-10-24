@@ -1,0 +1,64 @@
+# ZQAL SDK - Development Docker Image
+FROM rust:1.75-slim as builder
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    pkg-config \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy Rust project
+COPY zqal-sdk/zqalc/ ./zqalc/
+
+# Build ZQAL compiler
+WORKDIR /app/zqalc
+RUN cargo build --release
+
+# Runtime stage
+FROM python:3.11-slim
+
+# Install Python and system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy built ZQAL compiler
+COPY --from=builder /app/zqalc/target/release/zqalc /usr/local/bin/zqalc
+
+# Copy ZQAL SDK files
+COPY zqal-sdk/ ./zqal-sdk/
+
+# Copy real-time components
+COPY zion_websocket_server.py .
+COPY zion_monitoring_system.py .
+COPY zion_realtime_orchestrator.py .
+COPY test_realtime_orchestrator.py .
+
+# Copy web monitor
+COPY zion_websocket_monitor.html .
+
+# Create directories
+RUN mkdir -p /app/data /app/logs /app/examples
+
+# Copy examples
+COPY zqal-sdk/examples/ ./examples/
+
+# Expose ports
+EXPOSE 8080 8081 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD python -c "import sys; sys.exit(0)" || exit 1
+
+# Default command - start real-time orchestrator
+CMD ["python", "zion_realtime_orchestrator.py"]

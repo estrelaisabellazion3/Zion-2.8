@@ -1,0 +1,55 @@
+# Kubernetes deployment ignore file
+# Files to exclude from deployment
+
+# Development files
+*.log
+*.tmp
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# Git
+.git/
+.gitignore
+
+# Docker files (handled separately)
+../docker/
+../Dockerfile*
+
+# Documentation (not needed in cluster)
+../*.md
+../README*
+../docs/
+
+# Test files
+../test_*
+../*_test.py
+
+# Backup files
+../*.bak
+../*.backup
+
+# Configuration files (use ConfigMaps instead)
+../*.json
+../*.yaml
+!*.yaml  # But keep our YAML files
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Node modules (if any)
+node_modules/
+
+# Build artifacts
+build/
+dist/

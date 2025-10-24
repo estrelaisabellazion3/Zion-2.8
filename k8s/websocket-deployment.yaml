@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zion-websocket
+  namespace: zion-nebula
+  labels:
+    app: zion-websocket
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: zion-websocket
+  template:
+    metadata:
+      labels:
+        app: zion-websocket
+    spec:
+      containers:
+      - name: zion-websocket
+        image: zion-nebula:latest
+        ports:
+        - containerPort: 8080
+          name: websocket
+        - containerPort: 8081
+          name: socketio
+        envFrom:
+        - configMapRef:
+            name: zion-config
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: zion-secrets
+              key: REDIS_PASSWORD
+        command: ["python", "zion_websocket_server.py"]
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10

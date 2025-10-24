@@ -109,6 +109,21 @@ class ZionNetworkConfig:
         'score_decay_interval': 60
     }
     
+    # WEBSOCKET CONFIGURATION - REAL-TIME MONITORING
+    WEBSOCKET_CONFIG = {
+        'host': '0.0.0.0',
+        'port': 8080,  # WebSocket port
+        'socketio_port': 8081,  # Socket.IO port (fallback)
+        'ping_interval': 30,
+        'ping_timeout': 10,
+        'max_connections': 1000,
+        'broadcast_intervals': {
+            'mining_metrics': 1.0,    # 1Hz
+            'ai_metrics': 5.0,        # 0.2Hz
+            'system_metrics': 10.0    # 0.1Hz
+        }
+    }
+    
     # BLOCKCHAIN KONFIGURACE
     BLOCKCHAIN_CONFIG = {
         'db_file': 'data/zion_blockchain.db',

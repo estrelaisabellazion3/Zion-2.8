@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zion-dashboard
+  namespace: zion-nebula
+  labels:
+    app: zion-dashboard
+spec:
+  selector:
+    app: zion-dashboard
+  ports:
+  - name: http
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer

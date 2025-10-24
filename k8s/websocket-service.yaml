@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zion-websocket
+  namespace: zion-nebula
+  labels:
+    app: zion-websocket
+spec:
+  selector:
+    app: zion-websocket
+  ports:
+  - name: websocket
+    port: 8080
+    targetPort: 8080
+  - name: socketio
+    port: 8081
+    targetPort: 8081
+  type: ClusterIP

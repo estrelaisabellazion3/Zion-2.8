@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zion-blockchain
+  namespace: zion-nebula
+  labels:
+    app: zion-blockchain
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zion-blockchain
+  template:
+    metadata:
+      labels:
+        app: zion-blockchain
+    spec:
+      containers:
+      - name: zion-node
+        image: zion-nebula:latest
+        ports:
+        - containerPort: 8333
+          name: p2p
+        - containerPort: 8332
+          name: rpc
+        envFrom:
+        - configMapRef:
+            name: zion-config
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: zion-secrets
+              key: DB_PASSWORD
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: zion-secrets
+              key: REDIS_PASSWORD
+        volumeMounts:
+        - name: blockchain-data
+          mountPath: /app/data
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8332
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8332
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      volumes:
+      - name: blockchain-data
+        persistentVolumeClaim:
+          claimName: zion-blockchain-pvc
