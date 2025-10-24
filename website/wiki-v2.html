@@ -14,19 +14,50 @@
     <link rel="stylesheet" href="css/wiki-style.css">
     
     <style>
-        .live-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #00ff00;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-            margin-right: 5px;
+        /* Enhanced Wiki Styles */
+        .wiki-header {
+            background: linear-gradient(135deg, rgba(0,255,0,0.1), rgba(0,0,0,0.9));
+            border-bottom: 2px solid var(--matrix-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        
+        .wiki-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
+        
+        .wiki-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .wiki-logo .logo-icon {
+            font-size: 2.5rem;
+            color: var(--matrix-green);
+            text-shadow: 0 0 20px var(--matrix-green);
+        }
+        
+        .wiki-logo .logo-text {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--matrix-green);
+            text-shadow: 0 0 10px var(--matrix-green);
+        }
+        
+        .wiki-logo .logo-subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: -0.2rem;
+        }
+        
         .version-badge {
             display: inline-block;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -36,31 +67,59 @@
             font-size: 0.8rem;
             font-weight: bold;
             margin-left: 10px;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
         }
+        
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            margin-right: 5px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
         .pool-stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin: 2rem 0;
         }
+        
         .stat-card {
             background: rgba(0, 255, 0, 0.05);
             border: 1px solid var(--matrix-green);
             border-radius: 8px;
             padding: 1.5rem;
             text-align: center;
+            transition: all 0.3s ease;
         }
+        
+        .stat-card:hover {
+            background: rgba(0, 255, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+        }
+        
         .stat-value {
             font-size: 2rem;
             font-weight: bold;
             color: var(--matrix-green);
             font-family: 'Orbitron', monospace;
         }
+        
         .stat-label {
             color: var(--text-muted);
             font-size: 0.9rem;
             margin-top: 0.5rem;
         }
+        
         .event-feed {
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid var(--matrix-green);
@@ -69,20 +128,298 @@
             max-height: 400px;
             overflow-y: auto;
         }
+        
         .event-item {
             padding: 0.75rem;
             margin: 0.5rem 0;
             background: rgba(0, 255, 0, 0.03);
             border-left: 3px solid var(--matrix-green);
             border-radius: 4px;
+            transition: all 0.2s ease;
         }
+        
+        .event-item:hover {
+            background: rgba(0, 255, 0, 0.08);
+        }
+        
         .event-item.block-found {
             border-left-color: #FFD700;
             background: rgba(255, 215, 0, 0.05);
         }
+        
         .event-item.payment {
             border-left-color: #4CAF50;
             background: rgba(76, 175, 80, 0.05);
+        }
+        
+        .welcome-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .welcome-card {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid var(--matrix-green);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .welcome-card:hover::before {
+            left: 100%;
+        }
+        
+        .welcome-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .welcome-card h2 {
+            color: var(--matrix-green);
+            margin-bottom: 1rem;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .btn-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--matrix-green), #00aa00);
+            color: black;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid var(--matrix-green);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #00aa00, var(--matrix-green));
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+        }
+        
+        .doc-link {
+            display: inline-block;
+            color: var(--matrix-green);
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .doc-link:hover {
+            background: rgba(0, 255, 0, 0.1);
+            text-decoration: underline;
+        }
+        
+        .sidebar-categories {
+            margin-top: 2rem;
+        }
+        
+        .category-group {
+            margin-bottom: 2rem;
+        }
+        
+        .category-title {
+            color: var(--matrix-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .category-title:hover {
+            color: #00aa00;
+        }
+        
+        .category-title.active {
+            color: #FFD700;
+            border-bottom-color: #FFD700;
+        }
+        
+        .category-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .category-items li {
+            margin: 2px 0;
+        }
+        
+        .category-items a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 12px;
+            display: block;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+        
+        .category-items a:hover {
+            background: rgba(0, 255, 0, 0.1);
+            color: var(--matrix-green);
+            padding-left: 16px;
+        }
+        
+        .breadcrumbs {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+        
+        .crumb {
+            color: var(--text-muted);
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        .crumb.current {
+            color: var(--matrix-green);
+        }
+        
+        .separator {
+            margin: 0 0.5rem;
+            color: var(--text-muted);
+        }
+        
+        .wiki-content {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        .page-title {
+            color: var(--matrix-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .toc-sidebar {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        
+        .toc-sidebar h3 {
+            color: var(--matrix-green);
+            margin-bottom: 1rem;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .toc-sidebar a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 4px 0;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-sidebar a:hover {
+            color: var(--matrix-green);
+            padding-left: 8px;
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 2px solid var(--matrix-green);
+            padding: 3rem 0 1rem 0;
+            margin-top: 4rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h4 {
+            color: var(--matrix-green);
+            margin-bottom: 1rem;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            padding: 4px 0;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-section a:hover {
+            color: var(--matrix-green);
+            padding-left: 8px;
+        }
+        
+        .sacred-quote {
+            font-style: italic;
+            color: var(--text-muted);
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid var(--matrix-green);
+        }
+        
+        @media (max-width: 768px) {
+            .wiki-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .wiki-sidebar {
+                order: 2;
+            }
+            
+            .wiki-content {
+                order: 1;
+            }
+            
+            .toc-sidebar {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -93,25 +430,507 @@
     <!-- Sacred Geometry Background -->
     <div class="sacred-geometry-bg"></div>
     
-    <!-- Navigation -->
-    <nav class="header">
+    <!-- Enhanced Header -->
+    <header class="wiki-header">
         <div class="container">
-            <div class="nav-brand">
-                <span class="brand-icon">⬡</span>
-                <span class="brand-text">ZION</span>
-                <span class="brand-subtitle">Wiki</span>
-                <span class="version-badge">v2.8.2 Nebula</span>
+            <div class="wiki-logo">
+                <div class="logo-icon">⬡</div>
+                <div>
+                    <div class="logo-text">ZION</div>
+                    <div class="logo-subtitle">Wiki v2.8.2</div>
+                </div>
+                <span class="version-badge">Nebula</span>
             </div>
-            <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="#sacred-books">Sacred Books</a>
+            
+            <nav class="nav-links">
+                <a href="../index.html">← Home</a>
+                <a href="#pool-live">Live Stats</a>
                 <a href="#mining">Mining</a>
-                <a href="#multi-pool">Multi-Pool</a>
-                <a href="#roadmap">Roadmap</a>
-                <a href="#technical">Technical</a>
+                <a href="#technical">Docs</a>
+                <a href="https://github.com/estrelaisabellazion3/Zion-2.8" target="_blank">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Wiki Layout -->
+    <div class="wiki-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="wiki-sidebar">
+            <div class="sidebar-search">
+                <input type="text" id="wiki-search" placeholder="🔍 Search wiki..." />
+                <button id="search-btn">Search</button>
+            </div>
+            
+            <div class="sidebar-categories">
+                <!-- Live Pool Stats -->
+                <div class="category-group">
+                    <h3 class="category-title active" data-category="pool-live">
+                        <span class="live-indicator"></span>
+                        <span class="icon">📊</span>
+                        Live Pool Stats
+                    </h3>
+                    <ul class="category-items" id="pool-live-list">
+                        <li><a href="#pool-dashboard">📊 Pool Dashboard</a></li>
+                        <li><a href="#real-time-events">📡 Real-time Events</a></li>
+                        <li><a href="#miner-stats">⛏️ Miner Statistics</a></li>
+                        <li><a href="#block-explorer">🔍 Block Explorer</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Sacred Books Section -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="sacred-books">
+                        <span class="icon">📚</span>
+                        Sacred Books
+                    </h3>
+                    <ul class="category-items" id="sacred-books-list" style="display: none;">
+                        <li><a href="#smaragdove-desky" data-book="smaragdove-desky">📖 Smaragdové Desky</a></li>
+                        <li><a href="#trinity-one-love" data-book="trinity-one-love">📖 Trinity One Love</a></li>
+                        <li><a href="#starobyly-sip" data-book="starobyly-sip">📖 Starožitný Šíp</a></li>
+                        <li><a href="#tajemstvi-amenti" data-book="tajemstvi-amenti">📖 Tajemství Amenti</a></li>
+                        <li><a href="#dohrmanovo-proroctvi" data-book="dohrmanovo-proroctvi">📖 Dohrmanovo Proroctví</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Mining Section -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="mining">
+                        <span class="icon">⛏️</span>
+                        Mining Guides
+                    </h3>
+                    <ul class="category-items" id="mining-list" style="display: none;">
+                        <li><a href="#quick-start">🚀 Quick Start Guide</a></li>
+                        <li><a href="#cpu-mining">💻 CPU Mining (XMRig)</a></li>
+                        <li><a href="#gpu-mining">🎮 GPU Mining (SRBMiner)</a></li>
+                        <li><a href="#cosmic-harmony">🎨 Cosmic Harmony Algorithm</a></li>
+                        <li><a href="#consciousness-mining">🧘 Consciousness Mining</a></li>
+                        <li><a href="#pool-setup">⚙️ Pool Configuration</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Multi-Pool Orchestration -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="multi-pool">
+                        <span class="icon">🔄</span>
+                        Multi-Pool System
+                    </h3>
+                    <ul class="category-items" id="multi-pool-list" style="display: none;">
+                        <li><a href="#orchestration-overview" data-doc="MULTI_POOL_ORCHESTRATION_README">📋 Orchestration Overview</a></li>
+                        <li><a href="#intelligent-switching">🔄 Intelligent Pool Switching</a></li>
+                        <li><a href="#geographic-balancing">🌍 Geographic Load Balancing</a></li>
+                        <li><a href="#ai-optimization">🤖 AI-Powered Optimization</a></li>
+                        <li><a href="#payment-automation">💸 Automated Payments</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Roadmap & Planning -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="roadmap">
+                        <span class="icon">🗺️</span>
+                        Roadmap 2025-2030
+                    </h3>
+                    <ul class="category-items" id="roadmap-list" style="display: none;">
+                        <li><a href="#master-roadmap" data-doc="ROADMAP">📈 Master Roadmap</a></li>
+                        <li><a href="#q4-2025">📅 Q4 2025 (Current)</a></li>
+                        <li><a href="#2026-milestones">🎯 2026 Milestones</a></li>
+                        <li><a href="#mainnet-2027">🚀 Mainnet 2027</a></li>
+                        <li><a href="#multi-chain" data-doc="MULTI_CHAIN_TECHNICAL_ROADMAP">🔗 Multi-Chain Integration</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Technical Documentation -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="technical">
+                        <span class="icon">⚙️</span>
+                        Technical Docs
+                    </h3>
+                    <ul class="category-items" id="technical-list" style="display: none;">
+                        <li><a href="#blockchain-specs">📋 Blockchain Specifications</a></li>
+                        <li><a href="#cosmic-harmony-tech">🎨 Cosmic Harmony Tech</a></li>
+                        <li><a href="#websocket-api">📡 WebSocket API</a></li>
+                        <li><a href="#payment-system">💰 Payment System</a></li>
+                        <li><a href="#deployment" data-doc="DEPLOYMENT_GUIDE_2.8.2">🚀 Deployment Guide</a></li>
+                        <li><a href="#operational-report" data-doc="OPERATIONAL_REPORT_2025-10-24">📊 Operational Report</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Development -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="development">
+                        <span class="icon">💻</span>
+                        Development
+                    </h3>
+                    <ul class="category-items" id="development-list" style="display: none;">
+                        <li><a href="#project-structure">📁 Project Structure</a></li>
+                        <li><a href="#src-overview">💻 src/ Overview</a></li>
+                        <li><a href="#testing">🧪 Testing Suite</a></li>
+                        <li><a href="#benchmarking">⚡ Benchmarking Tools</a></li>
+                        <li><a href="#local-setup" data-doc="LOCAL_DEPLOYMENT_SUCCESS_2025-10-24">🏠 Local Setup</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Consciousness Game -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="consciousness">
+                        <span class="icon">🧘</span>
+                        Consciousness System
+                    </h3>
+                    <ul class="category-items" id="consciousness-list" style="display: none;">
+                        <li><a href="#level-system">🧘 Consciousness Levels (L1-L9)</a></li>
+                        <li><a href="#xp-progression">📈 XP Progression</a></li>
+                        <li><a href="#golden-egg">🥚 Golden Egg Quest</a></li>
+                        <li><a href="#achievements">🏆 Achievements</a></li>
+                        <li><a href="#meditation">🧘 Meditation Bonus</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Documentation Links -->
+                <div class="category-group">
+                    <h3 class="category-title" data-category="docs">
+                        <span class="icon">📖</span>
+                        Documentation
+                    </h3>
+                    <ul class="category-items" id="docs-list" style="display: none;">
+                        <li><a href="#whitepaper-cz" data-doc="ZION_COSMIC_DHARMA_WHITEPAPER_2025_CZ">📄 Whitepaper (CZ)</a></li>
+                        <li><a href="#whitepaper-en" data-doc="ZION_COSMIC_DHARMA_WHITEPAPER_2025">📄 Whitepaper (EN)</a></li>
+                        <li><a href="#mainnet-launch" data-doc="MAINNET_LAUNCH">🚀 MainNet Launch</a></li>
+                        <li><a href="#release-notes" data-doc="RELEASE_NOTES">📋 Release Notes</a></li>
+                        <li><a href="#changelog" data-doc="CHANGELOG">📝 Changelog</a></li>
+                        <li><a href="#liberation-manifesto" data-doc="LIBERATION-MANIFESTO">🕊️ Liberation Manifesto</a></li>
+                        <li><a href="#new-jerusalem" data-doc="NEW-JERUSALEM-MASTER-PLAN">🏛️ New Jerusalem Plan</a></li>
+                        <li><a href="#strategic-vision" data-doc="STRATEGIC_VISION_EXPANSION">🎯 Strategic Vision</a></li>
+                        <li><a href="#business-model" data-doc="BUSINESS_MODEL_ANALYSIS">💼 Business Model</a></li>
+                        <li><a href="#portugal-hub" data-doc="PORTUGAL_HUB_STRATEGY">🇵🇹 Portugal Hub</a></li>
+                        <li><a href="#consensus-params" data-doc="CONSENSUS_PARAMS">⚖️ Consensus Parameters</a></li>
+                        <li><a href="#multi-algo" data-doc="MULTI_ALGO_SUPPORT">🔄 Multi-Algorithm Support</a></li>
+                        <li><a href="#address-spec" data-doc="ADDRESS_SPEC">🏷️ Address Specification</a></li>
+                        <li><a href="#project-architecture" data-doc="PROJECT_ARCHITECTURE_OVERVIEW">🏗️ Project Architecture</a></li>
+                        <li><a href="#security" data-doc="SECURITY_WHITELIST">🔒 Security & Whitelist</a></li>
+                        <li><a href="#docker-workflow" data-doc="DOCKER_WORKFLOW_GUIDE">🐳 Docker Workflow</a></li>
+                        <li><a href="#node-installer" data-doc="NODE_INSTALLER">📦 Node Installer</a></li>
+                        <li><a href="#global-deployment" data-doc="GLOBAL-DEPLOYMENT-STRATEGY">🌍 Global Deployment</a></li>
+                        <li><a href="#hetzner-setup" data-doc="hetzner-setup">☁️ Hetzner Setup</a></li>
+                        <li><a href="#ssh-mining" data-doc="SSH_MINING_DEPLOYMENT">🔐 SSH Mining</a></li>
+                        <li><a href="#mining-ssh" data-doc="MINING_SSH_SETUP">⛏️ Mining SSH Setup</a></li>
+                        <li><a href="#distributed-mining" data-doc="DISTRIBUTED_MINING_FUTURE_PLAN">🌐 Distributed Mining</a></li>
+                        <li><a href="#troubleshooting">🔧 Troubleshooting</a></li>
+                        <li><a href="#gpu-setup" data-doc="AMD_GPU_SETUP_LOG">🎮 AMD GPU Setup</a></li>
+                        <li><a href="#realtime-mining" data-doc="REALTIME_MINING_README">⚡ Realtime Mining</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="wiki-content">
+            <div class="breadcrumbs">
+                <span class="crumb">Wiki</span>
+                <span class="separator">></span>
+                <span class="crumb current" id="current-category">Live Pool Stats</span>
+                <span class="separator" id="page-separator" style="display: none;">></span>
+                <span class="crumb current" id="current-page" style="display: none;"></span>
+            </div>
+            
+            <article id="wiki-article">
+                <!-- Default Landing Page - Live Pool Dashboard -->
+                <div id="wiki-home" class="wiki-page">
+                    <h1 class="page-title glitch" data-text="ZION Wiki v2.8.2">ZION Wiki v2.8.2</h1>
+                    <p class="page-subtitle">Multi-Pool Orchestration • Consciousness Mining • Real-time Events • Sacred Knowledge</p>
+                    
+                    <!-- Live Pool Stats -->
+                    <h2>🔴 Live Pool Statistics</h2>
+                    <div class="pool-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="pool-hashrate">Loading...</div>
+                            <div class="stat-label">Pool Hashrate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="active-miners">--</div>
+                            <div class="stat-label">Active Miners</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="blocks-found">--</div>
+                            <div class="stat-label">Blocks Found (24h)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="network-difficulty">--</div>
+                            <div class="stat-label">Network Difficulty</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Real-time Events Feed -->
+                    <h2>📡 Real-time Events</h2>
+                    <div class="event-feed" id="event-feed">
+                        <div class="event-item">
+                            <span style="color: var(--text-muted);">Connecting to pool events...</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Feature Cards -->
+                    <h2 style="margin-top: 3rem;">🌟 ZION 2.8.2 "Nebula" Features</h2>
+                    <div class="welcome-grid">
+                        <div class="welcome-card">
+                            <div class="card-icon">🔄</div>
+                            <h2>Multi-Pool Orchestration</h2>
+                            <p>AI-powered pool switching, geographic load balancing, distributed mining coordination across multiple pools</p>
+                            <a href="#orchestration-overview" class="btn-primary">Explore →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">⛏️</div>
+                            <h2>Real-time Mining</h2>
+                            <p>Live monitoring, WebSocket events, automated payments, consciousness-enhanced rewards</p>
+                            <a href="#pool-dashboard" class="btn-primary">Monitor →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">🎨</div>
+                            <h2>Cosmic Harmony</h2>
+                            <p>Native ZION mining algorithm combining sacred geometry with cryptographic security</p>
+                            <a href="#cosmic-harmony" class="btn-primary">Learn More →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">📚</div>
+                            <h2>Sacred Wisdom</h2>
+                            <p>Ancient texts: Smaragdové Desky (Thoth), Trinity One Love, WingMakers, Amenti mysteries</p>
+                            <a href="#sacred-books" class="btn-primary">Read →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">🗺️</div>
+                            <h2>2025-2030 Roadmap</h2>
+                            <p>Mainnet 2027, multi-chain bridges, DAO governance, global expansion plan</p>
+                            <a href="#master-roadmap" class="btn-primary">View Plan →</a>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="card-icon">🧘</div>
+                            <h2>Consciousness Mining</h2>
+                            <p>9 levels (L1→L9), meditation bonuses, XP progression, Golden Egg quest</p>
+                            <a href="#level-system" class="btn-primary">Ascend →</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Links -->
+                    <h2 style="margin-top: 3rem;">🚀 Quick Start</h2>
+                    <div style="background: rgba(0,255,0,0.05); border: 1px solid var(--matrix-green); padding: 2rem; border-radius: 8px;">
+                        <h3>Start Mining ZION in 3 Steps:</h3>
+                        <ol style="line-height: 2;">
+                            <li><strong>Download Miner:</strong> <a href="#cpu-mining" class="doc-link">XMRig (CPU)</a> or <a href="#gpu-mining" class="doc-link">SRBMiner (GPU)</a></li>
+                            <li><strong>Configure Pool:</strong> <code>pool.zion-blockchain.org:3336</code></li>
+                            <li><strong>Start Mining:</strong> Watch your consciousness level grow!</li>
+                        </ol>
+                        <p style="margin-top: 1rem;">
+                            <strong>Current Status:</strong> 
+                            <span style="color: var(--matrix-green);">✓ Pool Active</span> • 
+                            <span style="color: var(--matrix-green);">✓ Payments Automated</span> • 
+                            <span style="color: var(--matrix-green);">✓ AI Orchestration Running</span>
+                        </p>
+                    </div>
+                    
+                    <div class="quote-container" style="margin-top: 3rem;">
+                        <blockquote class="sacred-quote">
+                            "We are not human beings having a spiritual experience. We are spiritual beings having a human experience."
+                            <cite>— Pierre Teilhard de Chardin</cite>
+                        </blockquote>
+                    </div>
+                    
+                    <!-- Project Stats -->
+                    <h2 style="margin-top: 3rem;">📊 Project Statistics</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(0,255,0,0.03); padding: 1.5rem; border-radius: 8px;">
+                            <h3 style="margin: 0; color: var(--matrix-green);">Version</h3>
+                            <p style="font-size: 1.5rem; margin: 0.5rem 0 0 0;">2.8.2 "Nebula"</p>
+                        </div>
+                        <div style="background: rgba(0,255,0,0.03); padding: 1.5rem; border-radius: 8px;">
+                            <h3 style="margin: 0; color: var(--matrix-green);">Total Supply</h3>
+                            <p style="font-size: 1.5rem; margin: 0.5rem 0 0 0;">144B ZION</p>
+                        </div>
+                        <div style="background: rgba(0,255,0,0.03); padding: 1.5rem; border-radius: 8px;">
+                            <h3 style="margin: 0; color: var(--matrix-green);">Block Reward</h3>
+                            <p style="font-size: 1.5rem; margin: 0.5rem 0 0 0;">5,479.45 ZION</p>
+                        </div>
+                        <div style="background: rgba(0,255,0,0.03); padding: 1.5rem; border-radius: 8px;">
+                            <h3 style="margin: 0; color: var(--matrix-green);">Mainnet Target</h3>
+                            <p style="font-size: 1.5rem; margin: 0.5rem 0 0 0;">Q1 2027</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dynamic content loaded here by wiki-engine.js -->
+            </article>
+            
+            <!-- Table of Contents (for longer articles) -->
+            <aside class="toc-sidebar">
+                <h3>On This Page</h3>
+                <nav id="toc-nav">
+                    <a href="#live-pool-statistics">Live Pool Statistics</a>
+                    <a href="#real-time-events">Real-time Events</a>
+                    <a href="#zion-282-nebula-features">Features</a>
+                    <a href="#quick-start">Quick Start</a>
+                </nav>
+            </aside>
+        </main>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>ZION 2.8.2</h4>
+                    <a href="#master-roadmap" class="doc-link">📈 Master Roadmap</a>
+                    <a href="#multi-pool" class="doc-link">🔄 Multi-Pool System</a>
+                    <a href="#cosmic-harmony" class="doc-link">🎨 Cosmic Harmony</a>
+                    <a href="#deployment" class="doc-link">🚀 Deployment Guide</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Mining</h4>
+                    <a href="#quick-start" class="doc-link">🚀 Quick Start</a>
+                    <a href="#cpu-mining" class="doc-link">💻 CPU Mining</a>
+                    <a href="#gpu-mining" class="doc-link">🎮 GPU Mining</a>
+                    <a href="#pool-dashboard" class="doc-link">📊 Pool Dashboard</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <a href="#blockchain-specs" class="doc-link">📋 Blockchain Specs</a>
+                    <a href="#websocket-api" class="doc-link">📡 WebSocket API</a>
+                    <a href="#payment-system" class="doc-link">💰 Payment System</a>
+                    <a href="#testing" class="doc-link">🧪 Testing Suite</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <a href="https://github.com/estrelaisabellazion3/Zion-2.8" target="_blank" class="doc-link">🐙 GitHub</a>
+                    <a href="#" class="doc-link">💬 Discord</a>
+                    <a href="#" class="doc-link">✈️ Telegram</a>
+                    <a href="#" class="doc-link">📧 Forum</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 ZION Blockchain v2.8.2 "Nebula". Sacred Technology for Conscious Evolution.</p>
+                <p class="sacred-quote">"JAI RAM SITA HANUMAN - ON THE STAR!" ⭐</p>
             </div>
         </div>
-    </nav>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="js/matrix-rain.js"></script>
+    <script src="js/sacred-geometry.js"></script>
+    <script src="js/wiki-engine-complete.js"></script>
+    
+    <!-- WebSocket Live Events -->
+    <script>
+        // Connect to pool WebSocket for live events
+        let ws = null;
+        
+        function connectPoolEvents() {
+            try {
+                ws = new WebSocket('ws://localhost:8765');
+                
+                ws.onopen = () => {
+                    console.log('✅ Connected to pool events');
+                    updateEventFeed('✅ Connected to ZION Pool Events', 'success');
+                };
+                
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        handlePoolEvent(data);
+                    } catch (e) {
+                        console.error('Error parsing event:', e);
+                    }
+                };
+                
+                ws.onclose = () => {
+                    console.log('❌ Disconnected from pool events');
+                    updateEventFeed('❌ Disconnected. Reconnecting...', 'error');
+                    setTimeout(connectPoolEvents, 5000);
+                };
+                
+                ws.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                };
+                
+            } catch (e) {
+                console.error('Failed to connect:', e);
+                updateEventFeed('⚠️ Pool events unavailable (offline mode)', 'warning');
+            }
+        }
+        
+        function handlePoolEvent(data) {
+            if (data.type === 'block_found') {
+                updateEventFeed(`🎉 Block #${data.data.height} found! Reward: ${data.data.reward} ZION`, 'block-found');
+                updateBlocksFound();
+            } else if (data.type === 'payment') {
+                updateEventFeed(`💸 Payment: ${data.data.amount} ZION to ${data.data.address.substring(0, 12)}...`, 'payment');
+            } else if (data.type === 'miner_connected') {
+                updateEventFeed(`🔌 Miner connected: ${data.data.algorithm}`, 'info');
+                updateActiveMiners();
+            } else if (data.type === 'hashrate_update') {
+                updatePoolHashrate(data.data.pool_hashrate);
+                updateActiveMiners(data.data.active_miners);
+            }
+        }
+        
+        function updateEventFeed(message, type = 'info') {
+            const feed = document.getElementById('event-feed');
+            if (!feed) return;
+            
+            const event = document.createElement('div');
+            event.className = `event-item ${type}`;
+            event.innerHTML = `
+                <span style="color: var(--text-muted); font-size: 0.85rem;">${new Date().toLocaleTimeString()}</span>
+                <br>${message}
+            `;
+            
+            feed.insertBefore(event, feed.firstChild);
+            
+            // Keep only last 10 events
+            while (feed.children.length > 10) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+        
+        function updatePoolHashrate(hashrate) {
+            const el = document.getElementById('pool-hashrate');
+            if (el && hashrate) {
+                if (hashrate > 1000000) {
+                    el.textContent = (hashrate / 1000000).toFixed(2) + ' MH/s';
+                } else if (hashrate > 1000) {
+                    el.textContent = (hashrate / 1000).toFixed(2) + ' KH/s';
+                } else {
+                    el.textContent = hashrate.toFixed(0) + ' H/s';
+                }
+            }
+        }
+        
+        function updateActiveMiners(count) {
+            const el = document.getElementById('active-miners');
+            if (el && count !== undefined) {
+                el.textContent = count;
+            }
+        }
+        
+        function updateBlocksFound() {
+            const el = document.getElementById('blocks-found');
+            if (el) {
+                const current = parseInt(el.textContent) || 0;
+                el.textContent = current + 1;
+            }
+        }
+        
+        // Connect on page load
+        window.addEventListener('load', () => {
+            setTimeout(connectPoolEvents, 1000);
+        });
+    </script>
+</body>
+</html>
     
     <!-- Wiki Layout -->
     <div class="wiki-layout">
@@ -494,113 +1313,6 @@
                 .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
             el.innerHTML = html;
         }
-    </script>
-    
-    <!-- WebSocket Live Events -->
-    <script>
-        // Connect to pool WebSocket for live events
-        let ws = null;
-        
-        function connectPoolEvents() {
-            try {
-                ws = new WebSocket('ws://localhost:8765');
-                
-                ws.onopen = () => {
-                    console.log('✅ Connected to pool events');
-                    updateEventFeed('✅ Connected to ZION Pool Events', 'success');
-                };
-                
-                ws.onmessage = (event) => {
-                    try {
-                        const data = JSON.parse(event.data);
-                        handlePoolEvent(data);
-                    } catch (e) {
-                        console.error('Error parsing event:', e);
-                    }
-                };
-                
-                ws.onclose = () => {
-                    console.log('❌ Disconnected from pool events');
-                    updateEventFeed('❌ Disconnected. Reconnecting...', 'error');
-                    setTimeout(connectPoolEvents, 5000);
-                };
-                
-                ws.onerror = (error) => {
-                    console.error('WebSocket error:', error);
-                };
-                
-            } catch (e) {
-                console.error('Failed to connect:', e);
-                updateEventFeed('⚠️ Pool events unavailable (offline mode)', 'warning');
-            }
-        }
-        
-        function handlePoolEvent(data) {
-            if (data.type === 'block_found') {
-                updateEventFeed(`🎉 Block #${data.data.height} found! Reward: ${data.data.reward} ZION`, 'block-found');
-                updateBlocksFound();
-            } else if (data.type === 'payment') {
-                updateEventFeed(`💸 Payment: ${data.data.amount} ZION to ${data.data.address.substring(0, 12)}...`, 'payment');
-            } else if (data.type === 'miner_connected') {
-                updateEventFeed(`🔌 Miner connected: ${data.data.algorithm}`, 'info');
-                updateActiveMiners();
-            } else if (data.type === 'hashrate_update') {
-                updatePoolHashrate(data.data.pool_hashrate);
-                updateActiveMiners(data.data.active_miners);
-            }
-        }
-        
-        function updateEventFeed(message, type = 'info') {
-            const feed = document.getElementById('event-feed');
-            if (!feed) return;
-            
-            const event = document.createElement('div');
-            event.className = `event-item ${type}`;
-            event.innerHTML = `
-                <span style="color: var(--text-muted); font-size: 0.85rem;">${new Date().toLocaleTimeString()}</span>
-                <br>${message}
-            `;
-            
-            feed.insertBefore(event, feed.firstChild);
-            
-            // Keep only last 10 events
-            while (feed.children.length > 10) {
-                feed.removeChild(feed.lastChild);
-            }
-        }
-        
-        function updatePoolHashrate(hashrate) {
-            const el = document.getElementById('pool-hashrate');
-            if (el && hashrate) {
-                if (hashrate > 1000000) {
-                    el.textContent = (hashrate / 1000000).toFixed(2) + ' MH/s';
-                } else if (hashrate > 1000) {
-                    el.textContent = (hashrate / 1000).toFixed(2) + ' KH/s';
-                } else {
-                    el.textContent = hashrate.toFixed(0) + ' H/s';
-                }
-            }
-        }
-        
-        function updateActiveMiners(count) {
-            const el = document.getElementById('active-miners');
-            if (el && count !== undefined) {
-                el.textContent = count;
-            }
-        }
-        
-        function updateBlocksFound() {
-            const el = document.getElementById('blocks-found');
-            if (el) {
-                const current = parseInt(el.textContent) || 0;
-                el.textContent = current + 1;
-            }
-        }
-        
-        // Connect on page load
-        window.addEventListener('load', () => {
-            setTimeout(connectPoolEvents, 1000);
-        });
     </script>
 </body>
 </html>
