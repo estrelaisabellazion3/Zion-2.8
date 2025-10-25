@@ -1130,7 +1130,8 @@ section {
     }
     
     /* Hide desktop navigation */
-    .nav-menu {
+    .nav-menu,
+    .nav-links {
         display: none !important;
     }
     
