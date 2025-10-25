@@ -33,7 +33,7 @@
         
         /* Hamburger Menu Styles */
         .hamburger {
-            display: none;
+            display: flex !important; /* Always visible */
             flex-direction: column;
             cursor: pointer;
             padding: 0.5rem;
@@ -72,12 +72,12 @@
         
         /* Mobile Navigation */
         .mobile-nav {
-            display: none;
+            display: block !important; /* Always available */
             position: fixed;
             top: 0;
             left: -100%;
             width: 80%;
-            max-width: 350px;
+            max-width: 400px;
             height: 100vh;
             background: rgba(0, 0, 0, 0.98);
             border-right: 2px solid var(--matrix-green);
@@ -127,7 +127,7 @@
         }
         
         .mobile-overlay {
-            display: none;
+            display: block !important; /* Always available */
             position: fixed;
             top: 0;
             left: 0;
@@ -137,10 +137,12 @@
             z-index: 998;
             opacity: 0;
             transition: opacity 0.3s ease;
+            pointer-events: none;
         }
         
         .mobile-overlay.active {
             opacity: 1;
+            pointer-events: auto;
         }
         
         .wiki-logo {
@@ -622,12 +624,20 @@
             border-left: 3px solid var(--matrix-green);
         }
         
-        .wiki-layout {
-            display: grid;
-            grid-template-columns: 300px 1fr 280px;
-            gap: 2rem;
-            margin-top: 2rem;
-            max-width: 100%;
+        /* Always hide sidebar - use hamburger menu for all screen sizes */
+        .wiki-sidebar {
+            display: none !important;
+        }
+        
+        /* Always show hamburger menu */
+        .hamburger {
+            display: flex !important;
+        }
+        
+        /* Always enable mobile nav */
+        .mobile-nav,
+        .mobile-overlay {
+            display: block !important;
         }
         
         /* Responsive Design */
@@ -636,21 +646,8 @@
                 grid-template-columns: 1fr;
             }
             
-            .wiki-sidebar {
-                display: none;
-            }
-            
             .toc-sidebar {
                 display: none;
-            }
-            
-            .hamburger {
-                display: flex;
-            }
-            
-            .mobile-nav,
-            .mobile-overlay {
-                display: block;
             }
             
             .nav-links {
@@ -702,30 +699,21 @@
                 font-size: 0.85rem;
             }
         }
-        /* Fixed left sidebar on desktop */
-        @media (min-width: 1025px) {
-            .wiki-sidebar {
-                position: fixed;
-                top: 84px; /* header height approx */
-                left: 0;
-                width: 300px;
-                height: calc(100vh - 84px);
-                overflow: hidden; /* no inner scroll */
-                z-index: 900;
-            }
-            .wiki-content {
-                margin-left: 320px; /* avoid overlap with fixed sidebar */
-            }
+        
+        /* Single column layout for all screens */
+        .wiki-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 2rem;
         }
-
-        /* Ensure sidebar hidden on mobile (use hamburger) */
-        @media (max-width: 1024px) {
-            .wiki-sidebar {
-                display: none !important;
-            }
-            .wiki-content {
-                margin-left: 0;
-            }
+        
+        .wiki-content {
+            margin-left: 0 !important;
         }
     </style>
 </head>
