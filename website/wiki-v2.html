@@ -182,6 +182,91 @@
             box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
         }
         
+        /* Matrix Logo Styles */
+        .zion-matrix-logo {
+            display: inline-block;
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+        
+        .zion-matrix-logo svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.6));
+            animation: matrixGlow 2s ease-in-out infinite;
+        }
+        
+        .star-upper, .star-lower {
+            animation: matrixPulse 3s ease-in-out infinite;
+        }
+        
+        .star-lower {
+            animation-delay: 0.5s;
+        }
+        
+        .star-text {
+            animation: matrixFlicker 0.15s infinite;
+        }
+        
+        @keyframes matrixGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.6));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(0, 255, 0, 1)) drop-shadow(0 0 30px rgba(0, 255, 0, 0.4));
+            }
+        }
+        
+        @keyframes matrixPulse {
+            0%, 100% {
+                opacity: 1;
+                stroke-width: 2;
+            }
+            50% {
+                opacity: 0.7;
+                stroke-width: 2.5;
+            }
+        }
+        
+        @keyframes matrixFlicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        
+        .wiki-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .wiki-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .wiki-logo-text .main {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            letter-spacing: 2px;
+            line-height: 1;
+        }
+        
+        .wiki-logo-text .sub {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: rgba(0, 255, 0, 0.6);
+            letter-spacing: 1px;
+            margin-top: 0.2rem;
+        }
+        
         /* Desktop Navigation */
         .nav-links {
             display: flex;
@@ -654,11 +739,39 @@
     <!-- Enhanced Header -->
     <header class="wiki-header">
         <div class="container">
-            <div class="wiki-logo">
-                <div class="logo-icon">⬡</div>
-                <div>
-                    <div class="logo-text">ZION</div>
-                    <div class="logo-subtitle">Wiki v2.8.2</div>
+            <div class="wiki-logo-container">
+                <!-- Matrix Star of David Logo -->
+                <svg class="zion-matrix-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Upper Triangle -->
+                    <g class="star-upper">
+                        <polygon points="50,10 90,70 10,70" 
+                                 fill="none" 
+                                 stroke="#00ff00" 
+                                 stroke-width="2" 
+                                 stroke-linejoin="round"/>
+                    </g>
+                    <!-- Lower Triangle -->
+                    <g class="star-lower">
+                        <polygon points="50,90 10,30 90,30" 
+                                 fill="none" 
+                                 stroke="#00ff00" 
+                                 stroke-width="2" 
+                                 stroke-linejoin="round"/>
+                    </g>
+                    <!-- Center Z -->
+                    <g class="star-text">
+                        <text x="50" y="55" 
+                              text-anchor="middle" 
+                              font-family="Orbitron, monospace" 
+                              font-size="24" 
+                              font-weight="900" 
+                              fill="#00ff00">Z</text>
+                    </g>
+                </svg>
+                
+                <div class="wiki-logo-text">
+                    <div class="main">ZION</div>
+                    <div class="sub">Wiki v2.8.2</div>
                 </div>
                 <span class="version-badge">Nebula</span>
             </div>
