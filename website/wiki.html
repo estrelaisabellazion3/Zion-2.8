@@ -22,12 +22,21 @@
     
     <!-- Navigation -->
     <nav class="header">
-        <div class="container">
-            <div class="nav-brand">
+        <div class="container" style="display:flex; align-items:center; justify-content: space-between; gap: 1rem;">
+            <div class="nav-brand" style="display:flex; align-items:center; gap:0.5rem;">
                 <span class="brand-icon">⬡</span>
                 <span class="brand-text">ZION</span>
                 <span class="brand-subtitle">Wiki</span>
             </div>
+
+            <!-- Hamburger (visible on mobile/tablet; desktop can still use as needed) -->
+            <button class="hamburger" id="hamburger-btn" aria-label="Menu" style="margin-left:auto;">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Desktop links (hidden on <=1024px by CSS) -->
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="#sacred-books">Sacred Books</a>
@@ -36,6 +45,24 @@
                 <a href="#technical">Technical</a>
                 <a href="#consciousness">Consciousness</a>
             </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Overlay & Drawer -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+    <nav class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <div class="logo-text">⬡ ZION Wiki</div>
+            <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.5rem;">Sacred Knowledge Library</div>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html">🏠 Home</a>
+            <a href="#sacred-books">📚 Sacred Books</a>
+            <a href="#mining">⛏️ Mining</a>
+            <a href="#dao">🏛️ DAO</a>
+            <a href="#technical">⚙️ Technical</a>
+            <a href="#consciousness">🧘 Consciousness</a>
+            <a href="https://github.com/estrelaisabellazion3/Zion-2.8" target="_blank">💻 GitHub</a>
         </div>
     </nav>
     
@@ -71,6 +98,8 @@
                         Mining
                     </h3>
                     <ul class="category-items" id="mining-list" style="display: none;">
+                        <li><a href="#live-pool-stats" data-live="true">🔴 Live Pool Stats</a></li>
+                        <li><a href="#pool-events" data-live="true">📡 Real-time Events</a></li>
                         <li><a href="#cpu-mining">CPU Mining (XMRig)</a></li>
                         <li><a href="#gpu-mining" data-doc="AMD_GPU_SETUP_LOG">GPU Mining (AMD)</a></li>
                         <li><a href="#pool-setup">Pool Configuration</a></li>
@@ -300,4 +329,30 @@
     <script src="js/sacred-geometry.js"></script>
     <script src="js/wiki-engine.js"></script>
 </body>
+</html>
+<script>
+// Hamburger & Mobile Nav Scripts (mirrors index/wiki-v2 behavior)
+const hamburger = document.getElementById('hamburger-btn');
+const mobileNav = document.getElementById('mobile-nav');
+const mobileOverlay = document.getElementById('mobile-overlay');
+
+function toggleMobileMenu() {
+    if (!hamburger || !mobileNav || !mobileOverlay) return;
+    hamburger.classList.toggle('active');
+    mobileNav.classList.toggle('active');
+    mobileOverlay.classList.toggle('active');
+    document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+}
+
+hamburger && hamburger.addEventListener('click', toggleMobileMenu);
+mobileOverlay && mobileOverlay.addEventListener('click', toggleMobileMenu);
+
+document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (!link.getAttribute('href').startsWith('http')) {
+            toggleMobileMenu();
+        }
+    });
+});
+</script>
 </html>

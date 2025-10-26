@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ZION Pool Events - Live</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            background: #1a1a1a; 
+            color: #fff;
+            padding: 20px;
+        }
+        .event { 
+            margin: 10px 0; 
+            padding: 10px; 
+            background: #2a2a2a;
+            border-left: 4px solid #4CAF50;
+            border-radius: 4px;
+        }
+        .block_found { border-left-color: #FFD700; }
+        .payment { border-left-color: #4CAF50; }
+        .miner_connected { border-left-color: #2196F3; }
+        .timestamp { color: #888; font-size: 0.9em; }
+        #status { 
+            padding: 10px; 
+            background: #333; 
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .connected { color: #4CAF50; }
+        .disconnected { color: #f44336; }
+    </style>
+</head>
+<body>
+    <h1>🌟 ZION Pool - Live Events</h1>
+    <div id="status">Status: <span id="statusText" class="disconnected">Disconnected</span></div>
+    <div id="events"></div>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8765');
+        const eventsDiv = document.getElementById('events');
+        const statusText = document.getElementById('statusText');
+
+        ws.onopen = () => {
+            statusText.textContent = 'Connected';
+            statusText.className = 'connected';
+            console.log('WebSocket connected');
+        };
+
+        ws.onclose = () => {
+            statusText.textContent = 'Disconnected';
+            statusText.className = 'disconnected';
+            console.log('WebSocket disconnected');
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log('Event:', data);
+            
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'event ' + data.type;
+            
+            let content = `<strong>${data.type.toUpperCase()}</strong><br>`;
+            content += `<span class="timestamp">${data.timestamp}</span><br>`;
+            
+            if (data.type === 'block_found') {
+                content += `Block #${data.data.height} found!<br>`;
+                content += `Reward: ${data.data.reward} ZION<br>`;
+                content += `Miner: ${data.data.miner}<br>`;
+                content += `Algorithm: ${data.data.algorithm}`;
+            } else if (data.type === 'payment') {
+                content += `Payment sent: ${data.data.amount} ZION<br>`;
+                content += `To: ${data.data.address}<br>`;
+                content += `TX: ${data.data.tx_hash}`;
+            } else if (data.type === 'miner_connected') {
+                content += `Miner connected: ${data.data.address}<br>`;
+                content += `IP: ${data.data.ip}<br>`;
+                content += `Algorithm: ${data.data.algorithm}`;
+            } else if (data.type === 'hashrate_update') {
+                content += `Pool Hashrate: ${data.data.pool_hashrate} H/s<br>`;
+                content += `Active Miners: ${data.data.active_miners}`;
+            } else {
+                content += JSON.stringify(data.data, null, 2);
+            }
+            
+            eventDiv.innerHTML = content;
+            eventsDiv.insertBefore(eventDiv, eventsDiv.firstChild);
+            
+            // Limit na 50 událostí
+            while (eventsDiv.children.length > 50) {
+                eventsDiv.removeChild(eventsDiv.lastChild);
+            }
+        };
+
+        // Keep-alive ping každých 30s
+        setInterval(() => {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send('ping');
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
