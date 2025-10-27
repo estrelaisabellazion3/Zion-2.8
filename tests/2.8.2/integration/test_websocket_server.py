@@ -4,11 +4,15 @@ Test WebSocket Server
 Simple test script to verify WebSocket server functionality
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../src'))
+
 import asyncio
 import json
 import time
 import threading
-from zion_websocket_server import ZIONWebSocketServer, ZIONSocketIOServer
+from core.zion_websocket_server import ZIONWebSocketServer, ZIONSocketIOServer
 
 def test_websocket_server():
     """Test WebSocket server functionality"""

@@ -16,8 +16,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Import ZION components
 from zion_websocket_server import ZIONWebSocketServer, ZIONSocketIOServer
-from zion_monitoring_system import ZIONMonitoringSystem, get_monitoring_system
-from seednodes import ZionNetworkConfig
+from integrations.zion_monitoring_system import ZIONMonitoringSystem, get_monitoring_system
+from core.seednodes import ZionNetworkConfig
 
 class ZIONRealTimeOrchestrator:
     """Real-time orchestrator integrating all ZION components"""
@@ -66,7 +66,10 @@ class ZIONRealTimeOrchestrator:
 
     def _run_socketio_server(self):
         """Run Socket.IO server"""
-        self.socketio_server.run()
+        try:
+            self.socketio_server.run()
+        except Exception as e:
+            print(f"⚠️  Socket.IO server error: {e}")
 
     def _metrics_broadcast_loop(self):
         """Broadcast metrics from monitoring system to WebSocket servers"""

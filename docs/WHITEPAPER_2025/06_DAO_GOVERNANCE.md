@@ -2,9 +2,9 @@
 
 ---
 
-## 🏛️ ZION DAO - Decentralizovaná Autonomní Organizace
+## 🏛️ KONCIL 9 - Sacred Council Governance System
 
-**ZION DAO** není tradiční corporate governance. Je to **20-letá cesta** od centralizované kontroly k plné komunitní autonomii - inspirovaná přirozeným zráním organizmu, ne náhlou revolucí.
+**ZION 2.8.2 "Nebula" introduces KONCIL 9** - revolutionary sacred geometry governance combining divine feminine compassion with divine masculine strength. Unlike traditional DAOs, Koncil 9 operates on **sacred mathematics** where 2 + 7 = 9 (Trinity of Trinities).
 
 ---
 
@@ -31,6 +31,28 @@
 
 **ZION Approach:**
 > *"Decentralizace je cíl, ne startovní bod. Komunita se musí naučit governance, ne být do ní hozena."*
+
+### Sacred Geometry Structure
+
+**KONCIL 9 = 2 Co-Admins + 7 Council Members**
+
+- **2 Co-Admins** (Divine Masculine/Feminine Balance):
+  - **Maitreya** - Divine Masculine (Infrastructure & Technology)
+  - **Sarah Issabela** - Divine Feminine (Humanitarian & Children)
+
+- **7 Council Members** (3 Feminine + 4 Masculine):
+  - **Feminine Council** (3): Children Future Fund, Humanitarian Projects, Community Development
+  - **Masculine Council** (4): Network Infrastructure, Development Fund, Security, Operations
+
+### Budget Allocation from Premine Infrastructure Funds (4.34B ZION)
+
+| Category | Allocation | Purpose | Governance |
+|----------|------------|---------|------------|
+| **Co-Admins** | 1B ZION | 50/50 split between Maitreya & Sarah Issabela | Direct divine guidance |
+| **Children Future Fund** | 1B ZION | Education, healthcare, future generations | Feminine Council oversight |
+| **Development Fund** | 1B ZION | Vishwakarma Dev Team DAO (autonomous) | Full Dev DAO control |
+| **Network Infrastructure** | 1B ZION | 4 Masculine Council members (250M each) | Masculine Council management |
+| **Creator Reserve** | 342.857M ZION | Original creator compensation | Sacred mathematics (1/12 of total) |
 
 ---
 
@@ -404,17 +426,21 @@ Status: EXECUTED (protocol updated in next fork)
 ### DAO Treasury Sources
 
 ```yaml
-Treasury Inflows:
-  Development Fund Premine: 1,000,000,000 ZION (initial)
+Treasury Inflows (from Premine Infrastructure Funds):
+  Co-Admins Fund: 1,000,000,000 ZION (Maitreya & Sarah Issabela)
+  Children Future Fund: 1,000,000,000 ZION (Feminine Council)
+  Development Fund: 1,000,000,000 ZION (Vishwakarma Dev DAO)
+  Network Infrastructure: 1,000,000,000 ZION (Masculine Council)
+  Creator Reserve: 342,857,000 ZION (Original creator)
   
   Ongoing Revenue:
     Transaction Fees (25%): ~50M ZION/year
     Bridge Fees (10%):      ~20M ZION/year
     Liquidity Mining Return: ~30M ZION/year
   
+  Total Initial Treasury: 4,342,857,000 ZION
   Total Annual Income: ~100M ZION/year
-
-Treasury Outflows:
+```
   Core Development:
     - Salaries (10 devs × 100K ZION/year): 1M ZION
     - Bug bounties: 500K ZION
@@ -649,4 +675,4 @@ Decentralization Progress: 50% → Target: 100% by 2045
 ---
 
 *Stránka 6 z 12 | ZION Multi-Chain Dharma Ecosystem Whitepaper v1.0*  
-*"Governance is a practice, not a state. We practice together for 20 years."* 🏛️
+*"Governance is a practice, not a state. We practice together through sacred geometry."* 🏛️

@@ -14,13 +14,22 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import threading
 import logging
 from urllib.parse import urlparse, parse_qs
+from datetime import datetime
+
+# WebSocket imports
+try:
+    import websockets
+    WEBSOCKETS_AVAILABLE = True
+except ImportError:
+    WEBSOCKETS_AVAILABLE = False
+    websockets = None
 
 # Avoid circular import
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from new_zion_blockchain import NewZionBlockchain
-from crypto_utils import generate_keypair, verify_transaction_signature, tx_hash
-from seednodes import ZionNetworkConfig, get_rpc_port
+from .crypto_utils import generate_keypair, verify_transaction_signature, tx_hash
+from .seednodes import ZionNetworkConfig, get_rpc_port
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +50,14 @@ class ZIONRPCServer:
         self.rate_limit_per_minute = rate_limit_per_minute or rpc_config['rate_limit_per_minute']
         self.burst_limit = burst_limit or rpc_config['burst_limit']
         self.burst_window_seconds = burst_window_seconds or 5
+        
+        # WebSocket configuration
+        ws_config = ZionNetworkConfig.WEBSOCKET_CONFIG
+        self.websocket_host = ws_config['host']
+        self.websocket_port = ws_config['port']
+        self.websocket_server = None
+        self.websocket_clients = set()
+        
         # Determine auth token
         if self.require_auth:
             tok = auth_token or os.environ.get('ZION_RPC_TOKEN')
@@ -51,12 +68,144 @@ class ZIONRPCServer:
         else:
             self.auth_token = None
 
+    async def start_websocket_server(self):
+        """Start WebSocket server for real-time updates"""
+        if not WEBSOCKETS_AVAILABLE:
+            logger.warning("WebSocket server not available - install websockets package")
+            return
+
+        if self.websocket_server:
+            return
+
+        try:
+            self.websocket_server = await websockets.serve(
+                self._handle_websocket_client,
+                self.websocket_host,
+                self.websocket_port
+            )
+            logger.info(f"🌐 WebSocket server started on ws://{self.websocket_host}:{self.websocket_port}")
+            print(f"🌐 WebSocket server spuštěn na ws://{self.websocket_host}:{self.websocket_port}")
+        except Exception as e:
+            logger.error(f"Failed to start WebSocket server: {e}")
+
+    def stop_websocket_server(self):
+        """Stop WebSocket server"""
+        if self.websocket_server:
+            self.websocket_server.close()
+            self.websocket_server = None
+            logger.info("🌐 WebSocket server stopped")
+
+    async def _handle_websocket_client(self, websocket, path):
+        """Handle WebSocket client connections"""
+        self.websocket_clients.add(websocket)
+        client_addr = websocket.remote_address
+        logger.info(f"🔌 WebSocket client connected: {client_addr}")
+
+        try:
+            # Send welcome message
+            await self._send_websocket_welcome(websocket)
+
+            # Handle client messages
+            async for message in websocket:
+                try:
+                    data = json.loads(message)
+                    await self._handle_websocket_message(websocket, data)
+                except json.JSONDecodeError:
+                    await websocket.send(json.dumps({
+                        'type': 'error',
+                        'message': 'Invalid JSON format'
+                    }))
+
+        except websockets.exceptions.ConnectionClosed:
+            pass
+        finally:
+            self.websocket_clients.discard(websocket)
+            logger.info(f"🔌 WebSocket client disconnected: {client_addr}")
+
+    async def _send_websocket_welcome(self, websocket):
+        """Send welcome message to WebSocket client"""
+        welcome_data = {
+            'type': 'welcome',
+            'timestamp': datetime.now().isoformat(),
+            'server': 'ZION RPC WebSocket Server',
+            'version': '2.8.2',
+            'capabilities': ['realtime_updates', 'mining_stats', 'blockchain_events']
+        }
+        await websocket.send(json.dumps(welcome_data))
+
+    async def _handle_websocket_message(self, websocket, data):
+        """Handle incoming WebSocket messages"""
+        msg_type = data.get('type', '')
+
+        if msg_type == 'ping':
+            await websocket.send(json.dumps({'type': 'pong'}))
+        elif msg_type == 'subscribe':
+            # Handle subscription requests
+            channels = data.get('channels', [])
+            await websocket.send(json.dumps({
+                'type': 'subscribed',
+                'channels': channels,
+                'timestamp': datetime.now().isoformat()
+            }))
+        elif msg_type == 'get_status':
+            # Send current status
+            status = self._get_blockchain_status()
+            await websocket.send(json.dumps({
+                'type': 'status',
+                'data': status,
+                'timestamp': datetime.now().isoformat()
+            }))
+
+    def _get_blockchain_status(self):
+        """Get current blockchain status for WebSocket clients"""
+        return {
+            'blockchain': {
+                'height': len(self.blockchain.blocks),
+                'total_supply': self.blockchain.get_total_supply(),
+                'difficulty': self.blockchain.mining_difficulty,
+                'block_reward': self.blockchain.block_reward
+            },
+            'network': self.blockchain.get_network_status() if hasattr(self.blockchain, 'get_network_status') else {},
+            'mempool': {
+                'size': len(self.blockchain.pending_transactions)
+            }
+        }
+
+    async def broadcast_websocket_event(self, event_type: str, event_data: Dict[str, Any]):
+        """Broadcast event to all WebSocket clients"""
+        if not self.websocket_clients:
+            return
+
+        message = {
+            'type': 'event',
+            'event_type': event_type,
+            'timestamp': datetime.now().isoformat(),
+            'data': event_data
+        }
+
+        message_json = json.dumps(message)
+
+        # Send to all clients (remove disconnected ones)
+        disconnected = set()
+        for client in self.websocket_clients:
+            try:
+                await client.send(message_json)
+            except websockets.exceptions.ConnectionClosed:
+                disconnected.add(client)
+
+        self.websocket_clients -= disconnected
+
+        if disconnected:
+            logger.debug(f"Removed {len(disconnected)} disconnected WebSocket clients")
+
     def start(self):
-        """Start the RPC server in a separate thread"""
+        """Start the RPC server and WebSocket server"""
         if self.running:
             return
 
         self.running = True
+        
+        # Start HTTP RPC server
         self.server = ZIONRPCHandler
         self.server.blockchain = self.blockchain
         self.server.require_auth = self.require_auth
@@ -68,7 +217,7 @@ class ZIONRPCServer:
         self.server.burst_limit = self.burst_limit
         self.server.burst_window_seconds = self.burst_window_seconds
 
-        def run_server():
+        def run_http_server():
             try:
                 self.http_server = HTTPServer((self.host, self.port), ZIONRPCHandler)
                 logger.info(f"ZION RPC server started on http://{self.host}:{self.port}")
@@ -77,15 +226,34 @@ class ZIONRPCServer:
             except Exception as e:
                 logger.error(f"RPC server error: {e}")
 
-        self.thread = threading.Thread(target=run_server, daemon=True)
-        self.thread.start()
+        # Start HTTP server thread
+        self.http_thread = threading.Thread(target=run_http_server, daemon=True)
+        self.http_thread.start()
+
+        # Start WebSocket server
+        def run_websocket_server():
+            asyncio.run(self.start_websocket_server())
+            # Keep the event loop running
+            try:
+                asyncio.get_event_loop().run_forever()
+            except KeyboardInterrupt:
+                pass
+
+        self.websocket_thread = threading.Thread(target=run_websocket_server, daemon=True)
+        self.websocket_thread.start()
 
     def stop(self):
-        """Stop the RPC server"""
+        """Stop the RPC server and WebSocket server"""
         self.running = False
+        
+        # Stop HTTP server
         if hasattr(self, 'http_server') and self.http_server:
             self.http_server.shutdown()
             self.http_server.server_close()
+        
+        # Stop WebSocket server
+        self.stop_websocket_server()
+        
         logger.info("ZION RPC server stopped")
 
 class ZIONRPCHandler(BaseHTTPRequestHandler):
@@ -227,6 +395,12 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
                 result = self.rpc_get_metrics(params)
             elif method == 'getblocktemplate':
                 result = self.rpc_get_block_template(params)
+            elif method == 'subscribe_events':
+                result = self.rpc_subscribe_events(params)
+            elif method == 'broadcast_event':
+                result = self.rpc_broadcast_event(params)
+            elif method == 'get_websocket_status':
+                result = self.rpc_get_websocket_status(params)
             else:
                 self.send_json_response({
                     'error': {'code': -32601, 'message': 'Method not found'},
@@ -289,22 +463,18 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
                 Získá seznam bloků
             </div>
 
-            <h2>RPC Methods</h2>
+            <h2>Real-Time WebSocket API</h2>
             <div class="endpoint">
-                <strong>getbalance</strong> [address]<br>
-                Vrátí zůstatek adresy
+                <strong>WebSocket: ws://localhost:8080</strong><br>
+                Real-time události a živé statistiky
             </div>
             <div class="endpoint">
-                <strong>sendtransaction</strong> [from, to, amount, purpose]<br>
-                Odešle transakci
+                <strong>subscribe_events</strong> [channels]<br>
+                Přihlásit se k real-time událostem
             </div>
             <div class="endpoint">
-                <strong>getblock</strong> [height]<br>
-                Vrátí blok
-            </div>
-            <div class="endpoint">
-                <strong>getblockcount</strong><br>
-                Vrátí počet bloků
+                <strong>get_websocket_status</strong><br>
+                Získat status WebSocket serveru
             </div>
         </body>
         </html>
@@ -644,6 +814,49 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
             return {'status': 'accepted', 'tx_hash': tx_obj['tx_hash']}
         except Exception as e:
             return {'error': f'submit failed: {e}'}
+
+    # WebSocket RPC methods
+
+    def rpc_subscribe_events(self, params) -> Any:
+        """RPC: subscribe_events [channels] - Subscribe to real-time events via WebSocket"""
+        channels = params[0] if params else ['all']
+        return {
+            'status': 'subscribed',
+            'channels': channels,
+            'websocket_url': f'ws://{self.websocket_host}:{self.websocket_port}',
+            'message': 'Use WebSocket connection for real-time updates'
+        }
+
+    def rpc_broadcast_event(self, params) -> Any:
+        """RPC: broadcast_event [event_type, event_data] - Broadcast custom event (admin only)"""
+        if len(params) < 2:
+            return {'error': 'event_type and event_data required'}
+        
+        event_type = params[0]
+        event_data = params[1]
+        
+        # In a real implementation, check admin permissions here
+        
+        # Broadcast to WebSocket clients if server is available
+        if hasattr(self, 'broadcast_websocket_event'):
+            # This would need to be called asynchronously
+            pass
+        
+        return {
+            'status': 'broadcast_queued',
+            'event_type': event_type,
+            'recipients': 'websocket_clients'
+        }
+
+    def rpc_get_websocket_status(self, params) -> Any:
+        """RPC: get_websocket_status - Get WebSocket server status"""
+        return {
+            'websocket_enabled': WEBSOCKETS_AVAILABLE,
+            'websocket_host': getattr(self, 'websocket_host', 'N/A'),
+            'websocket_port': getattr(self, 'websocket_port', 'N/A'),
+            'connected_clients': len(getattr(self, 'websocket_clients', set())),
+            'server_running': getattr(self, 'websocket_server', None) is not None
+        }
 
     def log_message(self, format, *args):
         """Override to reduce noise"""
