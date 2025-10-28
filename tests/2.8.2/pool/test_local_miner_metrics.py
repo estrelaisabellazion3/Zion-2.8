@@ -15,9 +15,17 @@ import json
 import socket
 import subprocess
 import threading
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from ai.zion_universal_miner import ZionUniversalMiner
+# Add parent directories to path for imports
+test_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(test_dir)))
+sys.path.insert(0, project_root)
+sys.path.insert(0, os.path.join(project_root, 'ai'))
+
+try:
+    from zion_universal_miner import ZionUniversalMiner
+except ImportError:
+    from ai.zion_universal_miner import ZionUniversalMiner
 
 def check_pool_connectivity(host="127.0.0.1", port=3333):
     """Test if pool is reachable"""
