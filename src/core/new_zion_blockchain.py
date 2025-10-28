@@ -31,10 +31,10 @@ except ImportError:
     COSMIC_HARMONY_AVAILABLE = False
 
 # Add P2P network import
-from zion_p2p_network import ZIONP2PNetwork
-from zion_rpc_server import ZIONRPCServer
-from crypto_utils import tx_hash
-from seednodes import ZionNetworkConfig, get_premine_addresses, get_p2p_port, get_rpc_port, get_max_supply, get_dao_config
+from .zion_p2p_network import ZIONP2PNetwork
+from .zion_rpc_server import ZIONRPCServer
+from .crypto_utils import tx_hash
+from .seednodes import ZionNetworkConfig, get_premine_addresses, get_p2p_port, get_rpc_port, get_max_supply, get_dao_config
 
 # Setup logging
 import logging
