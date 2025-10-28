@@ -94,7 +94,8 @@ def main():
         time.sleep(1)
         
         # Get miner stats
-        stats = miner.get_stats()
+        status = miner.get_status()
+        stats = status.get('stats', {}) if status else {}
         
         if stats:
             shares = stats.get('total_shares', 0)
