@@ -46,13 +46,17 @@ except ImportError as e:
 # Prometheus monitoring
 from prometheus_client import Counter, Gauge, Histogram, start_http_server, Info
 
-# Import the real ZION blockchain and centralized config
-from new_zion_blockchain import NewZionBlockchain
-from seednodes import ZionNetworkConfig, get_pool_port
-from blockchain_rpc_client import ZionBlockchainRPCClient
-
-# 🎮 CONSCIOUSNESS MINING GAME
-from consciousness_mining_game import ConsciousnessMiningGame
+# Import the real ZION blockchain and centralized config - with fallback for relative/absolute imports
+try:
+    from .new_zion_blockchain import NewZionBlockchain
+    from .seednodes import ZionNetworkConfig, get_pool_port
+    from .blockchain_rpc_client import ZionBlockchainRPCClient
+    from .consciousness_mining_game import ConsciousnessMiningGame
+except ImportError:
+    from new_zion_blockchain import NewZionBlockchain
+    from seednodes import ZionNetworkConfig, get_pool_port
+    from blockchain_rpc_client import ZionBlockchainRPCClient
+    from consciousness_mining_game import ConsciousnessMiningGame
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
