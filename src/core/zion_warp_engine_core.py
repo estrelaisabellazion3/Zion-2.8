@@ -34,10 +34,18 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import threading
 
 # ZION Core Imports
-from new_zion_blockchain import NewZionBlockchain
-from zion_p2p_network import ZIONP2PNetwork
-from zion_rpc_server import ZIONRPCServer
-from seednodes import ZionNetworkConfig, get_premine_addresses, get_p2p_port, get_rpc_port
+try:
+    # Try relative imports first (when run as module)
+    from .new_zion_blockchain import NewZionBlockchain
+    from .zion_p2p_network import ZIONP2PNetwork
+    from .zion_rpc_server import ZIONRPCServer
+    from .seednodes import ZionNetworkConfig, get_premine_addresses, get_p2p_port, get_rpc_port
+except ImportError:
+    # Fall back to absolute imports (when run as script)
+    from new_zion_blockchain import NewZionBlockchain
+    from zion_p2p_network import ZIONP2PNetwork
+    from zion_rpc_server import ZIONRPCServer
+    from seednodes import ZionNetworkConfig, get_premine_addresses, get_p2p_port, get_rpc_port
 
 # Optional: Rainbow Bridge (requires additional dependencies)
 try:
