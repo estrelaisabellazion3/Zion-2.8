@@ -62,7 +62,12 @@ try:
     print(f"   ✅ CPU available: {miner.cpu_available}")
     print(f"   ✅ CPU threads: {miner.optimal_cpu_threads}")
     print(f"   ✅ Is mining: {miner.is_mining}")
-    print(f"   ✅ Stop mining flag: {miner.stop_mining}")
+    # Print stop flag info without colliding with method name
+    stop_flag = getattr(miner, 'stop_requested', None)
+    if stop_flag is not None:
+        print(f"   ✅ Stop flag (stop_requested): {stop_flag}")
+    else:
+        print(f"   ✅ stop_requested not present; stop_mining callable: {callable(getattr(miner, 'stop_mining', None))}")
     print(f"   ✅ Mining thread: {miner.mining_thread}")
 except Exception as e:
     print(f"   ❌ Miner creation error: {e}")
@@ -168,7 +173,7 @@ try:
         else:
             print(f"   ⚠️  Stratum protocol not found")
         
-        if 'is_mining' in source and 'stop_mining' in source:
+        if 'is_mining' in source and ('stop_mining' in source or 'stop_requested' in source):
             print(f"   ✅ Mining loop control found")
         else:
             print(f"   ⚠️  Mining loop control not found")

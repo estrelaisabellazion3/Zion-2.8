@@ -68,11 +68,9 @@ cd rocm-build
 
 ## ✅ VERIFICATION
 
-### Check GPU Detection
 
 ```bash
 # Method 1: lspci
-lspci | grep -i "vga\|3d\|radeon"
 # Output: 0a:00.0 VGA compatible controller: Advanced Micro Devices, Inc. 
 #         [AMD/ATI] Navi 10 [Radeon RX 5600 OEM/5600 XT / 5700/5700 XT]
 
@@ -91,8 +89,6 @@ clinfo
 rocm-smi --showid
 rocm-smi --showproductname
 # Lists all AMD GPUs
-```
-
 ### Test GPU Compute
 
 ```bash
@@ -110,7 +106,6 @@ for platform in cl.get_platforms():
 ```
 
 ---
-
 ## 🔧 MINING CONFIGURATION
 
 ### For ZION Universal Miner
