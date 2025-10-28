@@ -93,15 +93,17 @@ def main():
     for i in range(60):
         time.sleep(1)
         
-        # Get miner stats
+        # Get miner stats from status
         status = miner.get_status()
-        stats = status.get('stats', {}) if status else {}
         
-        if stats:
+        if status and status.get('is_mining'):
+            stats = status.get('statistics', {})
+            perf = status.get('performance', {})
+            
             shares = stats.get('total_shares', 0)
             accepted = stats.get('accepted_shares', 0)
             rejected = stats.get('rejected_shares', 0)
-            hashrate = stats.get('cpu_hashrate', 0)
+            hashrate = perf.get('total_hashrate', 0)
             
             # Get pool stats
             pool_stats = get_pool_stats()
@@ -121,7 +123,7 @@ def main():
                 'hashrate': hashrate
             })
         else:
-            print(f"{i+1:4d} | Waiting for metrics...")
+            print(f"{i+1:4d} | Initializing...")
     
     # Stop mining
     print("\n" + "="*80)
