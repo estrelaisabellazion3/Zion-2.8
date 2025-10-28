@@ -52,6 +52,18 @@
     </style>
 </head>
 <body>
+    <!-- Brand Bar with Large Logo -->
+    <header class="brand-bar">
+        <div class="container brand-wrap">
+            <div class="brand-left">
+                <img src="../Logo/Z.gif" alt="ZION Logo" class="zion-logo-large" width="250" height="250">
+            </div>
+            <div class="brand-right">
+                <div class="brand-title">ZION</div>
+                <div class="brand-subtitle">consciousness blockchain</div>
+            </div>
+        </div>
+    </header>
     <!-- Matrix Rain Background -->
     <canvas id="matrix-rain"></canvas>
     
@@ -80,7 +92,7 @@
                 <li><a href="#features">Features</a></li>
                 <li><a href="#mining">Mining</a></li>
                 <li><a href="#dao">DAO</a></li>
-                <li><a href="wiki/">Wiki</a></li>
+                <li><a href="wiki-v2.html">Wiki</a></li>
                 <li><a href="#stats" class="stats-link">Pool Stats</a></li>
                 <li><a href="#download" class="cta-button">Download</a></li>
             </ul>
@@ -106,7 +118,7 @@
             <a href="#features">✨ Features</a>
             <a href="#mining">⛏️ Mining</a>
             <a href="#dao">🏛️ DAO</a>
-            <a href="wiki/">📚 Wiki</a>
+            <a href="wiki-v2.html">📚 Wiki</a>
             <a href="#stats">📊 Pool Stats</a>
             <a href="#download">⬇️ Download</a>
             <a href="https://github.com/estrelaisabellazion3/Zion-2.8" target="_blank">💻 GitHub</a>
@@ -146,7 +158,7 @@
 
                 <div class="hero-actions">
                     <a href="#mining" class="btn btn-primary">Start Mining</a>
-                    <a href="wiki/" class="btn btn-secondary">Explore Wiki</a>
+                    <a href="wiki-v2.html" class="btn btn-secondary">Explore Wiki</a>
                     <a href="#whitepaper" class="btn btn-outline">Whitepaper</a>
                 </div>
             </div>
@@ -281,7 +293,7 @@
 -u YOUR_ZION_ADDRESS \
 -p x \
 --coin zion</pre>
-                    <a href="wiki/mining/cpu-guide" class="btn btn-secondary">CPU Guide</a>
+                    <a href="wiki-v2.html" class="btn btn-secondary">CPU Guide</a>
                 </div>
 
                 <div class="mining-method">
@@ -290,7 +302,7 @@
                     <pre class="code-block">srbminer-multi --algorithm yescrypt \
 --pool pool.zion-blockchain.org:3335 \
 --wallet YOUR_ZION_ADDRESS</pre>
-                    <a href="wiki/mining/gpu-guide" class="btn btn-secondary">GPU Guide</a>
+                    <a href="wiki-v2.html" class="btn btn-secondary">GPU Guide</a>
                 </div>
             </div>
 
@@ -517,30 +529,30 @@
                 <div class="footer-section">
                     <h3>Resources</h3>
                     <ul>
-                        <li><a href="wiki/">Wiki & Documentation</a></li>
-                        <li><a href="wiki/whitepaper">Whitepaper</a></li>
-                        <li><a href="wiki/api">API Documentation</a></li>
-                        <li><a href="wiki/roadmap">Roadmap</a></li>
+                        <li><a href="wiki-v2.html">Wiki & Documentation</a></li>
+                        <li><a href="wiki-v2.html">Whitepaper</a></li>
+                        <li><a href="wiki-v2.html">API Documentation</a></li>
+                        <li><a href="wiki-v2.html">Roadmap</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-section">
                     <h3>Mining</h3>
                     <ul>
-                        <li><a href="wiki/mining/cpu-guide">CPU Mining Guide</a></li>
-                        <li><a href="wiki/mining/gpu-guide">GPU Mining Guide</a></li>
-                        <li><a href="wiki/mining/pools">Mining Pools</a></li>
-                        <li><a href="wiki/mining/calculator">Mining Calculator</a></li>
+                        <li><a href="wiki-v2.html">CPU Mining Guide</a></li>
+                        <li><a href="wiki-v2.html">GPU Mining Guide</a></li>
+                        <li><a href="wiki-v2.html">Mining Pools</a></li>
+                        <li><a href="wiki-v2.html">Mining Calculator</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-section">
                     <h3>Community</h3>
                     <ul>
-                        <li><a href="wiki/dao">DAO Governance</a></li>
-                        <li><a href="wiki/consciousness">Consciousness Levels</a></li>
-                        <li><a href="wiki/hiranyagarbha">Golden Egg Quest</a></li>
-                        <li><a href="wiki/humanitarian">Humanitarian Fund</a></li>
+                        <li><a href="wiki-v2.html">DAO Governance</a></li>
+                        <li><a href="wiki-v2.html">Consciousness Levels</a></li>
+                        <li><a href="wiki-v2.html">Golden Egg Quest</a></li>
+                        <li><a href="wiki-v2.html">Humanitarian Fund</a></li>
                     </ul>
                 </div>
             </div>
@@ -558,8 +570,70 @@
     <script src="js/stats-updater.js"></script>
     <script src="js/animations.js"></script>
     
-    <!-- Hamburger & Mobile Nav Styles -->
+    <!-- Hamburger & Mobile Nav Styles + Brand Bar -->
     <style>
+        /* Brand Bar */
+        .brand-bar {
+            position: relative;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            border-bottom: 2px solid var(--matrix-green, #00ff00);
+            z-index: 1000;
+        }
+        .brand-wrap {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1rem 0.5rem;
+        }
+        .brand-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .zion-logo-large {
+            width: 250px;
+            height: 250px;
+            max-width: 35vw;
+            max-height: 35vw;
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.6);
+            object-fit: cover;
+        }
+        .brand-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .brand-title {
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: #00ff00;
+            letter-spacing: 2px;
+            text-shadow: 0 0 12px rgba(0,255,0,0.8);
+            line-height: 1;
+        }
+        .brand-subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.8rem, 1.8vw, 1rem);
+            color: rgba(0,255,0,0.7);
+            margin-top: 0.4rem;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 768px) {
+            .brand-wrap {
+                padding: 0.75rem 0.5rem;
+                gap: 1rem;
+            }
+            .zion-logo-large {
+                width: 140px;
+                height: 140px;
+                max-width: 45vw;
+                max-height: 45vw;
+                border-radius: 12px;
+            }
+        }
         /* Hamburger Menu */
         .hamburger {
             display: none;
@@ -619,12 +693,7 @@
             margin-bottom: 1.5rem;
         }
         
-        .mobile-nav-header .logo-text {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--matrix-green, #00ff00);
-        }
+        /* (removed unused .logo-text rule) */
         
         .mobile-nav-links {
             padding: 0 1.5rem;
@@ -679,10 +748,7 @@
             .nav-logo {
                 gap: 0.5rem;
             }
-            
-            .logo-text {
-                font-size: 1.2rem;
-            }
+            /* (removed unused .logo-text sizing) */
         }
     </style>
     
