@@ -1,0 +1,29 @@
+{
+  "cosmic_harmony_gpu": {
+    "name": "ZION Cosmic Harmony GPU",
+    "algorithm": "cosmic_harmony",
+    "duration": 30.03282880783081,
+    "avg_hashrate": 608582.9666666667,
+    "hashrate_mhs": 0.6085829666666667,
+    "peak_hashrate": 628067,
+    "min_hashrate": 563821,
+    "shares_total": 1302,
+    "shares_accepted": 1302,
+    "shares_rejected": 0,
+    "acceptance_rate": 100.0,
+    "avg_gpu_temp": 56.0,
+    "hashrate_samples": 90,
+    "raw_hashrates": [
+      627889,
+      625808,
+      625409,
+      626356,
+      626951,
+      627069,
+      627208,
+      627583,
+      628067,
+      627692
+    ]
+  }
+}
