@@ -1,0 +1,165 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # ZION Node - Full blockchain node with WARP Engine
+  # ============================================================================
+  zion-node:
+    build:
+      context: .
+      dockerfile: Dockerfile.testnet
+    image: zionterranova/zion-node:2.8.3
+    container_name: zion-node
+    restart: unless-stopped
+    
+    ports:
+      - "8545:8545"   # RPC API
+      - "8333:8333"   # P2P networking
+    
+    volumes:
+      - zion-blockchain:/data/blockchain
+      - zion-logs:/data/logs
+    
+    environment:
+      - ZION_RPC_PORT=8545
+      - ZION_P2P_PORT=8333
+      - ZION_NETWORK=testnet
+      - PYTHONUNBUFFERED=1
+    
+    networks:
+      - zion-network
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8545/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ============================================================================
+  # ZION Mining Pool - Optional mining pool service
+  # ============================================================================
+  zion-pool:
+    build:
+      context: .
+      dockerfile: Dockerfile.testnet
+    image: zionterranova/zion-pool:2.8.3
+    container_name: zion-pool
+    restart: unless-stopped
+    
+    ports:
+      - "3333:3333"   # Mining pool stratum
+    
+    volumes:
+      - zion-pool-data:/data/pool
+      - zion-logs:/data/logs
+    
+    environment:
+      - ZION_POOL_PORT=3333
+      - ZION_RPC_HOST=zion-node
+      - ZION_RPC_PORT=8545
+      - ZION_NETWORK=testnet
+    
+    depends_on:
+      zion-node:
+        condition: service_healthy
+    
+    networks:
+      - zion-network
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ============================================================================
+  # Prometheus - Monitoring (optional)
+  # ============================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: zion-prometheus
+    restart: unless-stopped
+    
+    ports:
+      - "9090:9090"
+    
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    
+    networks:
+      - zion-network
+    
+    profiles:
+      - monitoring
+
+  # ============================================================================
+  # Grafana - Dashboard (optional)
+  # ============================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: zion-grafana
+    restart: unless-stopped
+    
+    ports:
+      - "3000:3000"
+    
+    volumes:
+      - grafana-data:/var/lib/grafana
+    
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=zion_admin_change_me
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    
+    depends_on:
+      - prometheus
+    
+    networks:
+      - zion-network
+    
+    profiles:
+      - monitoring
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  zion-network:
+    driver: bridge
+    name: zion-testnet
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  zion-blockchain:
+    name: zion-blockchain
+    driver: local
+  
+  zion-pool-data:
+    name: zion-pool-data
+    driver: local
+  
+  zion-logs:
+    name: zion-logs
+    driver: local
+  
+  prometheus-data:
+    name: prometheus-data
+    driver: local
+  
+  grafana-data:
+    name: grafana-data
+    driver: local
