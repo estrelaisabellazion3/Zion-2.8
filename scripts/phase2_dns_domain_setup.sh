@@ -19,8 +19,8 @@ NC='\033[0m' # No Color
 
 # Configuration
 SERVER_IP="91.98.122.165"
-DOMAIN="zion-testnet.io"
-EMAIL="admin@zion-testnet.io"
+DOMAIN="zionterranova.com"
+EMAIL="admin@zionterranova.com"
 BACKUP_DIR="/mnt/backup/phase2-$(date +%Y%m%d_%H%M%S)"
 
 # Logging function
@@ -96,7 +96,7 @@ step2_configure_dns() {
 ║                                                                        ║
 ║  1. A RECORD (Main Domain)                                            ║
 ║     ┌─────────────────────────────────────────────────────────────┐  ║
-║     │ Name:  zion-testnet.io                                      │  ║
+║     │ Name:  zionterranova.com                                      │  ║
 ║     │ Type:  A                                                    │  ║
 ║     │ Value: 91.98.122.165                                        │  ║
 ║     │ TTL:   3600 (1 hour)                                        │  ║
@@ -104,7 +104,7 @@ step2_configure_dns() {
 ║                                                                        ║
 ║  2. A RECORD (Wildcard - All Subdomains)                             ║
 ║     ┌─────────────────────────────────────────────────────────────┐  ║
-║     │ Name:  *.zion-testnet.io                                    │  ║
+║     │ Name:  *.zionterranova.com                                    │  ║
 ║     │ Type:  A                                                    │  ║
 ║     │ Value: 91.98.122.165                                        │  ║
 ║     │ TTL:   3600 (1 hour)                                        │  ║
@@ -112,7 +112,7 @@ step2_configure_dns() {
 ║                                                                        ║
 ║  3. CAA RECORD (Certificate Authority Authorization)                  ║
 ║     ┌─────────────────────────────────────────────────────────────┐  ║
-║     │ Name:  zion-testnet.io                                      │  ║
+║     │ Name:  zionterranova.com                                      │  ║
 ║     │ Type:  CAA                                                  │  ║
 ║     │ Flags: 0                                                    │  ║
 ║     │ Tag:   issue                                                │  ║
@@ -121,7 +121,7 @@ step2_configure_dns() {
 ║                                                                        ║
 ║  4. DKIM RECORD (Email Authentication)                               ║
 ║     ┌─────────────────────────────────────────────────────────────┐  ║
-║     │ Name:   default._domainkey.zion-testnet.io                  │  ║
+║     │ Name:   default._domainkey.zionterranova.com                  │  ║
 ║     │ Type:   TXT                                                 │  ║
 ║     │ Value:  (Request from Email provider)                       │  ║
 ║     │ Status: ⏳ Pending configuration                              │  ║
@@ -129,7 +129,7 @@ step2_configure_dns() {
 ║                                                                        ║
 ║  5. DMARC RECORD (Email Protection Policy)                           ║
 ║     ┌─────────────────────────────────────────────────────────────┐  ║
-║     │ Name:  _dmarc.zion-testnet.io                               │  ║
+║     │ Name:  _dmarc.zionterranova.com                               │  ║
 ║     │ Type:  TXT                                                  │  ║
 ║     │ Value: v=DMARC1; p=quarantine; rua=mailto:admin@...         │  ║
 ║     │ TTL:   3600                                                 │  ║
@@ -143,7 +143,7 @@ ACTION REQUIRED:
   3. Request DKIM record from email provider
   4. Configure DMARC after DKIM is set up
   5. Wait 15-30 minutes for DNS propagation
-  6. Verify with: dig zion-testnet.io @8.8.8.8
+  6. Verify with: dig zionterranova.com @8.8.8.8
 
 EOF
 
@@ -157,10 +157,10 @@ EOF
     local max_attempts=30
     
     while [ $attempts -lt $max_attempts ]; do
-        if dig +short "zion-testnet.io" @8.8.8.8 | grep -q "$SERVER_IP"; then
+        if dig +short "zionterranova.com" @8.8.8.8 | grep -q "$SERVER_IP"; then
             success "DNS A record verified ($SERVER_IP)"
             
-            if dig +short "*.zion-testnet.io" @8.8.8.8 | grep -q "$SERVER_IP"; then
+            if dig +short "*.zionterranova.com" @8.8.8.8 | grep -q "$SERVER_IP"; then
                 success "DNS wildcard record verified"
                 break
             fi
@@ -203,7 +203,7 @@ step3_setup_ssl() {
         --agree-tos \
         --email "$EMAIL" \
         -d "$DOMAIN" \
-        -d "*.zion-testnet.io" \
+        -d "*.zionterranova.com" \
         --expand 2>&1 | grep -v "^$" || true
     
     if [ -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
@@ -232,7 +232,7 @@ step4_configure_nginx() {
     log "Step 4/6: Configuring Nginx domain routing..."
     
     # Create Nginx configuration for ZION services
-    cat > /etc/nginx/sites-available/zion-testnet.io << 'NGINX_EOF'
+    cat > /etc/nginx/sites-available/zionterranova.com << 'NGINX_EOF'
 # ZION 2.8.3 Testnet - Nginx Configuration
 # Generated by Phase 2 setup script
 
@@ -253,7 +253,7 @@ upstream zion_explorer {
 server {
     listen 80;
     listen [::]:80;
-    server_name zion-testnet.io *.zion-testnet.io;
+    server_name zionterranova.com *.zionterranova.com;
     
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
@@ -269,11 +269,11 @@ server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
     
-    server_name zion-testnet.io www.zion-testnet.io;
+    server_name zionterranova.com www.zionterranova.com;
     
     # SSL certificates
-    ssl_certificate /etc/letsencrypt/live/zion-testnet.io/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/zion-testnet.io/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/zionterranova.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/zionterranova.com/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
@@ -336,10 +336,10 @@ server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
     
-    server_name *.zion-testnet.io;
+    server_name *.zionterranova.com;
     
-    ssl_certificate /etc/letsencrypt/live/zion-testnet.io/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/zion-testnet.io/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/zionterranova.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/zionterranova.com/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     
@@ -371,7 +371,7 @@ limit_req_zone $binary_remote_addr zone=rpc:10m rate=10r/s;
 NGINX_EOF
 
     # Enable the site
-    ln -sf /etc/nginx/sites-available/zion-testnet.io /etc/nginx/sites-enabled/ 2>/dev/null || true
+    ln -sf /etc/nginx/sites-available/zionterranova.com /etc/nginx/sites-enabled/ 2>/dev/null || true
     
     # Test Nginx configuration
     if nginx -t &> /dev/null; then
@@ -490,11 +490,11 @@ step6_setup_subdomains() {
         <p class="tagline">Next-Generation Blockchain Platform</p>
         
         <div class="services">
-            <a href="https://api.zion-testnet.io" class="service">
+            <a href="https://api.zionterranova.com" class="service">
                 <h3>📡 RPC API</h3>
                 <p>JSON-RPC Endpoint</p>
             </a>
-            <a href="https://pool.zion-testnet.io" class="service">
+            <a href="https://pool.zionterranova.com" class="service">
                 <h3>⛏️ Mining Pool</h3>
                 <p>Stratum Protocol</p>
             </a>
@@ -562,12 +562,12 @@ DOCS_EOF
 {
   "status": "operational",
   "version": "2.8.3-testnet",
-  "domain": "zion-testnet.io",
+  "domain": "zionterranova.com",
   "services": {
-    "rpc": "https://api.zion-testnet.io",
-    "pool": "https://pool.zion-testnet.io",
-    "explorer": "https://zion-testnet.io/explorer",
-    "docs": "https://zion-testnet.io/docs"
+    "rpc": "https://api.zionterranova.com",
+    "pool": "https://pool.zionterranova.com",
+    "explorer": "https://zionterranova.com/explorer",
+    "docs": "https://zionterranova.com/docs"
   },
   "ssl": "enabled",
   "updated": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -585,7 +585,7 @@ main() {
     echo "╔════════════════════════════════════════════════════════════════════╗"
     echo "║     ZION 2.8.3 Phase 2: DNS & Domain Setup                        ║"
     echo "║     Timeline: November 1-2, 2025                                  ║"
-    echo "║     Domain: zion-testnet.io                                       ║"
+    echo "║     Domain: zionterranova.com                                       ║"
     echo "║     Server: 91.98.122.165                                         ║"
     echo "╚════════════════════════════════════════════════════════════════════╝"
     echo ""
@@ -608,9 +608,9 @@ main() {
     echo "╠════════════════════════════════════════════════════════════════════╣"
     echo "║                                                                    ║"
     echo "║  Your domain is now configured:                                   ║"
-    echo "║  🌐 https://zion-testnet.io (Main Site)                          ║"
-    echo "║  📡 https://api.zion-testnet.io (RPC Endpoint)                   ║"
-    echo "║  ⛏️  https://pool.zion-testnet.io (Mining Pool)                  ║"
+    echo "║  🌐 https://zionterranova.com (Main Site)                          ║"
+    echo "║  📡 https://api.zionterranova.com (RPC Endpoint)                   ║"
+    echo "║  ⛏️  https://pool.zionterranova.com (Mining Pool)                  ║"
     echo "║                                                                    ║"
     echo "║  SSL Certificates: Valid and auto-renewing                        ║"
     echo "║  Backup Location: $BACKUP_DIR                                     ║"
