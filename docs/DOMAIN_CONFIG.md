@@ -5,20 +5,22 @@
 
 ---
 
-## 🏠 Main Domains
+## 🏠 Main Domain Structure
 
-### Production
+### Primary Domain: www.zionterranova.com
+
+**Production (Mainnet):**
 - **Main Website:** https://www.zionterranova.com
-- **Pool:** https://pool.zionterranova.com
-- **Explorer:** https://explorer.zionterranova.com
-- **API:** https://api.zionterranova.com
-- **Documentation:** https://docs.zionterranova.com
+- **Mining Pool:** https://www.zionterranova.com/mining
+- **Blockchain Explorer:** https://www.zionterranova.com/explorer
+- **REST API:** https://www.zionterranova.com/api
+- **Documentation:** https://www.zionterranova.com/docs
 
-### Testnet
-- **Testnet Website:** https://testnet.zionterranova.com
-- **Testnet Faucet:** https://testnet-faucet.zionterranova.com
-- **Testnet Pool:** https://testnet-pool.zionterranova.com
-- **Testnet Explorer:** https://testnet-explorer.zionterranova.com
+**Testnet:**
+- **Testnet Website:** https://www.zionterranova.com/testnet
+- **Testnet Faucet:** https://www.zionterranova.com/testnet/faucet
+- **Testnet Pool:** https://www.zionterranova.com/testnet/mining
+- **Testnet Explorer:** https://www.zionterranova.com/testnet/explorer
 
 ---
 
@@ -48,18 +50,15 @@
 
 ## 🌍 DNS Configuration (For DevOps)
 
-### A Records
+### A Records (Single Domain Setup)
 ```
 www.zionterranova.com      → 91.98.122.165
-pool.zionterranova.com     → 91.98.122.165
-api.zionterranova.com      → 91.98.122.165
-testnet.zionterranova.com  → 91.98.122.165
+zionterranova.com          → 91.98.122.165 (redirect to www)
 ```
 
 ### CNAME Records
 ```
-explorer.zionterranova.com → www.zionterranova.com
-docs.zionterranova.com     → www.zionterranova.com
+# No subdomains needed - all via paths
 ```
 
 ### MX Records (Email)
@@ -83,12 +82,14 @@ zionterranova.com  MX 10 mail.zionterranova.com
 
 ---
 
-## 📝 Migration Notes
+### Migration Notes
 
 ### Old Domain References (To Update)
 - ~~zion-blockchain.org~~ → **www.zionterranova.com**
-- ~~pool.zion-blockchain.org~~ → **pool.zionterranova.com**
-- ~~api.zion-blockchain.org~~ → **api.zionterranova.com**
+- ~~pool.zion-blockchain.org~~ → **www.zionterranova.com/mining**
+- ~~api.zion-blockchain.org~~ → **www.zionterranova.com/api**
+- ~~explorer.zion-blockchain.org~~ → **www.zionterranova.com/explorer**
+- ~~docs.zion-blockchain.org~~ → **www.zionterranova.com/docs**
 
 ### Files Updated (29.10.2025)
 - ✅ `Readme.md` - Main website links

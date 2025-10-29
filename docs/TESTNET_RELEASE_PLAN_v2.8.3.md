@@ -571,13 +571,13 @@ enable_rpc_auth = false  # Testnet only
 
 ## Get Testnet Wallet
 
-Visit: https://testnet.zionterranova.com/faucet
+Visit: https://www.zionterranova.com/testnet/faucet
 - Request testnet ZION tokens
 - No mainnet value - for testing only
 
 ## Mining Pool Stats
 
-https://pool.zionterranova.com/
+https://www.zionterranova.com/testnet/mining
 - View your hashrate
 - Check earnings
 - See network stats
@@ -937,7 +937,7 @@ python clients/python/zion_rpc_client.py
 ```
 
 ## Get Testnet Tokens
-Visit: https://testnet-faucet.zionterranova.com
+Visit: https://www.zionterranova.com/testnet/faucet
 
 ## Documentation
 - [Quick Start](docs/QUICK_START.md)
