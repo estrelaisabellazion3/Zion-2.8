@@ -550,6 +550,8 @@ services:
 - **[Quick Start Guide](./QUICK_START.md)** - Get started in 5 minutes
 - **[Mining Guide](./MINING_GUIDE.md)** - Complete mining tutorial
 - **[RPC API Reference](./RPC_API.md)** - API documentation
+- **[FAQ](./FAQ.md)** - Frequently asked questions
+- **[Troubleshooting](./TROUBLESHOOTING.md)** - Common issues
 
 ### Development Resources
 - **GitHub:** [estrelaisabellazion3/Zion-2.8](https://github.com/estrelaisabellazion3/Zion-2.8)

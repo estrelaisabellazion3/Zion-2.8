@@ -769,6 +769,8 @@ ws.onmessage = (event) => {
 - **[Quick Start Guide](./QUICK_START.md)** - Get started quickly
 - **[Mining Guide](./MINING_GUIDE.md)** - Mining tutorials
 - **[Architecture Overview](./ARCHITECTURE.md)** - Technical details
+- **[FAQ](./FAQ.md)** - Frequently asked questions
+- **[Troubleshooting](./TROUBLESHOOTING.md)** - Common issues
 
 ### Tools & Libraries
 - **JavaScript SDK:** [github.com/estrelaisabellazion3/zion-js-sdk](https://github.com/estrelaisabellazion3/zion-js-sdk)
@@ -782,7 +784,7 @@ ws.onmessage = (event) => {
 
 ---
 
-**Need help with the API? Check our [FAQ](../FAQ.md) or open a [GitHub issue](https://github.com/estrelaisabellazion3/Zion-2.8/issues)!**
+**Need help with the API? Check our [FAQ](./FAQ.md) or [Troubleshooting Guide](./TROUBLESHOOTING.md), or open a [GitHub issue](https://github.com/estrelaisabellazion3/Zion-2.8/issues)!**
 
 *ZION RPC API - Powering the humanitarian blockchain*  
 *Version 2.8.3 "Terra Nova" - October 2025*

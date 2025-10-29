@@ -135,7 +135,7 @@ Created **complete professional documentation suite** for ZION 2.8.3 Testnet pub
 ---
 
 #### 5. FAQ.md ✅
-**Location:** `docs/FAQ.md`  
+**Location:** `docs/2.8.3/FAQ.md`  
 **Lines:** 650  
 **Purpose:** Comprehensive frequently asked questions
 
@@ -164,7 +164,7 @@ Created **complete professional documentation suite** for ZION 2.8.3 Testnet pub
 ---
 
 #### 6. TROUBLESHOOTING.md ✅
-**Location:** `docs/TROUBLESHOOTING.md`  
+**Location:** `docs/2.8.3/TROUBLESHOOTING.md`  
 **Lines:** 650  
 **Purpose:** Complete troubleshooting & debugging guide
 

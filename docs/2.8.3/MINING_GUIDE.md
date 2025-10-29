@@ -556,6 +556,8 @@ Visit [zionminingcalc.com](https://zionminingcalc.com) for:
 - **[Quick Start Guide](./QUICK_START.md)** - Get started in 5 minutes
 - **[RPC API Reference](./RPC_API.md)** - Developer documentation
 - **[Architecture Overview](./ARCHITECTURE.md)** - Technical details
+- **[FAQ](./FAQ.md)** - Frequently asked questions
+- **[Troubleshooting](./TROUBLESHOOTING.md)** - Common issues
 
 ### Community
 - **GitHub:** [Report issues](https://github.com/estrelaisabellazion3/Zion-2.8/issues)

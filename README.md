@@ -218,12 +218,12 @@ GPU-optimized mining algorithm:
 
 ### Technical
 - [RPC API Reference](./docs/2.8.3/RPC_API.md) - Complete API documentation
-- [Architecture Overview](./docs/ARCHITECTURE.md) - System design deep-dive
+- [Architecture Overview](./docs/2.8.3/ARCHITECTURE.md) - System design deep-dive
 - [Security Best Practices](./docs/SECURITY.md) - Secure your ZION
 
 ### Support
-- [FAQ](./docs/FAQ.md) - Frequently Asked Questions
-- [Troubleshooting](./docs/TROUBLESHOOTING.md) - Common issues
+- [FAQ](./docs/2.8.3/FAQ.md) - Frequently Asked Questions
+- [Troubleshooting](./docs/2.8.3/TROUBLESHOOTING.md) - Common issues
 
 ---
 

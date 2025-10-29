@@ -315,7 +315,9 @@ top  # Linux/macOS
 ### Learn More
 - **[Mining Guide](./MINING_GUIDE.md)** - Advanced mining setup
 - **[RPC API Reference](./RPC_API.md)** - Developer API docs
-- **[Architecture Overview](../ARCHITECTURE.md)** - Technical deep-dive
+- **[Architecture Overview](./ARCHITECTURE.md)** - Technical deep-dive
+- **[FAQ](./FAQ.md)** - Frequently asked questions
+- **[Troubleshooting](./TROUBLESHOOTING.md)** - Common issues
 
 ### Join Community
 - **Website:** [zionterranova.com](https://zionterranova.com)
@@ -359,8 +361,9 @@ git checkout -b feature/your-feature
 
 ### Quick Support
 1. Check this guide first
-2. Review [FAQ](../FAQ.md)
-3. Search [GitHub Issues](https://github.com/estrelaisabellazion3/Zion-2.8/issues)
+2. Review [FAQ](./FAQ.md)
+3. Review [Troubleshooting Guide](./TROUBLESHOOTING.md)
+4. Search [GitHub Issues](https://github.com/estrelaisabellazion3/Zion-2.8/issues)
 
 ### Report Issues
 - **Bug reports:** [Open GitHub Issue](https://github.com/estrelaisabellazion3/Zion-2.8/issues/new)

@@ -100,7 +100,7 @@
 - Future enhancements
 
 #### ✅ 5. FAQ.md (600 lines)
-**Location:** `docs/FAQ.md`
+**Location:** `docs/2.8.3/FAQ.md`
 
 **Content:**
 - 50+ frequently asked questions
