@@ -518,7 +518,7 @@ enable_rpc_auth = false  # Testnet only
 
 ### 6️⃣ **Dokumentace**
 
-#### `docs/QUICK_START.md`
+#### `docs/2.8.3/QUICK_START.md`
 
 ```markdown
 # ZION Testnet - Quick Start Guide
@@ -589,7 +589,7 @@ Telegram: https://t.me/zionblockchain
 Website: https://www.zionterranova.com
 ```
 
-#### `docs/RPC_API.md`
+#### `docs/2.8.3/RPC_API.md`
 
 ```markdown
 # ZION RPC API Documentation
@@ -940,9 +940,9 @@ python clients/python/zion_rpc_client.py
 Visit: https://www.zionterranova.com/testnet/faucet
 
 ## Documentation
-- [Quick Start](docs/QUICK_START.md)
-- [Mining Guide](docs/MINING_GUIDE.md)
-- [RPC API](docs/RPC_API.md)
+- [Quick Start](docs/2.8.3/QUICK_START.md)
+- [Mining Guide](docs/2.8.3/MINING_GUIDE.md)
+- [RPC API](docs/2.8.3/RPC_API.md)
 
 ## Security
 ⚠️ **TESTNET ONLY** - Tokens have NO real value

@@ -100,9 +100,9 @@ sha256sum zion-cli
 ## 📚 Documentation
 
 **Full Documentation:**
-- [Quick Start Guide](../../docs/QUICK_START.md) - 5-minute setup
-- [Mining Guide](../../docs/MINING_GUIDE.md) - Complete mining tutorial
-- [RPC API Reference](../../docs/RPC_API.md) - API documentation
+- [Quick Start Guide](../../docs/2.8.3/QUICK_START.md) - 5-minute setup
+- [Mining Guide](../../docs/2.8.3/MINING_GUIDE.md) - Complete mining tutorial
+- [RPC API Reference](../../docs/2.8.3/RPC_API.md) - API documentation
 - [Architecture](../../docs/ARCHITECTURE.md) - Technical overview
 
 **Community:**
