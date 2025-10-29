@@ -44,15 +44,23 @@ cd zion-cli-2.8.3
 
 ## 🔧 Hardware Requirements
 
-### Minimum Requirements
+### Minimum Requirements (CPU Mining)
+- **CPU:** Quad-core 2.0 GHz (Intel i3/AMD Ryzen 3)
+- **RAM:** 2 GB
+- **Storage:** 5 GB SSD
+- **Power:** 200W PSU
+- **Expected Hashrate:** 1-2 MH/s
+
+### Recommended Setup (GPU Mining)
 - **GPU:** NVIDIA GTX 1060 6GB or AMD RX 580 8GB
-- **VRAM:** 2 GB
+- **VRAM:** 2 GB minimum
 - **RAM:** 4 GB system RAM
 - **CPU:** Dual-core 2.4 GHz
 - **Storage:** 10 GB SSD
 - **Power:** 400W PSU
+- **Expected Hashrate:** 25-35 MH/s
 
-### Recommended Setup
+### Optimal Mining Rig (High-End GPU)
 - **GPU:** NVIDIA RTX 3060+ or AMD RX 6600 XT
 - **VRAM:** 8 GB+
 - **RAM:** 8 GB system RAM
@@ -99,7 +107,31 @@ docker run -d \
   zionterranova/zion-miner:2.8.3
 ```
 
-### Option 3: Solo Mining (Advanced)
+### Option 3: CPU Mining (Budget/Testing)
+
+Best for testing or if you don't have a GPU.
+
+```bash
+# Download CLI
+wget https://github.com/estrelaisabellazion3/Zion-2.8/releases/download/v2.8.3/zion-cli-2.8.3-linux-amd64.tar.gz
+tar -xzf zion-cli-2.8.3-linux-amd64.tar.gz
+
+# Start CPU mining
+./zion-cli mine --start \
+  --pool pool.zionterranova.com:3333 \
+  --wallet YOUR_ADDRESS \
+  --cpu-only \
+  --threads 8  # Number of CPU cores - 2
+
+# Expected hashrate:
+# 4-core CPU: ~1-2 MH/s
+# 8-core CPU: ~3-5 MH/s
+# 16-core CPU: ~8-12 MH/s
+```
+
+**Note:** CPU mining is ~100x slower than GPU but still contributes to network!
+
+### Option 4: Solo Mining (Advanced)
 ```bash
 # Connect directly to node
 ./zion-cli mine --solo --rpc https://api.zionterranova.com --wallet YOUR_ADDRESS
@@ -121,24 +153,32 @@ docker run -d \
 
 ### Advanced Configuration
 ```bash
-# Full configuration
+# Full configuration with CPU mining
 ./zion-cli mine --start \
   --pool pool.zionterranova.com:3333 \
   --wallet YOUR_ADDRESS \
-  --threads 8 \
-  --intensity 90 \
-  --worksize 256 \
+  --cpu-only \
+  --threads 12 \
+  --intensity 90
+
+# Or GPU + CPU hybrid mining
+./zion-cli mine --start \
+  --pool pool.zionterranova.com:3333 \
+  --wallet YOUR_ADDRESS \
   --gpu 0 \
-  --temperature-limit 75 \
-  --power-limit 200
+  --cpu-threads 4 \
+  --gpu-intensity 100 \
+  --cpu-intensity 80
 ```
 
 ### Configuration Parameters
 
 | Parameter | Description | Default | Range |
 |-----------|-------------|---------|-------|
+| `--cpu-only` | CPU mining mode (no GPU) | false | true/false |
 | `--threads` | CPU threads for mining | Auto | 1-64 |
-| `--intensity` | GPU workload intensity | 100 | 1-100 |
+| `--cpu-threads` | CPU threads (hybrid mode) | 0 | 0-64 |
+| `--intensity` | GPU/CPU workload intensity | 100 | 1-100 |
 | `--worksize` | GPU work group size | 64 | 32-512 |
 | `--gpu` | GPU device ID | 0 | 0-N |
 | `--temperature-limit` | GPU temperature limit (°C) | 80 | 60-90 |
@@ -151,6 +191,35 @@ docker run -d \
 
 # Mine on GPU 1
 ./zion-cli mine --start --gpu 1 --wallet YOUR_ADDRESS &
+```
+
+### CPU + GPU Hybrid Mining
+```bash
+# Maximize all hardware resources
+./zion-cli mine --start \
+  --wallet YOUR_ADDRESS \
+  --gpu 0 \
+  --gpu-intensity 100 \
+  --cpu-threads 4 \
+  --cpu-intensity 75
+
+# This uses:
+# - Full GPU power (100% intensity)
+# - 4 CPU cores (75% intensity to avoid thermal issues)
+```
+
+### CPU-Only Multi-Core Optimization
+```bash
+# For high-core-count CPUs (16+ cores)
+./zion-cli mine --start \
+  --cpu-only \
+  --threads 14 \  # Leave 2 cores for system
+  --intensity 90 \  # 90% to prevent thermal throttling
+  --affinity 0-13  # Pin to specific cores
+
+# Monitor with:
+htop  # Linux
+# Task Manager  # Windows
 ```
 
 ---
@@ -312,6 +381,42 @@ echo 2000 > /sys/class/drm/card0/device/hwmon/hwmon0/fan1_target
 
 # Monitor with rocm-smi
 rocm-smi --showtemp --showpower
+```
+
+#### CPU Mining Optimization
+```bash
+# Set CPU to performance mode
+sudo cpupower frequency-set -g performance
+
+# Monitor CPU usage and temperature
+htop  # Install: sudo apt install htop
+sensors  # Install: sudo apt install lm-sensors
+
+# Optimize thread count (experiment for best results)
+# Rule of thumb: Total cores - 2
+# Example for 16-core CPU:
+./zion-cli mine --cpu-only --threads 14
+
+# Enable huge pages (5-10% speedup)
+echo 128 | sudo tee /proc/sys/vm/nr_hugepages
+
+# Disable CPU throttling
+echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+```
+
+#### Hybrid (CPU + GPU) Optimization
+```bash
+# Balance workload between GPU and CPU
+./zion-cli mine --start \
+  --gpu 0 --gpu-intensity 100 \
+  --cpu-threads 4 --cpu-intensity 75
+
+# Monitor combined hashrate
+./zion-cli mine --status
+
+# Adjust based on temperature:
+# - If GPU hot: reduce --gpu-intensity to 85
+# - If CPU hot: reduce --cpu-threads or --cpu-intensity
 ```
 
 #### System Optimization

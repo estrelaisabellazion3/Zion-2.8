@@ -238,11 +238,37 @@ Daily profit: ~$5-8 (testnet estimates)
 ### Can I mine with CPU only?
 
 **Yes, but not recommended.** CPU mining is:
-- Very slow (~2 MH/s on 16-core CPU)
-- Unprofitable (electricity cost > rewards)
-- Better for testing only
+- Very slow (~1-5 MH/s on modern CPUs)
+- Less profitable than GPU mining
+- Better for: Testing, learning, supporting network
 
-**Recommendation:** Use GPU mining for meaningful rewards.
+**CPU Mining Guide:**
+```bash
+# Start CPU mining
+./zion-cli mine --start \
+  --cpu-only \
+  --threads 8 \  # Number of cores - 2
+  --wallet YOUR_ADDRESS
+
+# Expected hashrate:
+# 4-core: 1-2 MH/s
+# 8-core: 3-5 MH/s
+# 16-core: 8-12 MH/s
+# 32-core: 15-20 MH/s
+```
+
+**Profitability:**
+- GPU (RTX 3060): 45 MH/s (~$5-8/day)
+- CPU (16-core): 10 MH/s (~$1-2/day)
+- **Verdict:** GPU is ~20x more efficient
+
+**When to use CPU mining:**
+- You don't have a GPU
+- Testing before buying GPU
+- Supporting network decentralization
+- Learning how mining works
+
+**Recommendation:** If serious about mining, invest in GPU (even budget GTX 1060 is 10x faster than high-end CPU).
 
 ### What GPU is best for mining ZION?
 
@@ -253,8 +279,16 @@ Daily profit: ~$5-8 (testnet estimates)
 | RX 6600 XT | 55 MH/s | 130W | 0.423 MH/W | $$ |
 | RTX 3060 | 45 MH/s | 170W | 0.265 MH/W | $$ |
 
+**CPU Mining (for comparison):**
+| CPU | Hashrate | Power | Efficiency | Price |
+|-----|----------|-------|------------|-------|
+| Ryzen 9 7950X (16-core) | 12 MH/s | 170W | 0.071 MH/W | $$$ |
+| Ryzen 7 5800X (8-core) | 5 MH/s | 105W | 0.048 MH/W | $$ |
+| Intel i5-12600K (10-core) | 6 MH/s | 125W | 0.048 MH/W | $$ |
+
 **Budget option:** Used RTX 3060 or RX 6600 XT  
-**High performance:** RTX 4070 Ti or RTX 4080
+**High performance:** RTX 4070 Ti or RTX 4080  
+**CPU-only:** Not recommended (20x slower than budget GPU)
 
 ### Do I need to join a pool?
 
