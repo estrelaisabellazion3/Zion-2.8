@@ -12,7 +12,7 @@
 
 *First Consciousness-Based Blockchain with Professional GPU Mining & Real-time Metrics*
 
-[🌐 Website](https://zion-blockchain.org) • [📖 Docs](docs/) • [⛏️ Mining Guide](REALTIME_MINING_README.md) • [📊 Roadmap](ROADMAP.md)
+[🌐 Website](https://www.zionterranova.com) • [📖 Docs](docs/) • [⛏️ Mining Guide](REALTIME_MINING_README.md) • [📊 Roadmap](ROADMAP.md)
 
 </div>
 
@@ -237,7 +237,7 @@ python3 test_gpu_ai_miner.py
 ## 🤝 Community & Support
 
 ### Connect With Us
-- **🌐 Website**: [zion-blockchain.org](https://zion-blockchain.org)
+- **🌐 Website**: [www.zionterranova.com](https://www.zionterranova.com)
 - **💬 Discord**: [discord.gg/zion](https://discord.gg/zion)
 - **🐙 GitHub**: [github.com/estrelaisabellazion3/Zion-2.8](https://github.com/estrelaisabellazion3/Zion-2.8)
 - **📧 Email**: contact@zion-blockchain.org

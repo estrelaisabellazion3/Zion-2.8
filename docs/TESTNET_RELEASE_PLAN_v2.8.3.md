@@ -571,13 +571,13 @@ enable_rpc_auth = false  # Testnet only
 
 ## Get Testnet Wallet
 
-Visit: https://testnet.zion-blockchain.org/faucet
+Visit: https://testnet.zionterranova.com/faucet
 - Request testnet ZION tokens
 - No mainnet value - for testing only
 
 ## Mining Pool Stats
 
-https://pool.zion-blockchain.org/
+https://pool.zionterranova.com/
 - View your hashrate
 - Check earnings
 - See network stats
@@ -586,6 +586,7 @@ https://pool.zion-blockchain.org/
 
 Discord: https://discord.gg/zion
 Telegram: https://t.me/zionblockchain
+Website: https://www.zionterranova.com
 ```
 
 #### `docs/RPC_API.md`
@@ -936,7 +937,7 @@ python clients/python/zion_rpc_client.py
 ```
 
 ## Get Testnet Tokens
-Visit: https://testnet-faucet.zion-blockchain.org
+Visit: https://testnet-faucet.zionterranova.com
 
 ## Documentation
 - [Quick Start](docs/QUICK_START.md)
@@ -950,6 +951,7 @@ Visit: https://testnet-faucet.zion-blockchain.org
 ## Support
 - Discord: https://discord.gg/zion
 - Telegram: https://t.me/zionblockchain
+- Website: https://www.zionterranova.com
 EOF
 
 # Tag release
@@ -1096,8 +1098,9 @@ Warning: All testnet tokens WILL BE DELETED
 ## 📞 CONTACT & SUPPORT
 
 ### Pre-Launch
-- **Security Issues:** security@zion-blockchain.org (PGP encrypted)
-- **Technical Questions:** dev@zion-blockchain.org
+- **Security Issues:** security@zionterranova.com (PGP encrypted)
+- **Technical Questions:** dev@zionterranova.com
+- **Website:** https://www.zionterranova.com
 
 ### Post-Launch
 - **Discord:** https://discord.gg/zion
