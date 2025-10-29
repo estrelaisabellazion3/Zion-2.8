@@ -164,3 +164,55 @@ ZION VOL 30.9/
 
 # Test reports (generated)
 test-results.xml
+backups/
+
+# ============================================================================
+# ZION 2.8.3 Production Security (Added Phase 3)
+# ============================================================================
+
+# Private data and backups
+backups/
+.private/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Deployment-specific configs
+deployment/seednodes.py
+deployment/*_production.py
+deployment/secrets/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+blockchain_data/
+pool_data/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.pid
+*.sock
+
+# Environment and secrets
+.env
+.env.local
+.env.production
+secrets.json
+config/secrets/
+
+# Build artifacts (will be added in Phase 3.2)
+build/
+dist/
+*.exe
+*.app
+*.dmg
+*.deb
+*.rpm
+
+# Docker production configs
+docker-compose.production.yml
+docker-compose.sacred-production.yml
+
