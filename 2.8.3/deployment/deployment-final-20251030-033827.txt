@@ -1,0 +1,2119 @@
+[0;35m
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║         ███████╗██╗ ██████╗ ███╗   ██╗                        ║
+║         ╚══███╔╝██║██╔═══██╗████╗  ██║                        ║
+║           ███╔╝ ██║██║   ██║██╔██╗ ██║                        ║
+║          ███╔╝  ██║██║   ██║██║╚██╗██║                        ║
+║         ███████╗██║╚██████╔╝██║ ╚████║                        ║
+║         ╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝                        ║
+║                                                                ║
+║                  BLOCKCHAIN 2.8.3 "Terra Nova"                ║
+║                  Production SSH Deployment                     ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+[0m
+[0;32m[2025-10-30 03:38:27][0m Target Server: 91.98.122.165 (zionterranova.com)
+[0;32m[2025-10-30 03:38:27][0m ZION Version: 2.8.3
+[0;32m[2025-10-30 03:38:27][0m Deployment Directory: /opt/zion-2.8.3
+
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 1/12: Pre-Deployment Validation[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+[0;34m[2025-10-30 03:38:27] INFO:[0m Checking local files...
+[0;32m[2025-10-30 03:38:27][0m ✓ Local files validated
+[0;34m[2025-10-30 03:38:27] INFO:[0m Testing SSH connection to 91.98.122.165...
+[0;32m[2025-10-30 03:38:28][0m ✓ SSH connection established
+[0;34m[2025-10-30 03:38:28] INFO:[0m Checking server operating system...
+[0;32m[2025-10-30 03:38:29][0m ✓ Server OS: Description:	Ubuntu 24.04.3 LTS
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 2/12: Stopping Old Services[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:38:28 AM UTC 2025
+
+  System load:  0.04              Processes:             141
+  Usage of /:   3.0% of 37.23GB   Users logged in:       1
+  Memory usage: 5%                IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Stopping ZION processes...
+Old services stopped
+[0;32m[2025-10-30 03:38:29][0m ✓ Old services stopped
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 3/12: Preparing Server Directories[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:38:28 AM UTC 2025
+
+  System load:  0.04              Processes:             141
+  Usage of /:   3.0% of 37.23GB   Users logged in:       1
+  Memory usage: 5%                IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Creating directory structure at /opt/zion-2.8.3...
+Directories prepared
+[0;32m[2025-10-30 03:38:30][0m ✓ Server directories prepared
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 4/12: Transferring Source Code[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+[0;34m[2025-10-30 03:38:30] INFO:[0m Copying source code to server...
+[0;32m[2025-10-30 03:38:50][0m ✓ Source code transferred
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 5/12: Installing System Dependencies[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:38:28 AM UTC 2025
+
+  System load:  0.04              Processes:             141
+  Usage of /:   3.0% of 37.23GB   Users logged in:       1
+  Memory usage: 5%                IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Updating package lists...
+Installing system dependencies...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+python3 is already the newest version (3.12.3-0ubuntu2).
+ufw is already the newest version (0.36.2-6).
+curl is already the newest version (8.5.0-2ubuntu10.6).
+wget is already the newest version (1.21.4-1ubuntu4.1).
+git is already the newest version (1:2.43.0-1ubuntu7.3).
+htop is already the newest version (3.3.0-4build1).
+net-tools is already the newest version (2.10-0.1ubuntu4.4).
+lsof is already the newest version (4.95.0-1build3).
+The following additional packages will be installed:
+  binutils binutils-common binutils-x86-64-linux-gnu build-essential bzip2 cpp
+  cpp-13 cpp-13-x86-64-linux-gnu cpp-x86-64-linux-gnu dpkg dpkg-dev fakeroot
+  fontconfig-config fonts-dejavu-core fonts-dejavu-mono g++ g++-13
+  g++-13-x86-64-linux-gnu g++-x86-64-linux-gnu gcc gcc-13 gcc-13-base
+  gcc-13-x86-64-linux-gnu gcc-x86-64-linux-gnu javascript-common
+  libalgorithm-diff-perl libalgorithm-diff-xs-perl libalgorithm-merge-perl
+  libaom3 libasan8 libatomic1 libbinutils libc-bin libc-dev-bin libc-devtools
+  libc6 libc6-dev libcc1-0 libcrypt-dev libctf-nobfd0 libctf0 libde265-0
+  libdeflate0 libdpkg-perl libexpat1-dev libfakeroot libfile-fcntllock-perl
+  libfontconfig1 libgcc-13-dev libgd3 libgomp1 libgprofng0
+  libheif-plugin-aomdec libheif-plugin-aomenc libheif-plugin-libde265 libheif1
+  libhwasan0 libisl23 libitm1 libjbig0 libjpeg-turbo8 libjpeg8 libjs-jquery
+  libjs-sphinxdoc libjs-underscore liblerc4 liblsan0 libmpc3 libpython3-dev
+  libpython3.12-dev libpython3.12-minimal libpython3.12-stdlib
+  libpython3.12t64 libquadmath0 libsframe1 libsharpyuv0 libsqlite3-0
+  libstdc++-13-dev libtiff6 libtsan2 libubsan1 libwebp7 libx11-6 libx11-data
+  libxau6 libxcb1 libxdmcp6 libxpm4 linux-libc-dev linux-tools-common locales
+  lto-disabled-list make manpages-dev nginx-common python3-acme
+  python3-certbot python3-configargparse python3-dev python3-icu
+  python3-josepy python3-parsedatetime python3-pip-whl python3-pyasyncore
+  python3-pyinotify python3-rfc3339 python3-setuptools-whl python3-wheel
+  python3.12 python3.12-dev python3.12-minimal python3.12-venv rpcsvc-proto
+  whois zlib1g-dev
+Suggested packages:
+  binutils-doc gprofng-gui bzip2-doc python-certbot-doc python3-certbot-apache
+  cpp-doc gcc-13-locales cpp-13-doc debsig-verify debian-keyring mailx monit
+  g++-multilib g++-13-multilib gcc-13-doc gcc-multilib autoconf automake
+  libtool flex bison gdb gcc-doc gcc-13-multilib gdb-x86-64-linux-gnu
+  glibc-doc libnss-nis libnss-nisplus bzr libgd-tools libheif-plugin-x265
+  libheif-plugin-ffmpegdec libheif-plugin-jpegdec libheif-plugin-jpegenc
+  libheif-plugin-j2kdec libheif-plugin-j2kenc libheif-plugin-rav1e
+  libheif-plugin-svtenc libstdc++-13-doc make-doc fcgiwrap nginx-doc ssl-cert
+  python-acme-doc python-certbot-nginx-doc python-pyinotify-doc python3.12-doc
+  binfmt-support sqlite3-doc
+The following NEW packages will be installed:
+  binutils binutils-common binutils-x86-64-linux-gnu build-essential bzip2
+  certbot cpp cpp-13 cpp-13-x86-64-linux-gnu cpp-x86-64-linux-gnu dpkg-dev
+  fail2ban fakeroot fontconfig-config fonts-dejavu-core fonts-dejavu-mono g++
+  g++-13 g++-13-x86-64-linux-gnu g++-x86-64-linux-gnu gcc gcc-13 gcc-13-base
+  gcc-13-x86-64-linux-gnu gcc-x86-64-linux-gnu javascript-common
+  libalgorithm-diff-perl libalgorithm-diff-xs-perl libalgorithm-merge-perl
+  libaom3 libasan8 libatomic1 libbinutils libc-dev-bin libc-devtools libc6-dev
+  libcc1-0 libcrypt-dev libctf-nobfd0 libctf0 libde265-0 libdeflate0
+  libdpkg-perl libexpat1-dev libfakeroot libfile-fcntllock-perl libfontconfig1
+  libgcc-13-dev libgd3 libgomp1 libgprofng0 libheif-plugin-aomdec
+  libheif-plugin-aomenc libheif-plugin-libde265 libheif1 libhwasan0 libisl23
+  libitm1 libjbig0 libjpeg-turbo8 libjpeg8 libjs-jquery libjs-sphinxdoc
+  libjs-underscore liblerc4 liblsan0 libmpc3 libpython3-dev libpython3.12-dev
+  libquadmath0 libsframe1 libsharpyuv0 libstdc++-13-dev libtiff6 libtsan2
+  libubsan1 libwebp7 libx11-6 libx11-data libxau6 libxcb1 libxdmcp6 libxpm4
+  linux-libc-dev lto-disabled-list make manpages-dev nginx nginx-common
+  python3-acme python3-certbot python3-certbot-nginx python3-configargparse
+  python3-dev python3-icu python3-josepy python3-parsedatetime python3-pip
+  python3-pip-whl python3-pyasyncore python3-pyinotify python3-rfc3339
+  python3-setuptools-whl python3-venv python3-wheel python3.12-dev
+  python3.12-venv rpcsvc-proto sqlite3 whois zlib1g-dev
+The following packages will be upgraded:
+  dpkg libc-bin libc6 libpython3.12-minimal libpython3.12-stdlib
+  libpython3.12t64 libsqlite3-0 linux-tools-common locales python3.12
+  python3.12-minimal
+11 upgraded, 111 newly installed, 0 to remove and 44 not upgraded.
+Need to get 112 MB of archives.
+After this operation, 326 MB of additional disk space will be used.
+Get:1 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 dpkg amd64 1.22.6ubuntu6.5 [1,282 kB]
+Get:2 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libc6 amd64 2.39-0ubuntu8.6 [3,263 kB]
+Get:3 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libc-bin amd64 2.39-0ubuntu8.6 [682 kB]
+Get:4 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpython3.12t64 amd64 3.12.3-1ubuntu0.8 [2,355 kB]
+Get:5 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 python3.12 amd64 3.12.3-1ubuntu0.8 [651 kB]
+Get:6 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpython3.12-stdlib amd64 3.12.3-1ubuntu0.8 [2,068 kB]
+Get:7 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 python3.12-minimal amd64 3.12.3-1ubuntu0.8 [2,334 kB]
+Get:8 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpython3.12-minimal amd64 3.12.3-1ubuntu0.8 [836 kB]
+Get:9 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libsqlite3-0 amd64 3.45.1-1ubuntu2.5 [701 kB]
+Get:10 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 locales all 2.39-0ubuntu8.6 [4,229 kB]
+Get:11 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libxau6 amd64 1:1.0.9-1build6 [7,160 B]
+Get:12 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libxdmcp6 amd64 1:1.1.3-0ubuntu6 [10.3 kB]
+Get:13 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libxcb1 amd64 1.15-1ubuntu2 [47.7 kB]
+Get:14 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libx11-data all 2:1.8.7-1build1 [115 kB]
+Get:15 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libx11-6 amd64 2:1.8.7-1build1 [650 kB]
+Get:16 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 binutils-common amd64 2.42-4ubuntu2.5 [240 kB]
+Get:17 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libsframe1 amd64 2.42-4ubuntu2.5 [15.5 kB]
+Get:18 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libbinutils amd64 2.42-4ubuntu2.5 [577 kB]
+Get:19 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libctf-nobfd0 amd64 2.42-4ubuntu2.5 [97.7 kB]
+Get:20 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libctf0 amd64 2.42-4ubuntu2.5 [94.5 kB]
+Get:21 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libgprofng0 amd64 2.42-4ubuntu2.5 [849 kB]
+Get:22 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 binutils-x86-64-linux-gnu amd64 2.42-4ubuntu2.5 [2,462 kB]
+Get:23 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 binutils amd64 2.42-4ubuntu2.5 [18.1 kB]
+Get:24 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libc-dev-bin amd64 2.39-0ubuntu8.6 [20.4 kB]
+Get:25 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 linux-libc-dev amd64 6.8.0-86.87 [1,932 kB]
+Get:26 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libcrypt-dev amd64 1:4.4.36-4build1 [112 kB]
+Get:27 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 rpcsvc-proto amd64 1.4.2-0ubuntu7 [67.4 kB]
+Get:28 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libc6-dev amd64 2.39-0ubuntu8.6 [2,125 kB]
+Get:29 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 gcc-13-base amd64 13.3.0-6ubuntu2~24.04 [51.5 kB]
+Get:30 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libisl23 amd64 0.26-3build1.1 [680 kB]
+Get:31 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libmpc3 amd64 1.3.1-1build1.1 [54.6 kB]
+Get:32 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 cpp-13-x86-64-linux-gnu amd64 13.3.0-6ubuntu2~24.04 [10.7 MB]
+Get:33 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 cpp-13 amd64 13.3.0-6ubuntu2~24.04 [1,038 B]
+Get:34 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 cpp-x86-64-linux-gnu amd64 4:13.2.0-7ubuntu1 [5,326 B]
+Get:35 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 cpp amd64 4:13.2.0-7ubuntu1 [22.4 kB]
+Get:36 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libcc1-0 amd64 14.2.0-4ubuntu2~24.04 [48.0 kB]
+Get:37 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libgomp1 amd64 14.2.0-4ubuntu2~24.04 [148 kB]
+Get:38 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libitm1 amd64 14.2.0-4ubuntu2~24.04 [29.7 kB]
+Get:39 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libatomic1 amd64 14.2.0-4ubuntu2~24.04 [10.5 kB]
+Get:40 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libasan8 amd64 14.2.0-4ubuntu2~24.04 [3,031 kB]
+Get:41 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 liblsan0 amd64 14.2.0-4ubuntu2~24.04 [1,322 kB]
+Get:42 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libtsan2 amd64 14.2.0-4ubuntu2~24.04 [2,772 kB]
+Get:43 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libubsan1 amd64 14.2.0-4ubuntu2~24.04 [1,184 kB]
+Get:44 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libhwasan0 amd64 14.2.0-4ubuntu2~24.04 [1,641 kB]
+Get:45 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libquadmath0 amd64 14.2.0-4ubuntu2~24.04 [153 kB]
+Get:46 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libgcc-13-dev amd64 13.3.0-6ubuntu2~24.04 [2,681 kB]
+Get:47 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 gcc-13-x86-64-linux-gnu amd64 13.3.0-6ubuntu2~24.04 [21.1 MB]
+Get:48 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 gcc-13 amd64 13.3.0-6ubuntu2~24.04 [494 kB]
+Get:49 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 gcc-x86-64-linux-gnu amd64 4:13.2.0-7ubuntu1 [1,212 B]
+Get:50 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 gcc amd64 4:13.2.0-7ubuntu1 [5,018 B]
+Get:51 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libstdc++-13-dev amd64 13.3.0-6ubuntu2~24.04 [2,420 kB]
+Get:52 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 g++-13-x86-64-linux-gnu amd64 13.3.0-6ubuntu2~24.04 [12.2 MB]
+Get:53 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 g++-13 amd64 13.3.0-6ubuntu2~24.04 [16.1 kB]
+Get:54 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 g++-x86-64-linux-gnu amd64 4:13.2.0-7ubuntu1 [964 B]
+Get:55 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 g++ amd64 4:13.2.0-7ubuntu1 [1,100 B]
+Get:56 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 make amd64 4.3-4.1build2 [180 kB]
+Get:57 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libdpkg-perl all 1.22.6ubuntu6.5 [269 kB]
+Get:58 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 bzip2 amd64 1.0.8-5.1build0.1 [34.5 kB]
+Get:59 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 lto-disabled-list all 47 [12.4 kB]
+Get:60 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 dpkg-dev all 1.22.6ubuntu6.5 [1,074 kB]
+Get:61 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 build-essential amd64 12.10ubuntu1 [4,928 B]
+Get:62 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 python3-pyasyncore all 1.0.2-2 [10.1 kB]
+Get:63 https://mirror.hetzner.com/ubuntu/packages noble-updates/universe amd64 fail2ban all 1.0.2-3ubuntu0.1 [409 kB]
+Get:64 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libfakeroot amd64 1.33-1 [32.4 kB]
+Get:65 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 fakeroot amd64 1.33-1 [67.2 kB]
+Get:66 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 fonts-dejavu-mono all 2.37-8 [502 kB]
+Get:67 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 fonts-dejavu-core all 2.37-8 [835 kB]
+Get:68 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 fontconfig-config amd64 2.15.0-1.1ubuntu2 [37.3 kB]
+Get:69 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 javascript-common all 11+nmu1 [5,936 B]
+Get:70 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libalgorithm-diff-perl all 1.201-1 [41.8 kB]
+Get:71 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libalgorithm-diff-xs-perl amd64 0.04-8build3 [11.2 kB]
+Get:72 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libalgorithm-merge-perl all 0.08-5 [11.4 kB]
+Get:73 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libaom3 amd64 3.8.2-2ubuntu0.1 [1,941 kB]
+Get:74 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libfontconfig1 amd64 2.15.0-1.1ubuntu2 [139 kB]
+Get:75 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libsharpyuv0 amd64 1.3.2-0.4build3 [15.8 kB]
+Get:76 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libheif-plugin-aomdec amd64 1.17.6-1ubuntu4.1 [10.4 kB]
+Get:77 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libde265-0 amd64 1.0.15-1build3 [166 kB]
+Get:78 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libheif-plugin-libde265 amd64 1.17.6-1ubuntu4.1 [8,176 B]
+Get:79 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libheif1 amd64 1.17.6-1ubuntu4.1 [275 kB]
+Get:80 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libjpeg-turbo8 amd64 2.1.5-2ubuntu2 [150 kB]
+Get:81 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libjpeg8 amd64 8c-2ubuntu11 [2,148 B]
+Get:82 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libdeflate0 amd64 1.19-1build1.1 [43.9 kB]
+Get:83 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libjbig0 amd64 2.1-6.1ubuntu2 [29.7 kB]
+Get:84 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 liblerc4 amd64 4.0.0+ds-4ubuntu2 [179 kB]
+Get:85 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libwebp7 amd64 1.3.2-0.4build3 [230 kB]
+Get:86 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libtiff6 amd64 4.5.1+git230720-4ubuntu2.4 [199 kB]
+Get:87 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libxpm4 amd64 1:3.5.17-1build2 [36.5 kB]
+Get:88 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libgd3 amd64 2.3.3-9ubuntu5 [128 kB]
+Get:89 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libc-devtools amd64 2.39-0ubuntu8.6 [29.3 kB]
+Get:90 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libexpat1-dev amd64 2.6.1-2ubuntu0.3 [140 kB]
+Get:91 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libfile-fcntllock-perl amd64 0.22-4ubuntu5 [30.7 kB]
+Get:92 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libheif-plugin-aomenc amd64 1.17.6-1ubuntu4.1 [14.7 kB]
+Get:93 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libjs-jquery all 3.6.1+dfsg+~3.5.14-1 [328 kB]
+Get:94 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libjs-underscore all 1.13.4~dfsg+~1.11.4-3 [118 kB]
+Get:95 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libjs-sphinxdoc all 7.2.6-6 [149 kB]
+Get:96 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 zlib1g-dev amd64 1:1.3.dfsg-3.1ubuntu2.1 [894 kB]
+Get:97 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpython3.12-dev amd64 3.12.3-1ubuntu0.8 [5,677 kB]
+Get:98 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpython3-dev amd64 3.12.3-0ubuntu2 [10.3 kB]
+Get:99 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 linux-tools-common all 6.8.0-86.87 [772 kB]
+Get:100 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 manpages-dev all 6.7-2 [2,013 kB]
+Get:101 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 nginx-common all 1.24.0-2ubuntu7.5 [43.4 kB]
+Get:102 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 nginx amd64 1.24.0-2ubuntu7.5 [520 kB]
+Get:103 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 python3-josepy all 1.14.0-1 [22.1 kB]
+Get:104 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 python3-rfc3339 all 1.1-4 [6,744 B]
+Get:105 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 python3-acme all 2.9.0-1 [48.5 kB]
+Get:106 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 python3-configargparse all 1.7-1 [31.7 kB]
+Get:107 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 python3-parsedatetime all 2.6-3 [32.8 kB]
+Get:108 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 python3-certbot all 2.9.0-1 [267 kB]
+Get:109 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 certbot all 2.9.0-1 [89.2 kB]
+Get:110 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 python3-certbot-nginx all 2.9.0-1 [66.0 kB]
+Get:111 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 python3.12-dev amd64 3.12.3-1ubuntu0.8 [498 kB]
+Get:112 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 python3-dev amd64 3.12.3-0ubuntu2 [26.7 kB]
+Get:113 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 python3-icu amd64 2.12-1build2 [534 kB]
+Get:114 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 python3-wheel all 0.42.0-2 [53.1 kB]
+Get:115 https://mirror.hetzner.com/ubuntu/packages noble-updates/universe amd64 python3-pip all 24.0+dfsg-1ubuntu1.3 [1,320 kB]
+Get:116 https://mirror.hetzner.com/ubuntu/packages noble-updates/universe amd64 python3-pip-whl all 24.0+dfsg-1ubuntu1.3 [1,707 kB]
+Get:117 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 python3-pyinotify all 0.9.6-2ubuntu1 [25.0 kB]
+Get:118 https://mirror.hetzner.com/ubuntu/packages noble-updates/universe amd64 python3-setuptools-whl all 68.1.2-2ubuntu1.2 [716 kB]
+Get:119 https://mirror.hetzner.com/ubuntu/packages noble-updates/universe amd64 python3.12-venv amd64 3.12.3-1ubuntu0.8 [5,678 B]
+Get:120 https://mirror.hetzner.com/ubuntu/packages noble-updates/universe amd64 python3-venv amd64 3.12.3-0ubuntu2 [1,034 B]
+Get:121 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 sqlite3 amd64 3.45.1-1ubuntu2.5 [144 kB]
+Get:122 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 whois amd64 5.5.22 [51.7 kB]
+Preconfiguring packages ...
+Fetched 112 MB in 1s (109 MB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 38532 files and directories currently installed.)
+Preparing to unpack .../dpkg_1.22.6ubuntu6.5_amd64.deb ...
+Unpacking dpkg (1.22.6ubuntu6.5) over (1.22.6ubuntu6.1) ...
+Setting up dpkg (1.22.6ubuntu6.5) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 38532 files and directories currently installed.)
+Preparing to unpack .../libc6_2.39-0ubuntu8.6_amd64.deb ...
+Unpacking libc6:amd64 (2.39-0ubuntu8.6) over (2.39-0ubuntu8.5) ...
+Setting up libc6:amd64 (2.39-0ubuntu8.6) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 38532 files and directories currently installed.)
+Preparing to unpack .../libc-bin_2.39-0ubuntu8.6_amd64.deb ...
+Unpacking libc-bin (2.39-0ubuntu8.6) over (2.39-0ubuntu8.5) ...
+Setting up libc-bin (2.39-0ubuntu8.6) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 38532 files and directories currently installed.)
+Preparing to unpack .../000-libpython3.12t64_3.12.3-1ubuntu0.8_amd64.deb ...
+Unpacking libpython3.12t64:amd64 (3.12.3-1ubuntu0.8) over (3.12.3-1ubuntu0.7) ...
+Preparing to unpack .../001-python3.12_3.12.3-1ubuntu0.8_amd64.deb ...
+Unpacking python3.12 (3.12.3-1ubuntu0.8) over (3.12.3-1ubuntu0.7) ...
+Preparing to unpack .../002-libpython3.12-stdlib_3.12.3-1ubuntu0.8_amd64.deb ...
+Unpacking libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.8) over (3.12.3-1ubuntu0.7) ...
+Preparing to unpack .../003-python3.12-minimal_3.12.3-1ubuntu0.8_amd64.deb ...
+Unpacking python3.12-minimal (3.12.3-1ubuntu0.8) over (3.12.3-1ubuntu0.7) ...
+Preparing to unpack .../004-libpython3.12-minimal_3.12.3-1ubuntu0.8_amd64.deb ...
+Unpacking libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.8) over (3.12.3-1ubuntu0.7) ...
+Preparing to unpack .../005-libsqlite3-0_3.45.1-1ubuntu2.5_amd64.deb ...
+Unpacking libsqlite3-0:amd64 (3.45.1-1ubuntu2.5) over (3.45.1-1ubuntu2.4) ...
+Preparing to unpack .../006-locales_2.39-0ubuntu8.6_all.deb ...
+Unpacking locales (2.39-0ubuntu8.6) over (2.39-0ubuntu8.5) ...
+Selecting previously unselected package libxau6:amd64.
+Preparing to unpack .../007-libxau6_1%3a1.0.9-1build6_amd64.deb ...
+Unpacking libxau6:amd64 (1:1.0.9-1build6) ...
+Selecting previously unselected package libxdmcp6:amd64.
+Preparing to unpack .../008-libxdmcp6_1%3a1.1.3-0ubuntu6_amd64.deb ...
+Unpacking libxdmcp6:amd64 (1:1.1.3-0ubuntu6) ...
+Selecting previously unselected package libxcb1:amd64.
+Preparing to unpack .../009-libxcb1_1.15-1ubuntu2_amd64.deb ...
+Unpacking libxcb1:amd64 (1.15-1ubuntu2) ...
+Selecting previously unselected package libx11-data.
+Preparing to unpack .../010-libx11-data_2%3a1.8.7-1build1_all.deb ...
+Unpacking libx11-data (2:1.8.7-1build1) ...
+Selecting previously unselected package libx11-6:amd64.
+Preparing to unpack .../011-libx11-6_2%3a1.8.7-1build1_amd64.deb ...
+Unpacking libx11-6:amd64 (2:1.8.7-1build1) ...
+Selecting previously unselected package binutils-common:amd64.
+Preparing to unpack .../012-binutils-common_2.42-4ubuntu2.5_amd64.deb ...
+Unpacking binutils-common:amd64 (2.42-4ubuntu2.5) ...
+Selecting previously unselected package libsframe1:amd64.
+Preparing to unpack .../013-libsframe1_2.42-4ubuntu2.5_amd64.deb ...
+Unpacking libsframe1:amd64 (2.42-4ubuntu2.5) ...
+Selecting previously unselected package libbinutils:amd64.
+Preparing to unpack .../014-libbinutils_2.42-4ubuntu2.5_amd64.deb ...
+Unpacking libbinutils:amd64 (2.42-4ubuntu2.5) ...
+Selecting previously unselected package libctf-nobfd0:amd64.
+Preparing to unpack .../015-libctf-nobfd0_2.42-4ubuntu2.5_amd64.deb ...
+Unpacking libctf-nobfd0:amd64 (2.42-4ubuntu2.5) ...
+Selecting previously unselected package libctf0:amd64.
+Preparing to unpack .../016-libctf0_2.42-4ubuntu2.5_amd64.deb ...
+Unpacking libctf0:amd64 (2.42-4ubuntu2.5) ...
+Selecting previously unselected package libgprofng0:amd64.
+Preparing to unpack .../017-libgprofng0_2.42-4ubuntu2.5_amd64.deb ...
+Unpacking libgprofng0:amd64 (2.42-4ubuntu2.5) ...
+Selecting previously unselected package binutils-x86-64-linux-gnu.
+Preparing to unpack .../018-binutils-x86-64-linux-gnu_2.42-4ubuntu2.5_amd64.deb ...
+Unpacking binutils-x86-64-linux-gnu (2.42-4ubuntu2.5) ...
+Selecting previously unselected package binutils.
+Preparing to unpack .../019-binutils_2.42-4ubuntu2.5_amd64.deb ...
+Unpacking binutils (2.42-4ubuntu2.5) ...
+Selecting previously unselected package libc-dev-bin.
+Preparing to unpack .../020-libc-dev-bin_2.39-0ubuntu8.6_amd64.deb ...
+Unpacking libc-dev-bin (2.39-0ubuntu8.6) ...
+Selecting previously unselected package linux-libc-dev:amd64.
+Preparing to unpack .../021-linux-libc-dev_6.8.0-86.87_amd64.deb ...
+Unpacking linux-libc-dev:amd64 (6.8.0-86.87) ...
+Selecting previously unselected package libcrypt-dev:amd64.
+Preparing to unpack .../022-libcrypt-dev_1%3a4.4.36-4build1_amd64.deb ...
+Unpacking libcrypt-dev:amd64 (1:4.4.36-4build1) ...
+Selecting previously unselected package rpcsvc-proto.
+Preparing to unpack .../023-rpcsvc-proto_1.4.2-0ubuntu7_amd64.deb ...
+Unpacking rpcsvc-proto (1.4.2-0ubuntu7) ...
+Selecting previously unselected package libc6-dev:amd64.
+Preparing to unpack .../024-libc6-dev_2.39-0ubuntu8.6_amd64.deb ...
+Unpacking libc6-dev:amd64 (2.39-0ubuntu8.6) ...
+Selecting previously unselected package gcc-13-base:amd64.
+Preparing to unpack .../025-gcc-13-base_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking gcc-13-base:amd64 (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package libisl23:amd64.
+Preparing to unpack .../026-libisl23_0.26-3build1.1_amd64.deb ...
+Unpacking libisl23:amd64 (0.26-3build1.1) ...
+Selecting previously unselected package libmpc3:amd64.
+Preparing to unpack .../027-libmpc3_1.3.1-1build1.1_amd64.deb ...
+Unpacking libmpc3:amd64 (1.3.1-1build1.1) ...
+Selecting previously unselected package cpp-13-x86-64-linux-gnu.
+Preparing to unpack .../028-cpp-13-x86-64-linux-gnu_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking cpp-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package cpp-13.
+Preparing to unpack .../029-cpp-13_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking cpp-13 (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package cpp-x86-64-linux-gnu.
+Preparing to unpack .../030-cpp-x86-64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking cpp-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package cpp.
+Preparing to unpack .../031-cpp_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking cpp (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package libcc1-0:amd64.
+Preparing to unpack .../032-libcc1-0_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libcc1-0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libgomp1:amd64.
+Preparing to unpack .../033-libgomp1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libgomp1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libitm1:amd64.
+Preparing to unpack .../034-libitm1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libitm1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libatomic1:amd64.
+Preparing to unpack .../035-libatomic1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libatomic1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libasan8:amd64.
+Preparing to unpack .../036-libasan8_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libasan8:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package liblsan0:amd64.
+Preparing to unpack .../037-liblsan0_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking liblsan0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libtsan2:amd64.
+Preparing to unpack .../038-libtsan2_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libtsan2:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libubsan1:amd64.
+Preparing to unpack .../039-libubsan1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libubsan1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libhwasan0:amd64.
+Preparing to unpack .../040-libhwasan0_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libhwasan0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libquadmath0:amd64.
+Preparing to unpack .../041-libquadmath0_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libquadmath0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libgcc-13-dev:amd64.
+Preparing to unpack .../042-libgcc-13-dev_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking libgcc-13-dev:amd64 (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package gcc-13-x86-64-linux-gnu.
+Preparing to unpack .../043-gcc-13-x86-64-linux-gnu_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking gcc-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package gcc-13.
+Preparing to unpack .../044-gcc-13_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking gcc-13 (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package gcc-x86-64-linux-gnu.
+Preparing to unpack .../045-gcc-x86-64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking gcc-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package gcc.
+Preparing to unpack .../046-gcc_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking gcc (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package libstdc++-13-dev:amd64.
+Preparing to unpack .../047-libstdc++-13-dev_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking libstdc++-13-dev:amd64 (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package g++-13-x86-64-linux-gnu.
+Preparing to unpack .../048-g++-13-x86-64-linux-gnu_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking g++-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package g++-13.
+Preparing to unpack .../049-g++-13_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking g++-13 (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package g++-x86-64-linux-gnu.
+Preparing to unpack .../050-g++-x86-64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking g++-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package g++.
+Preparing to unpack .../051-g++_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking g++ (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package make.
+Preparing to unpack .../052-make_4.3-4.1build2_amd64.deb ...
+Unpacking make (4.3-4.1build2) ...
+Selecting previously unselected package libdpkg-perl.
+Preparing to unpack .../053-libdpkg-perl_1.22.6ubuntu6.5_all.deb ...
+Unpacking libdpkg-perl (1.22.6ubuntu6.5) ...
+Selecting previously unselected package bzip2.
+Preparing to unpack .../054-bzip2_1.0.8-5.1build0.1_amd64.deb ...
+Unpacking bzip2 (1.0.8-5.1build0.1) ...
+Selecting previously unselected package lto-disabled-list.
+Preparing to unpack .../055-lto-disabled-list_47_all.deb ...
+Unpacking lto-disabled-list (47) ...
+Selecting previously unselected package dpkg-dev.
+Preparing to unpack .../056-dpkg-dev_1.22.6ubuntu6.5_all.deb ...
+Unpacking dpkg-dev (1.22.6ubuntu6.5) ...
+Selecting previously unselected package build-essential.
+Preparing to unpack .../057-build-essential_12.10ubuntu1_amd64.deb ...
+Unpacking build-essential (12.10ubuntu1) ...
+Selecting previously unselected package python3-pyasyncore.
+Preparing to unpack .../058-python3-pyasyncore_1.0.2-2_all.deb ...
+Unpacking python3-pyasyncore (1.0.2-2) ...
+Selecting previously unselected package fail2ban.
+Preparing to unpack .../059-fail2ban_1.0.2-3ubuntu0.1_all.deb ...
+Unpacking fail2ban (1.0.2-3ubuntu0.1) ...
+Selecting previously unselected package libfakeroot:amd64.
+Preparing to unpack .../060-libfakeroot_1.33-1_amd64.deb ...
+Unpacking libfakeroot:amd64 (1.33-1) ...
+Selecting previously unselected package fakeroot.
+Preparing to unpack .../061-fakeroot_1.33-1_amd64.deb ...
+Unpacking fakeroot (1.33-1) ...
+Selecting previously unselected package fonts-dejavu-mono.
+Preparing to unpack .../062-fonts-dejavu-mono_2.37-8_all.deb ...
+Unpacking fonts-dejavu-mono (2.37-8) ...
+Selecting previously unselected package fonts-dejavu-core.
+Preparing to unpack .../063-fonts-dejavu-core_2.37-8_all.deb ...
+Unpacking fonts-dejavu-core (2.37-8) ...
+Selecting previously unselected package fontconfig-config.
+Preparing to unpack .../064-fontconfig-config_2.15.0-1.1ubuntu2_amd64.deb ...
+Unpacking fontconfig-config (2.15.0-1.1ubuntu2) ...
+Selecting previously unselected package javascript-common.
+Preparing to unpack .../065-javascript-common_11+nmu1_all.deb ...
+Unpacking javascript-common (11+nmu1) ...
+Selecting previously unselected package libalgorithm-diff-perl.
+Preparing to unpack .../066-libalgorithm-diff-perl_1.201-1_all.deb ...
+Unpacking libalgorithm-diff-perl (1.201-1) ...
+Selecting previously unselected package libalgorithm-diff-xs-perl:amd64.
+Preparing to unpack .../067-libalgorithm-diff-xs-perl_0.04-8build3_amd64.deb ...
+Unpacking libalgorithm-diff-xs-perl:amd64 (0.04-8build3) ...
+Selecting previously unselected package libalgorithm-merge-perl.
+Preparing to unpack .../068-libalgorithm-merge-perl_0.08-5_all.deb ...
+Unpacking libalgorithm-merge-perl (0.08-5) ...
+Selecting previously unselected package libaom3:amd64.
+Preparing to unpack .../069-libaom3_3.8.2-2ubuntu0.1_amd64.deb ...
+Unpacking libaom3:amd64 (3.8.2-2ubuntu0.1) ...
+Selecting previously unselected package libfontconfig1:amd64.
+Preparing to unpack .../070-libfontconfig1_2.15.0-1.1ubuntu2_amd64.deb ...
+Unpacking libfontconfig1:amd64 (2.15.0-1.1ubuntu2) ...
+Selecting previously unselected package libsharpyuv0:amd64.
+Preparing to unpack .../071-libsharpyuv0_1.3.2-0.4build3_amd64.deb ...
+Unpacking libsharpyuv0:amd64 (1.3.2-0.4build3) ...
+Selecting previously unselected package libheif-plugin-aomdec:amd64.
+Preparing to unpack .../072-libheif-plugin-aomdec_1.17.6-1ubuntu4.1_amd64.deb ...
+Unpacking libheif-plugin-aomdec:amd64 (1.17.6-1ubuntu4.1) ...
+Selecting previously unselected package libde265-0:amd64.
+Preparing to unpack .../073-libde265-0_1.0.15-1build3_amd64.deb ...
+Unpacking libde265-0:amd64 (1.0.15-1build3) ...
+Selecting previously unselected package libheif-plugin-libde265:amd64.
+Preparing to unpack .../074-libheif-plugin-libde265_1.17.6-1ubuntu4.1_amd64.deb ...
+Unpacking libheif-plugin-libde265:amd64 (1.17.6-1ubuntu4.1) ...
+Selecting previously unselected package libheif1:amd64.
+Preparing to unpack .../075-libheif1_1.17.6-1ubuntu4.1_amd64.deb ...
+Unpacking libheif1:amd64 (1.17.6-1ubuntu4.1) ...
+Selecting previously unselected package libjpeg-turbo8:amd64.
+Preparing to unpack .../076-libjpeg-turbo8_2.1.5-2ubuntu2_amd64.deb ...
+Unpacking libjpeg-turbo8:amd64 (2.1.5-2ubuntu2) ...
+Selecting previously unselected package libjpeg8:amd64.
+Preparing to unpack .../077-libjpeg8_8c-2ubuntu11_amd64.deb ...
+Unpacking libjpeg8:amd64 (8c-2ubuntu11) ...
+Selecting previously unselected package libdeflate0:amd64.
+Preparing to unpack .../078-libdeflate0_1.19-1build1.1_amd64.deb ...
+Unpacking libdeflate0:amd64 (1.19-1build1.1) ...
+Selecting previously unselected package libjbig0:amd64.
+Preparing to unpack .../079-libjbig0_2.1-6.1ubuntu2_amd64.deb ...
+Unpacking libjbig0:amd64 (2.1-6.1ubuntu2) ...
+Selecting previously unselected package liblerc4:amd64.
+Preparing to unpack .../080-liblerc4_4.0.0+ds-4ubuntu2_amd64.deb ...
+Unpacking liblerc4:amd64 (4.0.0+ds-4ubuntu2) ...
+Selecting previously unselected package libwebp7:amd64.
+Preparing to unpack .../081-libwebp7_1.3.2-0.4build3_amd64.deb ...
+Unpacking libwebp7:amd64 (1.3.2-0.4build3) ...
+Selecting previously unselected package libtiff6:amd64.
+Preparing to unpack .../082-libtiff6_4.5.1+git230720-4ubuntu2.4_amd64.deb ...
+Unpacking libtiff6:amd64 (4.5.1+git230720-4ubuntu2.4) ...
+Selecting previously unselected package libxpm4:amd64.
+Preparing to unpack .../083-libxpm4_1%3a3.5.17-1build2_amd64.deb ...
+Unpacking libxpm4:amd64 (1:3.5.17-1build2) ...
+Selecting previously unselected package libgd3:amd64.
+Preparing to unpack .../084-libgd3_2.3.3-9ubuntu5_amd64.deb ...
+Unpacking libgd3:amd64 (2.3.3-9ubuntu5) ...
+Selecting previously unselected package libc-devtools.
+Preparing to unpack .../085-libc-devtools_2.39-0ubuntu8.6_amd64.deb ...
+Unpacking libc-devtools (2.39-0ubuntu8.6) ...
+Selecting previously unselected package libexpat1-dev:amd64.
+Preparing to unpack .../086-libexpat1-dev_2.6.1-2ubuntu0.3_amd64.deb ...
+Unpacking libexpat1-dev:amd64 (2.6.1-2ubuntu0.3) ...
+Selecting previously unselected package libfile-fcntllock-perl.
+Preparing to unpack .../087-libfile-fcntllock-perl_0.22-4ubuntu5_amd64.deb ...
+Unpacking libfile-fcntllock-perl (0.22-4ubuntu5) ...
+Selecting previously unselected package libheif-plugin-aomenc:amd64.
+Preparing to unpack .../088-libheif-plugin-aomenc_1.17.6-1ubuntu4.1_amd64.deb ...
+Unpacking libheif-plugin-aomenc:amd64 (1.17.6-1ubuntu4.1) ...
+Selecting previously unselected package libjs-jquery.
+Preparing to unpack .../089-libjs-jquery_3.6.1+dfsg+~3.5.14-1_all.deb ...
+Unpacking libjs-jquery (3.6.1+dfsg+~3.5.14-1) ...
+Selecting previously unselected package libjs-underscore.
+Preparing to unpack .../090-libjs-underscore_1.13.4~dfsg+~1.11.4-3_all.deb ...
+Unpacking libjs-underscore (1.13.4~dfsg+~1.11.4-3) ...
+Selecting previously unselected package libjs-sphinxdoc.
+Preparing to unpack .../091-libjs-sphinxdoc_7.2.6-6_all.deb ...
+Unpacking libjs-sphinxdoc (7.2.6-6) ...
+Selecting previously unselected package zlib1g-dev:amd64.
+Preparing to unpack .../092-zlib1g-dev_1%3a1.3.dfsg-3.1ubuntu2.1_amd64.deb ...
+Unpacking zlib1g-dev:amd64 (1:1.3.dfsg-3.1ubuntu2.1) ...
+Selecting previously unselected package libpython3.12-dev:amd64.
+Preparing to unpack .../093-libpython3.12-dev_3.12.3-1ubuntu0.8_amd64.deb ...
+Unpacking libpython3.12-dev:amd64 (3.12.3-1ubuntu0.8) ...
+Selecting previously unselected package libpython3-dev:amd64.
+Preparing to unpack .../094-libpython3-dev_3.12.3-0ubuntu2_amd64.deb ...
+Unpacking libpython3-dev:amd64 (3.12.3-0ubuntu2) ...
+Preparing to unpack .../095-linux-tools-common_6.8.0-86.87_all.deb ...
+Unpacking linux-tools-common (6.8.0-86.87) over (6.8.0-71.71) ...
+Selecting previously unselected package manpages-dev.
+Preparing to unpack .../096-manpages-dev_6.7-2_all.deb ...
+Unpacking manpages-dev (6.7-2) ...
+Selecting previously unselected package nginx-common.
+Preparing to unpack .../097-nginx-common_1.24.0-2ubuntu7.5_all.deb ...
+Unpacking nginx-common (1.24.0-2ubuntu7.5) ...
+Selecting previously unselected package nginx.
+Preparing to unpack .../098-nginx_1.24.0-2ubuntu7.5_amd64.deb ...
+Unpacking nginx (1.24.0-2ubuntu7.5) ...
+Selecting previously unselected package python3-josepy.
+Preparing to unpack .../099-python3-josepy_1.14.0-1_all.deb ...
+Unpacking python3-josepy (1.14.0-1) ...
+Selecting previously unselected package python3-rfc3339.
+Preparing to unpack .../100-python3-rfc3339_1.1-4_all.deb ...
+Unpacking python3-rfc3339 (1.1-4) ...
+Selecting previously unselected package python3-acme.
+Preparing to unpack .../101-python3-acme_2.9.0-1_all.deb ...
+Unpacking python3-acme (2.9.0-1) ...
+Selecting previously unselected package python3-configargparse.
+Preparing to unpack .../102-python3-configargparse_1.7-1_all.deb ...
+Unpacking python3-configargparse (1.7-1) ...
+Selecting previously unselected package python3-parsedatetime.
+Preparing to unpack .../103-python3-parsedatetime_2.6-3_all.deb ...
+Unpacking python3-parsedatetime (2.6-3) ...
+Selecting previously unselected package python3-certbot.
+Preparing to unpack .../104-python3-certbot_2.9.0-1_all.deb ...
+Unpacking python3-certbot (2.9.0-1) ...
+Selecting previously unselected package certbot.
+Preparing to unpack .../105-certbot_2.9.0-1_all.deb ...
+Unpacking certbot (2.9.0-1) ...
+Selecting previously unselected package python3-certbot-nginx.
+Preparing to unpack .../106-python3-certbot-nginx_2.9.0-1_all.deb ...
+Unpacking python3-certbot-nginx (2.9.0-1) ...
+Selecting previously unselected package python3.12-dev.
+Preparing to unpack .../107-python3.12-dev_3.12.3-1ubuntu0.8_amd64.deb ...
+Unpacking python3.12-dev (3.12.3-1ubuntu0.8) ...
+Selecting previously unselected package python3-dev.
+Preparing to unpack .../108-python3-dev_3.12.3-0ubuntu2_amd64.deb ...
+Unpacking python3-dev (3.12.3-0ubuntu2) ...
+Selecting previously unselected package python3-icu.
+Preparing to unpack .../109-python3-icu_2.12-1build2_amd64.deb ...
+Unpacking python3-icu (2.12-1build2) ...
+Selecting previously unselected package python3-wheel.
+Preparing to unpack .../110-python3-wheel_0.42.0-2_all.deb ...
+Unpacking python3-wheel (0.42.0-2) ...
+Selecting previously unselected package python3-pip.
+Preparing to unpack .../111-python3-pip_24.0+dfsg-1ubuntu1.3_all.deb ...
+Unpacking python3-pip (24.0+dfsg-1ubuntu1.3) ...
+Selecting previously unselected package python3-pip-whl.
+Preparing to unpack .../112-python3-pip-whl_24.0+dfsg-1ubuntu1.3_all.deb ...
+Unpacking python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+Selecting previously unselected package python3-pyinotify.
+Preparing to unpack .../113-python3-pyinotify_0.9.6-2ubuntu1_all.deb ...
+Unpacking python3-pyinotify (0.9.6-2ubuntu1) ...
+Selecting previously unselected package python3-setuptools-whl.
+Preparing to unpack .../114-python3-setuptools-whl_68.1.2-2ubuntu1.2_all.deb ...
+Unpacking python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+Selecting previously unselected package python3.12-venv.
+Preparing to unpack .../115-python3.12-venv_3.12.3-1ubuntu0.8_amd64.deb ...
+Unpacking python3.12-venv (3.12.3-1ubuntu0.8) ...
+Selecting previously unselected package python3-venv.
+Preparing to unpack .../116-python3-venv_3.12.3-0ubuntu2_amd64.deb ...
+Unpacking python3-venv (3.12.3-0ubuntu2) ...
+Selecting previously unselected package sqlite3.
+Preparing to unpack .../117-sqlite3_3.45.1-1ubuntu2.5_amd64.deb ...
+Unpacking sqlite3 (3.45.1-1ubuntu2.5) ...
+Selecting previously unselected package whois.
+Preparing to unpack .../118-whois_5.5.22_amd64.deb ...
+Unpacking whois (5.5.22) ...
+Setting up javascript-common (11+nmu1) ...
+Setting up python3-configargparse (1.7-1) ...
+Setting up libsharpyuv0:amd64 (1.3.2-0.4build3) ...
+Setting up libaom3:amd64 (3.8.2-2ubuntu0.1) ...
+Setting up manpages-dev (6.7-2) ...
+Setting up libxau6:amd64 (1:1.0.9-1build6) ...
+Setting up libxdmcp6:amd64 (1:1.1.3-0ubuntu6) ...
+Setting up python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+Setting up lto-disabled-list (47) ...
+Setting up libxcb1:amd64 (1.15-1ubuntu2) ...
+Setting up liblerc4:amd64 (4.0.0+ds-4ubuntu2) ...
+Setting up python3-parsedatetime (2.6-3) ...
+Setting up whois (5.5.22) ...
+Setting up python3-icu (2.12-1build2) ...
+Setting up libfile-fcntllock-perl (0.22-4ubuntu5) ...
+Setting up python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+Setting up libalgorithm-diff-perl (1.201-1) ...
+Setting up libsqlite3-0:amd64 (3.45.1-1ubuntu2.5) ...
+Setting up libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.8) ...
+Setting up binutils-common:amd64 (2.42-4ubuntu2.5) ...
+Setting up libdeflate0:amd64 (1.19-1build1.1) ...
+Setting up linux-libc-dev:amd64 (6.8.0-86.87) ...
+Setting up libctf-nobfd0:amd64 (2.42-4ubuntu2.5) ...
+Setting up nginx-common (1.24.0-2ubuntu7.5) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /usr/lib/systemd/system/nginx.service.
+Setting up libgomp1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up bzip2 (1.0.8-5.1build0.1) ...
+Setting up locales (2.39-0ubuntu8.6) ...
+Generating locales (this might take a while)...
+  en_US.UTF-8... done
+Generation complete.
+Setting up python3-wheel (0.42.0-2) ...
+Setting up libjbig0:amd64 (2.1-6.1ubuntu2) ...
+Setting up libsframe1:amd64 (2.42-4ubuntu2.5) ...
+Setting up libfakeroot:amd64 (1.33-1) ...
+Setting up fakeroot (1.33-1) ...
+update-alternatives: using /usr/bin/fakeroot-sysv to provide /usr/bin/fakeroot (fakeroot) in auto mode
+Setting up rpcsvc-proto (1.4.2-0ubuntu7) ...
+Setting up gcc-13-base:amd64 (13.3.0-6ubuntu2~24.04) ...
+Setting up libx11-data (2:1.8.7-1build1) ...
+Setting up make (4.3-4.1build2) ...
+Setting up libquadmath0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up fonts-dejavu-mono (2.37-8) ...
+Setting up libmpc3:amd64 (1.3.1-1build1.1) ...
+Setting up libatomic1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up fonts-dejavu-core (2.37-8) ...
+Setting up python3-pip (24.0+dfsg-1ubuntu1.3) ...
+Setting up libjpeg-turbo8:amd64 (2.1.5-2ubuntu2) ...
+Setting up libdpkg-perl (1.22.6ubuntu6.5) ...
+Setting up libwebp7:amd64 (1.3.2-0.4build3) ...
+Setting up python3-josepy (1.14.0-1) ...
+Setting up libubsan1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libhwasan0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libcrypt-dev:amd64 (1:4.4.36-4build1) ...
+Setting up libasan8:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libx11-6:amd64 (2:1.8.7-1build1) ...
+Setting up libtsan2:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up python3-pyasyncore (1.0.2-2) ...
+Setting up libjs-jquery (3.6.1+dfsg+~3.5.14-1) ...
+Setting up libbinutils:amd64 (2.42-4ubuntu2.5) ...
+Setting up libisl23:amd64 (0.26-3build1.1) ...
+Setting up python3-rfc3339 (1.1-4) ...
+Setting up libde265-0:amd64 (1.0.15-1build3) ...
+Setting up libc-dev-bin (2.39-0ubuntu8.6) ...
+Setting up linux-tools-common (6.8.0-86.87) ...
+Setting up libalgorithm-diff-xs-perl:amd64 (0.04-8build3) ...
+Setting up libcc1-0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up sqlite3 (3.45.1-1ubuntu2.5) ...
+Setting up liblsan0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libitm1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libjs-underscore (1.13.4~dfsg+~1.11.4-3) ...
+Setting up libalgorithm-merge-perl (0.08-5) ...
+Setting up libctf0:amd64 (2.42-4ubuntu2.5) ...
+Setting up libjpeg8:amd64 (8c-2ubuntu11) ...
+Setting up python3.12-minimal (3.12.3-1ubuntu0.8) ...
+Setting up libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.8) ...
+Setting up libxpm4:amd64 (1:3.5.17-1build2) ...
+Setting up nginx (1.24.0-2ubuntu7.5) ...
+ * Upgrading binary nginx
+   ...done.
+Setting up cpp-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04) ...
+Setting up fontconfig-config (2.15.0-1.1ubuntu2) ...
+Setting up fail2ban (1.0.2-3ubuntu0.1) ...
+/usr/lib/python3/dist-packages/fail2ban/tests/fail2banregextestcase.py:224: SyntaxWarning: invalid escape sequence '\s'
+  "1490349000 test failed.dns.ch", "^\s*test <F-ID>\S+</F-ID>"
+/usr/lib/python3/dist-packages/fail2ban/tests/fail2banregextestcase.py:435: SyntaxWarning: invalid escape sequence '\S'
+  '^'+prefix+'<F-ID>User <F-USER>\S+</F-USER></F-ID> not allowed\n'
+/usr/lib/python3/dist-packages/fail2ban/tests/fail2banregextestcase.py:443: SyntaxWarning: invalid escape sequence '\S'
+  '^'+prefix+'User <F-USER>\S+</F-USER> not allowed\n'
+/usr/lib/python3/dist-packages/fail2ban/tests/fail2banregextestcase.py:444: SyntaxWarning: invalid escape sequence '\d'
+  '^'+prefix+'Received disconnect from <F-ID><ADDR> port \d+</F-ID>'
+/usr/lib/python3/dist-packages/fail2ban/tests/fail2banregextestcase.py:451: SyntaxWarning: invalid escape sequence '\s'
+  _test_variants('common', prefix="\s*\S+ sshd\[<F-MLFID>\d+</F-MLFID>\]:\s+")
+/usr/lib/python3/dist-packages/fail2ban/tests/fail2banregextestcase.py:537: SyntaxWarning: invalid escape sequence '\['
+  'common[prefregex="^svc\[<F-MLFID>\d+</F-MLFID>\] connect <F-CONTENT>.+</F-CONTENT>$"'
+/usr/lib/python3/dist-packages/fail2ban/tests/servertestcase.py:1375: SyntaxWarning: invalid escape sequence '\s'
+  "`{ nft -a list chain inet f2b-table f2b-chain | grep -oP '@addr-set-j-w-nft-mp\s+.*\s+\Khandle\s+(\d+)$'; } | while read -r hdl; do`",
+/usr/lib/python3/dist-packages/fail2ban/tests/servertestcase.py:1378: SyntaxWarning: invalid escape sequence '\s'
+  "`{ nft -a list chain inet f2b-table f2b-chain | grep -oP '@addr6-set-j-w-nft-mp\s+.*\s+\Khandle\s+(\d+)$'; } | while read -r hdl; do`",
+/usr/lib/python3/dist-packages/fail2ban/tests/servertestcase.py:1421: SyntaxWarning: invalid escape sequence '\s'
+  "`{ nft -a list chain inet f2b-table f2b-chain | grep -oP '@addr-set-j-w-nft-ap\s+.*\s+\Khandle\s+(\d+)$'; } | while read -r hdl; do`",
+/usr/lib/python3/dist-packages/fail2ban/tests/servertestcase.py:1424: SyntaxWarning: invalid escape sequence '\s'
+  "`{ nft -a list chain inet f2b-table f2b-chain | grep -oP '@addr6-set-j-w-nft-ap\s+.*\s+\Khandle\s+(\d+)$'; } | while read -r hdl; do`",
+Created symlink /etc/systemd/system/multi-user.target.wants/fail2ban.service → /usr/lib/systemd/system/fail2ban.service.
+Setting up python3.12 (3.12.3-1ubuntu0.8) ...
+Setting up python3-pyinotify (0.9.6-2ubuntu1) ...
+Setting up libpython3.12t64:amd64 (3.12.3-1ubuntu0.8) ...
+Setting up libgprofng0:amd64 (2.42-4ubuntu2.5) ...
+Setting up python3-acme (2.9.0-1) ...
+Setting up python3-certbot (2.9.0-1) ...
+Setting up libjs-sphinxdoc (7.2.6-6) ...
+Setting up certbot (2.9.0-1) ...
+Created symlink /etc/systemd/system/timers.target.wants/certbot.timer → /usr/lib/systemd/system/certbot.timer.
+Setting up libgcc-13-dev:amd64 (13.3.0-6ubuntu2~24.04) ...
+Setting up libtiff6:amd64 (4.5.1+git230720-4ubuntu2.4) ...
+Setting up libc6-dev:amd64 (2.39-0ubuntu8.6) ...
+Setting up libstdc++-13-dev:amd64 (13.3.0-6ubuntu2~24.04) ...
+Setting up binutils-x86-64-linux-gnu (2.42-4ubuntu2.5) ...
+Setting up cpp-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Setting up cpp-13 (13.3.0-6ubuntu2~24.04) ...
+Setting up python3.12-venv (3.12.3-1ubuntu0.8) ...
+Setting up gcc-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04) ...
+Setting up python3-certbot-nginx (2.9.0-1) ...
+Setting up binutils (2.42-4ubuntu2.5) ...
+Setting up dpkg-dev (1.22.6ubuntu6.5) ...
+Setting up libexpat1-dev:amd64 (2.6.1-2ubuntu0.3) ...
+Setting up python3-venv (3.12.3-0ubuntu2) ...
+Setting up gcc-13 (13.3.0-6ubuntu2~24.04) ...
+Setting up zlib1g-dev:amd64 (1:1.3.dfsg-3.1ubuntu2.1) ...
+Setting up cpp (4:13.2.0-7ubuntu1) ...
+Setting up g++-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04) ...
+Setting up gcc-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Setting up libpython3.12-dev:amd64 (3.12.3-1ubuntu0.8) ...
+Setting up gcc (4:13.2.0-7ubuntu1) ...
+Setting up python3.12-dev (3.12.3-1ubuntu0.8) ...
+Setting up g++-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Setting up g++-13 (13.3.0-6ubuntu2~24.04) ...
+Setting up libpython3-dev:amd64 (3.12.3-0ubuntu2) ...
+Setting up python3-dev (3.12.3-0ubuntu2) ...
+Setting up g++ (4:13.2.0-7ubuntu1) ...
+update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode
+Setting up build-essential (12.10ubuntu1) ...
+Setting up libheif-plugin-aomdec:amd64 (1.17.6-1ubuntu4.1) ...
+Setting up libheif1:amd64 (1.17.6-1ubuntu4.1) ...
+Setting up libheif-plugin-libde265:amd64 (1.17.6-1ubuntu4.1) ...
+Setting up libheif-plugin-aomenc:amd64 (1.17.6-1ubuntu4.1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+Processing triggers for ufw (0.36.2-6) ...
+Processing triggers for systemd (255.4-1ubuntu8.10) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for sgml-base (1.31) ...
+Setting up libfontconfig1:amd64 (2.15.0-1.1ubuntu2) ...
+Setting up libgd3:amd64 (2.3.3-9ubuntu5) ...
+Setting up libc-devtools (2.39-0ubuntu8.6) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+
+Running kernel seems to be up-to-date.
+
+Restarting services...
+ systemctl restart atd.service cron.service multipathd.service packagekit.service polkit.service qemu-guest-agent.service rsyslog.service ssh.service systemd-journald.service systemd-networkd.service systemd-resolved.service systemd-timesyncd.service systemd-udevd.service
+
+Service restarts being deferred:
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart serial-getty@ttyS0.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ root @ session #1: login[961]
+ root @ session #11: sshd[1721]
+ root @ user manager service: systemd[1210]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+System dependencies installed
+[0;32m[2025-10-30 03:39:26][0m ✓ System dependencies installed
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 6/12: Setting Up Python Environment[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:38:28 AM UTC 2025
+
+  System load:  0.04              Processes:             141
+  Usage of /:   3.0% of 37.23GB   Users logged in:       1
+  Memory usage: 5%                IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+46 updates can be applied immediately.
+20 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+Creating Python virtual environment...
+Activating virtual environment...
+Upgrading pip...
+Requirement already satisfied: pip in ./venv/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Downloading pip-25.3-py3-none-any.whl.metadata (4.7 kB)
+Downloading pip-25.3-py3-none-any.whl (1.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 21.2 MB/s eta 0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-25.3
+Installing Python dependencies...
+Collecting aiohttp>=3.8.0 (from -r requirements.txt (line 1))
+  Downloading aiohttp-3.13.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
+Collecting requests>=2.28.0 (from -r requirements.txt (line 2))
+  Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+Collecting python-dotenv>=1.0.0 (from -r requirements.txt (line 3))
+  Downloading python_dotenv-1.2.1-py3-none-any.whl.metadata (25 kB)
+Collecting websockets>=11.0.0 (from -r requirements.txt (line 4))
+  Downloading websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB)
+Collecting flask-socketio>=5.3.0 (from -r requirements.txt (line 5))
+  Downloading Flask_SocketIO-5.5.1-py3-none-any.whl.metadata (2.6 kB)
+Collecting socketio>=0.2.1 (from -r requirements.txt (line 6))
+  Downloading socketio-0.2.1.tar.gz (6.1 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting eventlet>=0.33.0 (from -r requirements.txt (line 7))
+  Downloading eventlet-0.40.3-py3-none-any.whl.metadata (5.4 kB)
+Collecting flask>=2.3.0 (from -r requirements.txt (line 8))
+  Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+Collecting flask-cors>=4.0.0 (from -r requirements.txt (line 9))
+  Downloading flask_cors-6.0.1-py3-none-any.whl.metadata (5.3 kB)
+Collecting psutil>=5.9.0 (from -r requirements.txt (line 10))
+  Downloading psutil-7.1.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (23 kB)
+Collecting pynvml>=11.5.0 (from -r requirements.txt (line 11))
+  Downloading pynvml-13.0.1-py3-none-any.whl.metadata (5.6 kB)
+Collecting aiohappyeyeballs>=2.5.0 (from aiohttp>=3.8.0->-r requirements.txt (line 1))
+  Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl.metadata (5.9 kB)
+Collecting aiosignal>=1.4.0 (from aiohttp>=3.8.0->-r requirements.txt (line 1))
+  Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting attrs>=17.3.0 (from aiohttp>=3.8.0->-r requirements.txt (line 1))
+  Downloading attrs-25.4.0-py3-none-any.whl.metadata (10 kB)
+Collecting frozenlist>=1.1.1 (from aiohttp>=3.8.0->-r requirements.txt (line 1))
+  Downloading frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+Collecting multidict<7.0,>=4.5 (from aiohttp>=3.8.0->-r requirements.txt (line 1))
+  Downloading multidict-6.7.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.3 kB)
+Collecting propcache>=0.2.0 (from aiohttp>=3.8.0->-r requirements.txt (line 1))
+  Downloading propcache-0.4.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (13 kB)
+Collecting yarl<2.0,>=1.17.0 (from aiohttp>=3.8.0->-r requirements.txt (line 1))
+  Downloading yarl-1.22.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (75 kB)
+Collecting idna>=2.0 (from yarl<2.0,>=1.17.0->aiohttp>=3.8.0->-r requirements.txt (line 1))
+  Downloading idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+Collecting charset_normalizer<4,>=2 (from requests>=2.28.0->-r requirements.txt (line 2))
+  Downloading charset_normalizer-3.4.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (37 kB)
+Collecting urllib3<3,>=1.21.1 (from requests>=2.28.0->-r requirements.txt (line 2))
+  Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting certifi>=2017.4.17 (from requests>=2.28.0->-r requirements.txt (line 2))
+  Downloading certifi-2025.10.5-py3-none-any.whl.metadata (2.5 kB)
+Collecting python-socketio>=5.12.0 (from flask-socketio>=5.3.0->-r requirements.txt (line 5))
+  Downloading python_socketio-5.14.3-py3-none-any.whl.metadata (3.2 kB)
+Collecting setuptools==3.3 (from socketio>=0.2.1->-r requirements.txt (line 6))
+  Downloading setuptools-3.3-py2.py3-none-any.whl.metadata (76 kB)
+Collecting netifaces==0.10.6 (from socketio>=0.2.1->-r requirements.txt (line 6))
+  Downloading netifaces-0.10.6.tar.gz (25 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting dnspython>=1.15.0 (from eventlet>=0.33.0->-r requirements.txt (line 7))
+  Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting greenlet>=1.0 (from eventlet>=0.33.0->-r requirements.txt (line 7))
+  Downloading greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (4.1 kB)
+Collecting blinker>=1.9.0 (from flask>=2.3.0->-r requirements.txt (line 8))
+  Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+Collecting click>=8.1.3 (from flask>=2.3.0->-r requirements.txt (line 8))
+  Downloading click-8.3.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting itsdangerous>=2.2.0 (from flask>=2.3.0->-r requirements.txt (line 8))
+  Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+Collecting jinja2>=3.1.2 (from flask>=2.3.0->-r requirements.txt (line 8))
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting markupsafe>=2.1.1 (from flask>=2.3.0->-r requirements.txt (line 8))
+  Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting werkzeug>=3.1.0 (from flask>=2.3.0->-r requirements.txt (line 8))
+  Downloading werkzeug-3.1.3-py3-none-any.whl.metadata (3.7 kB)
+Collecting nvidia-ml-py>=12.0.0 (from pynvml>=11.5.0->-r requirements.txt (line 11))
+  Downloading nvidia_ml_py-13.580.82-py3-none-any.whl.metadata (9.6 kB)
+Collecting typing-extensions>=4.2 (from aiosignal>=1.4.0->aiohttp>=3.8.0->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting bidict>=0.21.0 (from python-socketio>=5.12.0->flask-socketio>=5.3.0->-r requirements.txt (line 5))
+  Downloading bidict-0.23.1-py3-none-any.whl.metadata (8.7 kB)
+Collecting python-engineio>=4.11.0 (from python-socketio>=5.12.0->flask-socketio>=5.3.0->-r requirements.txt (line 5))
+  Downloading python_engineio-4.12.3-py3-none-any.whl.metadata (2.2 kB)
+Collecting simple-websocket>=0.10.0 (from python-engineio>=4.11.0->python-socketio>=5.12.0->flask-socketio>=5.3.0->-r requirements.txt (line 5))
+  Downloading simple_websocket-1.1.0-py3-none-any.whl.metadata (1.5 kB)
+Collecting wsproto (from simple-websocket>=0.10.0->python-engineio>=4.11.0->python-socketio>=5.12.0->flask-socketio>=5.3.0->-r requirements.txt (line 5))
+  Downloading wsproto-1.2.0-py3-none-any.whl.metadata (5.6 kB)
+Collecting h11<1,>=0.9.0 (from wsproto->simple-websocket>=0.10.0->python-engineio>=4.11.0->python-socketio>=5.12.0->flask-socketio>=5.3.0->-r requirements.txt (line 5))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Downloading aiohttp-3.13.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 20.2 MB/s  0:00:00
+Downloading multidict-6.7.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (256 kB)
+Downloading yarl-1.22.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (377 kB)
+Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+Downloading charset_normalizer-3.4.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+Downloading idna-3.11-py3-none-any.whl (71 kB)
+Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+Downloading python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+Downloading websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (182 kB)
+Downloading Flask_SocketIO-5.5.1-py3-none-any.whl (18 kB)
+Downloading setuptools-3.3-py2.py3-none-any.whl (545 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 545.3/545.3 kB 22.8 MB/s  0:00:00
+Downloading eventlet-0.40.3-py3-none-any.whl (364 kB)
+Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+Downloading flask_cors-6.0.1-py3-none-any.whl (13 kB)
+Downloading psutil-7.1.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (258 kB)
+Downloading pynvml-13.0.1-py3-none-any.whl (28 kB)
+Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl (15 kB)
+Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Downloading attrs-25.4.0-py3-none-any.whl (67 kB)
+Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+Downloading certifi-2025.10.5-py3-none-any.whl (163 kB)
+Downloading click-8.3.0-py3-none-any.whl (107 kB)
+Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+Downloading frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (242 kB)
+Downloading greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (607 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 607.6/607.6 kB 32.5 MB/s  0:00:00
+Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading nvidia_ml_py-13.580.82-py3-none-any.whl (49 kB)
+Downloading propcache-0.4.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (221 kB)
+Downloading python_socketio-5.14.3-py3-none-any.whl (79 kB)
+Downloading bidict-0.23.1-py3-none-any.whl (32 kB)
+Downloading python_engineio-4.12.3-py3-none-any.whl (59 kB)
+Downloading simple_websocket-1.1.0-py3-none-any.whl (13 kB)
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Downloading werkzeug-3.1.3-py3-none-any.whl (224 kB)
+Downloading wsproto-1.2.0-py3-none-any.whl (24 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Building wheels for collected packages: socketio, netifaces
+  Building wheel for socketio (pyproject.toml): started
+  Building wheel for socketio (pyproject.toml): finished with status 'done'
+  Created wheel for socketio: filename=socketio-0.2.1-py3-none-any.whl size=7681 sha256=7067eadc885dbb3910f078cde08778a7df2669aacfcdad9f8217230bc0011154
+  Stored in directory: /root/.cache/pip/wheels/18/e6/29/a993ae56cc69cc32e045ab5dde721bc3f9359a5f83544d1eb9
+  Building wheel for netifaces (pyproject.toml): started
+  Building wheel for netifaces (pyproject.toml): finished with status 'done'
+  Created wheel for netifaces: filename=netifaces-0.10.6-cp312-cp312-linux_x86_64.whl size=35424 sha256=51a366fc1226d5d2d9a0b383bd4f89d8a7dad5ab1b9d62a0c42f92a451740a1a
+  Stored in directory: /root/.cache/pip/wheels/5c/ca/9b/965fdff1ad912c4e210bd2dcaeb5087436314b3f6ab0320913
+Successfully built socketio netifaces
+Installing collected packages: setuptools, nvidia-ml-py, netifaces, websockets, urllib3, typing-extensions, socketio, python-dotenv, pynvml, psutil, propcache, multidict, markupsafe, itsdangerous, idna, h11, greenlet, frozenlist, dnspython, click, charset_normalizer, certifi, blinker, bidict, attrs, aiohappyeyeballs, yarl, wsproto, werkzeug, requests, jinja2, eventlet, aiosignal, simple-websocket, flask, aiohttp, python-engineio, flask-cors, python-socketio, flask-socketio
+
+Successfully installed aiohappyeyeballs-2.6.1 aiohttp-3.13.2 aiosignal-1.4.0 attrs-25.4.0 bidict-0.23.1 blinker-1.9.0 certifi-2025.10.5 charset_normalizer-3.4.4 click-8.3.0 dnspython-2.8.0 eventlet-0.40.3 flask-3.1.2 flask-cors-6.0.1 flask-socketio-5.5.1 frozenlist-1.8.0 greenlet-3.2.4 h11-0.16.0 idna-3.11 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.3 multidict-6.7.0 netifaces-0.10.6 nvidia-ml-py-13.580.82 propcache-0.4.1 psutil-7.1.2 pynvml-13.0.1 python-dotenv-1.2.1 python-engineio-4.12.3 python-socketio-5.14.3 requests-2.32.5 setuptools-3.3 simple-websocket-1.1.0 socketio-0.2.1 typing-extensions-4.15.0 urllib3-2.5.0 websockets-15.0.1 werkzeug-3.1.3 wsproto-1.2.0 yarl-1.22.0
+Python environment ready
+[0;32m[2025-10-30 03:39:42][0m ✓ Python environment configured
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 7/12: Generating SSL Certificate[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:39:43 AM UTC 2025
+
+  System load:  0.77              Processes:             154
+  Usage of /:   5.2% of 37.23GB   Users logged in:       1
+  Memory usage: 7%                IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+46 updates can be applied immediately.
+20 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+Generating SSL certificate...
+[0;32m[2025-10-30 02:39:43][0m Creating SSL certificate directory...
+[0;32m[2025-10-30 02:39:43][0m Generating self-signed SSL certificate...
+........+..........+......+...+..+...+.+..+....+........+......+......+....+......+.....+.........+.......+.....+....+.....+.+...............+.....+....+........+.+..+.......+...+..+.......+...+..+.+..+...............+.+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*..+......................+......+..+..........+..+.+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*......+....+........+.......+......+...........+.........+.+........+.........................+..+.+...+..+.......+......+......+........+...+..........+........+..........+...........+...+................+............+..+...+............+......+.......+...+.....................+.......................+.......+....................+......+.............+..+..........+........+......+....+...........+.+........+....+..+...............+.+........+..........+......+...+...........+.+........+...+.......+..+.+...+......+...........+...+.+........+...+...+.+..............+....+.................+........................+...............+......................+.........+.....+....+.....+.......+..+...............+...+...+.+...............+...+..+....+............+...+..+....+.....+.+..............+.............+...+...+......+...........+.......+...+..+.+..+....+.......................+.......+...+..+.+..+......+...............+.......+.....+......................+.....+.+.....+......+...............+.....................+.......+..+.+.....+.......+....................+.+..+..................+................+.....+..........+...+............+......+.....+...+....+..+.........................+...........+....+..............+......+...+.+......+..............+.+...+..+.........+....+......+..+....+...+............+...........+...+.......+..+......+.........+.+............+..+......+..........+...........+........................+.+...+...+...+......+...+............+......+..+.+.....+.+...+..+...+......+.......+.....+.........+.............+..+................+...+..+............+.+......+.........+.....+.+...+.....+...+....+.........+............+.........+.........+.....+....+........+...+..........+.....+.+........+............+...+..........+...........................+...+..+....+..............+...............+......+.......+..+...+....+......+.....+.............+.................+.......+..+............................+...+...+..............+.+.........+..+...+............+...................+......+...+.....+.......+........+......+......+...+.+.................+.......+...+........+...............+................+.........+.................+.......+..+.........+......+...+......+.+.....................+.....+.......+............+.........+......+........+.+.........+...+...+...........+...+.+......+......+.....+.......+......+..............+.+..+.........+....+....................+.......+...+......+...........+.........+.........+............+..........+...+......+...+........+....+......+..+............+.+..+......+.+..............+.+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.+......+.+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*..+.......+...+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*...............+......+....+........+............+......+...+..........+..+.......+............+...+...........+.+...+..+...............+...+.+......+...+..+...+.......+.....+......+.........+...+.......+.......................+.......+.....................+........+......+...+.............+...+.........+......+...............+.....+....+......+.....+......+...+............+...+...............+......+......+......+...+......+.+.................+...+...+....+...+...+.........+......+.....+......+.+..+............+.............+...+...+..+...+............+.......+..+.........+.+...+............+......+..+.+.....+......+.+..+.............+..+.......+.....+....+.....+.......+.........+........+.............+.........+........+.+............+..+..........+.....+.......+...+........+.......+...+....................+...+.......+..+...+.............+....................+...............+.....................+.+..............................+..+.+..+....+...+..+.....................+...................+.........+.....+....+.....+..........+......+............+..+...+...+....+..+.........+.+..............+.........+.........................+.....+...+...................+...+............+.........+.....+..........+..+.........+.............+..+....+..+.........+....+....................................+....................+......+....+...+..+.+..+.....................+.........................+............+...+......+.....+...+............+.........+.........+...+...+.......+.....+.......+...+..+...+.........+....+..+.............+.....+.+...+..+................+............+...+..............+.+............+......+...........+.........+.+...+.....+.......+...............+.......................+.......+...+...+........+....+..+.+..+.......+...+...........+.........+......+....+...+........+.+...........+............+......+......................+............+.....+.+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----
+[0;32m[2025-10-30 02:39:47][0m SSL certificate created successfully!
+
+[0;32m[2025-10-30 02:39:47][0m Certificate: /etc/nginx/ssl/zion.crt
+[0;32m[2025-10-30 02:39:47][0m Private Key: /etc/nginx/ssl/zion.key
+[0;32m[2025-10-30 02:39:47][0m Valid for: 365 days
+
+[1;33m[2025-10-30 02:39:47] WARNING:[0m This is a SELF-SIGNED certificate for TESTING only!
+[1;33m[2025-10-30 02:39:47] WARNING:[0m For production, use Let's Encrypt or a commercial CA.
+
+[0;32m[2025-10-30 02:39:47][0m To view certificate details:
+  openssl x509 -in /etc/nginx/ssl/zion.crt -text -noout
+
+[0;32m[2025-10-30 03:39:47][0m ✓ SSL certificate ready
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 8/12: Configuring Nginx Reverse Proxy[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:39:43 AM UTC 2025
+
+  System load:  0.77              Processes:             154
+  Usage of /:   5.2% of 37.23GB   Users logged in:       1
+  Memory usage: 7%                IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+46 updates can be applied immediately.
+20 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+Backing up existing Nginx config...
+Installing ZION Nginx configuration...
+Testing Nginx configuration...
+2025/10/30 02:39:48 [warn] 5467#5467: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/ssl/zion.crt"
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+Nginx config valid - reloading...
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+Synchronizing state of nginx.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable nginx
+[0;32m[2025-10-30 03:39:48][0m ✓ Nginx configured
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 9/12: Installing Systemd Service[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:39:43 AM UTC 2025
+
+  System load:  0.77              Processes:             154
+  Usage of /:   5.2% of 37.23GB   Users logged in:       1
+  Memory usage: 7%                IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+46 updates can be applied immediately.
+20 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+Installing systemd service...
+Reloading systemd daemon...
+Enabling zion-node service...
+Created symlink /etc/systemd/system/multi-user.target.wants/zion-node.service → /etc/systemd/system/zion-node.service.
+Systemd service installed
+[0;32m[2025-10-30 03:39:50][0m ✓ Systemd service installed
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 10/12: Configuring Automated Backups[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:39:43 AM UTC 2025
+
+  System load:  0.77              Processes:             154
+  Usage of /:   5.2% of 37.23GB   Users logged in:       1
+  Memory usage: 7%                IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+46 updates can be applied immediately.
+20 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+Setting up backup automation...
+Backup cron job added (daily at 3 AM)
+Backup automation configured
+[0;32m[2025-10-30 03:39:50][0m ✓ Automated backups configured
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 11/12: Applying Security Hardening[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:39:43 AM UTC 2025
+
+  System load:  0.77              Processes:             154
+  Usage of /:   5.2% of 37.23GB   Users logged in:       1
+  Memory usage: 7%                IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+46 updates can be applied immediately.
+20 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+Applying security hardening...
+[0;32m[2025-10-30 02:39:51][0m Starting ZION security hardening...
+[0;32m[2025-10-30 02:39:51][0m Configuring UFW firewall...
+Backing up 'user.rules' to '/etc/ufw/user.rules.20251030_023951'
+Backing up 'before.rules' to '/etc/ufw/before.rules.20251030_023951'
+Backing up 'after.rules' to '/etc/ufw/after.rules.20251030_023951'
+Backing up 'user6.rules' to '/etc/ufw/user6.rules.20251030_023951'
+Backing up 'before6.rules' to '/etc/ufw/before6.rules.20251030_023951'
+Backing up 'after6.rules' to '/etc/ufw/after6.rules.20251030_023951'
+
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+Default outgoing policy changed to 'allow'
+(be sure to update your rules accordingly)
+[0;34m[2025-10-30 02:39:51] INFO:[0m Allowing SSH on port 22
+Rules updated
+Rules updated (v6)
+[0;34m[2025-10-30 02:39:51] INFO:[0m Allowing HTTP/HTTPS
+Rules updated
+Rules updated (v6)
+Rules updated
+Rules updated (v6)
+[0;32m[2025-10-30 02:39:52][0m Enabling UFW...
+Firewall is active and enabled on system startup
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                   # SSH
+80/tcp                     ALLOW IN    Anywhere                   # HTTP
+443/tcp                    ALLOW IN    Anywhere                   # HTTPS
+22/tcp (v6)                ALLOW IN    Anywhere (v6)              # SSH
+80/tcp (v6)                ALLOW IN    Anywhere (v6)              # HTTP
+443/tcp (v6)               ALLOW IN    Anywhere (v6)              # HTTPS
+
+[0;32m[2025-10-30 02:39:52][0m Configuring fail2ban...
+Synchronizing state of fail2ban.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable fail2ban
+[0;32m[2025-10-30 02:39:53][0m fail2ban configured and started
+[0;32m[2025-10-30 02:39:53][0m Hardening SSH configuration...
+[0;34m[2025-10-30 02:39:53] INFO:[0m Applying SSH security settings...
+[0;32m[2025-10-30 02:39:53][0m SSH configuration valid
+Failed to reload sshd.service: Unit sshd.service not found.
+[0;32m[2025-10-30 02:39:53][0m Checking for system updates...
+Hit:1 https://mirror.hetzner.com/ubuntu/packages noble InRelease
+Hit:2 https://mirror.hetzner.com/ubuntu/packages noble-updates InRelease
+Hit:3 https://mirror.hetzner.com/ubuntu/packages noble-backports InRelease
+Hit:4 https://mirror.hetzner.com/ubuntu/security noble-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+The following packages have been kept back:
+  linux-image-virtual
+The following packages will be upgraded:
+  bind9-dnsutils bind9-host bind9-libs cloud-init coreutils distro-info-data
+  landscape-common libnss-systemd libpam-modules libpam-modules-bin
+  libpam-runtime libpam-systemd libpam0g libssl3t64 libsystemd-shared
+  libsystemd0 libudev1 libxml2 open-vm-tools openssh-client openssh-server
+  openssh-sftp-server openssl powermgmt-base python3-software-properties
+  qemu-guest-agent snapd software-properties-common sosreport systemd
+  systemd-dev systemd-hwe-hwdb systemd-resolved systemd-sysv systemd-timesyncd
+  tcpdump ubuntu-drivers-common udev vim vim-common vim-runtime vim-tiny xxd
+43 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+Need to get 64.5 MB of archives.
+After this operation, 3,374 kB of additional disk space will be used.
+Get:1 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 coreutils amd64 9.4-3ubuntu6.1 [1,413 kB]
+Get:2 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpam0g amd64 1.5.3-5ubuntu5.5 [67.8 kB]
+Get:3 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 systemd-timesyncd amd64 255.4-1ubuntu8.11 [35.3 kB]
+Get:4 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libssl3t64 amd64 3.0.13-0ubuntu3.6 [1,940 kB]
+Get:5 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 systemd-resolved amd64 255.4-1ubuntu8.11 [296 kB]
+Get:6 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libnss-systemd amd64 255.4-1ubuntu8.11 [159 kB]
+Get:7 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 systemd-dev all 255.4-1ubuntu8.11 [106 kB]
+Get:8 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 systemd amd64 255.4-1ubuntu8.11 [3,475 kB]
+Get:9 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 udev amd64 255.4-1ubuntu8.11 [1,874 kB]
+Get:10 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 systemd-sysv amd64 255.4-1ubuntu8.11 [11.9 kB]
+Get:11 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpam-systemd amd64 255.4-1ubuntu8.11 [235 kB]
+Get:12 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libsystemd-shared amd64 255.4-1ubuntu8.11 [2,076 kB]
+Get:13 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libudev1 amd64 255.4-1ubuntu8.11 [176 kB]
+Get:14 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpam-runtime all 1.5.3-5ubuntu5.5 [40.8 kB]
+Get:15 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libsystemd0 amd64 255.4-1ubuntu8.11 [434 kB]
+Get:16 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpam-modules-bin amd64 1.5.3-5ubuntu5.5 [51.9 kB]
+Get:17 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libpam-modules amd64 1.5.3-5ubuntu5.5 [286 kB]
+Get:18 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 openssh-sftp-server amd64 1:9.6p1-3ubuntu13.14 [37.3 kB]
+Get:19 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 openssh-server amd64 1:9.6p1-3ubuntu13.14 [510 kB]
+Get:20 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 openssh-client amd64 1:9.6p1-3ubuntu13.14 [906 kB]
+Get:21 https://mirror.hetzner.com/ubuntu/packages noble-updates/universe amd64 qemu-guest-agent amd64 1:8.2.2+ds-0ubuntu1.10 [390 kB]
+Get:22 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 ubuntu-drivers-common amd64 1:0.9.7.6ubuntu3.4 [65.8 kB]
+Get:23 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libxml2 amd64 2.9.14+dfsg-1.3ubuntu3.5 [763 kB]
+Get:24 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 open-vm-tools amd64 2:12.5.0-1~ubuntu0.24.04.2 [742 kB]
+Get:25 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 distro-info-data all 0.60ubuntu0.5 [6,934 B]
+Get:26 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 openssl amd64 3.0.13-0ubuntu3.6 [1,003 kB]
+Get:27 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 systemd-hwe-hwdb all 255.1.6 [3,684 B]
+Get:28 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 vim amd64 2:9.1.0016-1ubuntu7.9 [1,881 kB]
+Get:29 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 vim-common all 2:9.1.0016-1ubuntu7.9 [386 kB]
+Get:30 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 vim-tiny amd64 2:9.1.0016-1ubuntu7.9 [803 kB]
+Get:31 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 vim-runtime all 2:9.1.0016-1ubuntu7.9 [7,281 kB]
+Get:32 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 xxd amd64 2:9.1.0016-1ubuntu7.9 [63.8 kB]
+Get:33 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 bind9-dnsutils amd64 1:9.18.39-0ubuntu0.24.04.2 [156 kB]
+Get:34 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 bind9-host amd64 1:9.18.39-0ubuntu0.24.04.2 [50.5 kB]
+Get:35 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 bind9-libs amd64 1:9.18.39-0ubuntu0.24.04.2 [1,257 kB]
+Get:36 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 powermgmt-base all 1.37ubuntu0.1 [7,650 B]
+Get:37 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 tcpdump amd64 4.99.4-3ubuntu4.24.04.1 [479 kB]
+Get:38 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 landscape-common amd64 24.02-0ubuntu5.6 [93.2 kB]
+Get:39 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 software-properties-common all 0.99.49.3 [14.4 kB]
+Get:40 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 python3-software-properties all 0.99.49.3 [29.9 kB]
+Get:41 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 snapd amd64 2.71+ubuntu24.04 [33.9 MB]
+Get:42 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 sosreport amd64 4.9.2-0ubuntu0~24.04.1 [372 kB]
+Get:43 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 cloud-init all 25.2-0ubuntu1~24.04.1 [625 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 64.5 MB in 1s (103 MB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../coreutils_9.4-3ubuntu6.1_amd64.deb ...
+Unpacking coreutils (9.4-3ubuntu6.1) over (9.4-3ubuntu6) ...
+Setting up coreutils (9.4-3ubuntu6.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../libpam0g_1.5.3-5ubuntu5.5_amd64.deb ...
+Unpacking libpam0g:amd64 (1.5.3-5ubuntu5.5) over (1.5.3-5ubuntu5.4) ...
+Setting up libpam0g:amd64 (1.5.3-5ubuntu5.5) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../systemd-timesyncd_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking systemd-timesyncd (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Preparing to unpack .../libssl3t64_3.0.13-0ubuntu3.6_amd64.deb ...
+Unpacking libssl3t64:amd64 (3.0.13-0ubuntu3.6) over (3.0.13-0ubuntu3.5) ...
+Setting up libssl3t64:amd64 (3.0.13-0ubuntu3.6) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../0-systemd-resolved_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking systemd-resolved (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Preparing to unpack .../1-libnss-systemd_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking libnss-systemd:amd64 (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Preparing to unpack .../2-systemd-dev_255.4-1ubuntu8.11_all.deb ...
+Unpacking systemd-dev (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Preparing to unpack .../3-systemd_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking systemd (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Preparing to unpack .../4-udev_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking udev (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Preparing to unpack .../5-libsystemd-shared_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking libsystemd-shared:amd64 (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Setting up libsystemd-shared:amd64 (255.4-1ubuntu8.11) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../libsystemd0_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking libsystemd0:amd64 (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Setting up libsystemd0:amd64 (255.4-1ubuntu8.11) ...
+Setting up systemd-dev (255.4-1ubuntu8.11) ...
+Setting up systemd (255.4-1ubuntu8.11) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../systemd-sysv_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking systemd-sysv (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Preparing to unpack .../libpam-systemd_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking libpam-systemd:amd64 (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Preparing to unpack .../libudev1_255.4-1ubuntu8.11_amd64.deb ...
+Unpacking libudev1:amd64 (255.4-1ubuntu8.11) over (255.4-1ubuntu8.10) ...
+Setting up libudev1:amd64 (255.4-1ubuntu8.11) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../libpam-runtime_1.5.3-5ubuntu5.5_all.deb ...
+Unpacking libpam-runtime (1.5.3-5ubuntu5.5) over (1.5.3-5ubuntu5.4) ...
+Setting up libpam-runtime (1.5.3-5ubuntu5.5) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../libpam-modules-bin_1.5.3-5ubuntu5.5_amd64.deb ...
+Unpacking libpam-modules-bin (1.5.3-5ubuntu5.5) over (1.5.3-5ubuntu5.4) ...
+Setting up libpam-modules-bin (1.5.3-5ubuntu5.5) ...
+pam_namespace.service is a disabled or a static unit not running, not starting it.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../libpam-modules_1.5.3-5ubuntu5.5_amd64.deb ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Unpacking libpam-modules:amd64 (1.5.3-5ubuntu5.5) over (1.5.3-5ubuntu5.4) ...
+Setting up libpam-modules:amd64 (1.5.3-5ubuntu5.5) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47207 files and directories currently installed.)
+Preparing to unpack .../00-openssh-sftp-server_1%3a9.6p1-3ubuntu13.14_amd64.deb ...
+Unpacking openssh-sftp-server (1:9.6p1-3ubuntu13.14) over (1:9.6p1-3ubuntu13.13) ...
+Preparing to unpack .../01-openssh-server_1%3a9.6p1-3ubuntu13.14_amd64.deb ...
+Unpacking openssh-server (1:9.6p1-3ubuntu13.14) over (1:9.6p1-3ubuntu13.13) ...
+Preparing to unpack .../02-openssh-client_1%3a9.6p1-3ubuntu13.14_amd64.deb ...
+Unpacking openssh-client (1:9.6p1-3ubuntu13.14) over (1:9.6p1-3ubuntu13.13) ...
+Preparing to unpack .../03-qemu-guest-agent_1%3a8.2.2+ds-0ubuntu1.10_amd64.deb ...
+Unpacking qemu-guest-agent (1:8.2.2+ds-0ubuntu1.10) over (1:8.2.2+ds-0ubuntu1.8) ...
+Preparing to unpack .../04-ubuntu-drivers-common_1%3a0.9.7.6ubuntu3.4_amd64.deb ...
+Unpacking ubuntu-drivers-common (1:0.9.7.6ubuntu3.4) over (1:0.9.7.6ubuntu3.2) ...
+Preparing to unpack .../05-libxml2_2.9.14+dfsg-1.3ubuntu3.5_amd64.deb ...
+Unpacking libxml2:amd64 (2.9.14+dfsg-1.3ubuntu3.5) over (2.9.14+dfsg-1.3ubuntu3.3) ...
+Preparing to unpack .../06-open-vm-tools_2%3a12.5.0-1~ubuntu0.24.04.2_amd64.deb ...
+Unpacking open-vm-tools (2:12.5.0-1~ubuntu0.24.04.2) over (2:12.4.5-1~ubuntu0.24.04.2) ...
+Preparing to unpack .../07-distro-info-data_0.60ubuntu0.5_all.deb ...
+Unpacking distro-info-data (0.60ubuntu0.5) over (0.60ubuntu0.3) ...
+Preparing to unpack .../08-openssl_3.0.13-0ubuntu3.6_amd64.deb ...
+Unpacking openssl (3.0.13-0ubuntu3.6) over (3.0.13-0ubuntu3.5) ...
+Preparing to unpack .../09-systemd-hwe-hwdb_255.1.6_all.deb ...
+Unpacking systemd-hwe-hwdb (255.1.6) over (255.1.4) ...
+Preparing to unpack .../10-vim_2%3a9.1.0016-1ubuntu7.9_amd64.deb ...
+Unpacking vim (2:9.1.0016-1ubuntu7.9) over (2:9.1.0016-1ubuntu7.8) ...
+Preparing to unpack .../11-vim-common_2%3a9.1.0016-1ubuntu7.9_all.deb ...
+Unpacking vim-common (2:9.1.0016-1ubuntu7.9) over (2:9.1.0016-1ubuntu7.8) ...
+Preparing to unpack .../12-vim-tiny_2%3a9.1.0016-1ubuntu7.9_amd64.deb ...
+Unpacking vim-tiny (2:9.1.0016-1ubuntu7.9) over (2:9.1.0016-1ubuntu7.8) ...
+Preparing to unpack .../13-vim-runtime_2%3a9.1.0016-1ubuntu7.9_all.deb ...
+Unpacking vim-runtime (2:9.1.0016-1ubuntu7.9) over (2:9.1.0016-1ubuntu7.8) ...
+Preparing to unpack .../14-xxd_2%3a9.1.0016-1ubuntu7.9_amd64.deb ...
+Unpacking xxd (2:9.1.0016-1ubuntu7.9) over (2:9.1.0016-1ubuntu7.8) ...
+Preparing to unpack .../15-bind9-dnsutils_1%3a9.18.39-0ubuntu0.24.04.2_amd64.deb ...
+Unpacking bind9-dnsutils (1:9.18.39-0ubuntu0.24.04.2) over (1:9.18.30-0ubuntu0.24.04.2) ...
+Preparing to unpack .../16-bind9-host_1%3a9.18.39-0ubuntu0.24.04.2_amd64.deb ...
+Unpacking bind9-host (1:9.18.39-0ubuntu0.24.04.2) over (1:9.18.30-0ubuntu0.24.04.2) ...
+Preparing to unpack .../17-bind9-libs_1%3a9.18.39-0ubuntu0.24.04.2_amd64.deb ...
+Unpacking bind9-libs:amd64 (1:9.18.39-0ubuntu0.24.04.2) over (1:9.18.30-0ubuntu0.24.04.2) ...
+Preparing to unpack .../18-powermgmt-base_1.37ubuntu0.1_all.deb ...
+Unpacking powermgmt-base (1.37ubuntu0.1) over (1.37) ...
+Preparing to unpack .../19-tcpdump_4.99.4-3ubuntu4.24.04.1_amd64.deb ...
+Unpacking tcpdump (4.99.4-3ubuntu4.24.04.1) over (4.99.4-3ubuntu4) ...
+Preparing to unpack .../20-landscape-common_24.02-0ubuntu5.6_amd64.deb ...
+Unpacking landscape-common (24.02-0ubuntu5.6) over (24.02-0ubuntu5.3) ...
+Preparing to unpack .../21-software-properties-common_0.99.49.3_all.deb ...
+Unpacking software-properties-common (0.99.49.3) over (0.99.49.2) ...
+Preparing to unpack .../22-python3-software-properties_0.99.49.3_all.deb ...
+Unpacking python3-software-properties (0.99.49.3) over (0.99.49.2) ...
+Preparing to unpack .../23-snapd_2.71+ubuntu24.04_amd64.deb ...
+Unpacking snapd (2.71+ubuntu24.04) over (2.68.5+ubuntu24.04.1) ...
+Preparing to unpack .../24-sosreport_4.9.2-0ubuntu0~24.04.1_amd64.deb ...
+Unpacking sosreport (4.9.2-0ubuntu0~24.04.1) over (4.8.2-0ubuntu0~24.04.2) ...
+Preparing to unpack .../25-cloud-init_25.2-0ubuntu1~24.04.1_all.deb ...
+Unpacking cloud-init (25.2-0ubuntu1~24.04.1) over (25.1.4-0ubuntu0~24.04.1) ...
+Setting up powermgmt-base (1.37ubuntu0.1) ...
+Setting up tcpdump (4.99.4-3ubuntu4.24.04.1) ...
+Setting up systemd-sysv (255.4-1ubuntu8.11) ...
+Setting up cloud-init (25.2-0ubuntu1~24.04.1) ...
+Installing new version of config file /etc/cloud/templates/sources.list.debian.deb822.tmpl ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Setting up distro-info-data (0.60ubuntu0.5) ...
+Setting up openssh-client (1:9.6p1-3ubuntu13.14) ...
+Setting up qemu-guest-agent (1:8.2.2+ds-0ubuntu1.10) ...
+Setting up libnss-systemd:amd64 (255.4-1ubuntu8.11) ...
+Setting up landscape-common (24.02-0ubuntu5.6) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Setting up xxd (2:9.1.0016-1ubuntu7.9) ...
+Setting up vim-common (2:9.1.0016-1ubuntu7.9) ...
+Setting up python3-software-properties (0.99.49.3) ...
+Setting up systemd-timesyncd (255.4-1ubuntu8.11) ...
+Setting up udev (255.4-1ubuntu8.11) ...
+Setting up sosreport (4.9.2-0ubuntu0~24.04.1) ...
+Installing new version of config file /etc/sos/sos.conf ...
+Setting up systemd-hwe-hwdb (255.1.6) ...
+Setting up libpam-systemd:amd64 (255.4-1ubuntu8.11) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Setting up vim-runtime (2:9.1.0016-1ubuntu7.9) ...
+Setting up openssl (3.0.13-0ubuntu3.6) ...
+Setting up libxml2:amd64 (2.9.14+dfsg-1.3ubuntu3.5) ...
+Setting up systemd-resolved (255.4-1ubuntu8.11) ...
+Setting up snapd (2.71+ubuntu24.04) ...
+Installing new version of config file /etc/apparmor.d/usr.lib.snapd.snap-confine.real ...
+snapd.failure.service is a disabled or a static unit not running, not starting it.
+snapd.gpio-chardev-setup.target is a disabled or a static unit not running, not starting it.
+snapd.snap-repair.service is a disabled or a static unit not running, not starting it.
+Setting up openssh-sftp-server (1:9.6p1-3ubuntu13.14) ...
+Setting up vim (2:9.1.0016-1ubuntu7.9) ...
+Setting up ubuntu-drivers-common (1:0.9.7.6ubuntu3.4) ...
+Setting up openssh-server (1:9.6p1-3ubuntu13.14) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Configuring openssh-server
+--------------------------
+
+A new version (/tmp/tmp.hwmd3T1uV9) of configuration file /etc/ssh/sshd_config 
+is available, but the version installed currently has been locally modified.
+
+  1. install the package maintainer's version
+  2. keep the local version currently installed
+  3. show the differences between the versions
+  4. show a side-by-side difference between the versions
+  5. show a 3-way difference between available versions
+  6. do a 3-way merge between available versions
+  7. start a new shell to examine the situation
+
+What do you want to do about modified configuration file sshd_config? 
+What do you want to do about modified configuration file sshd_config? 
+What do you want to do about modified configuration file sshd_config? 
+Use of uninitialized value $_[1] in join or string at /usr/share/perl5/Debconf/DbDriver/Stack.pm line 112, <STDIN> line 2.
+Use of uninitialized value $val in substitution (s///) at /usr/share/perl5/Debconf/Format/822.pm line 84, <GEN6> line 13.
+Use of uninitialized value $val in concatenation (.) or string at /usr/share/perl5/Debconf/Format/822.pm line 85, <GEN6> line 13.
+Setting up bind9-libs:amd64 (1:9.18.39-0ubuntu0.24.04.2) ...
+Setting up vim-tiny (2:9.1.0016-1ubuntu7.9) ...
+Setting up software-properties-common (0.99.49.3) ...
+Setting up open-vm-tools (2:12.5.0-1~ubuntu0.24.04.2) ...
+Installing new version of config file /etc/vmware-tools/tools.conf.example ...
+Setting up bind9-host (1:9.18.39-0ubuntu0.24.04.2) ...
+Setting up bind9-dnsutils (1:9.18.39-0ubuntu0.24.04.2) ...
+Processing triggers for initramfs-tools (0.142ubuntu25.5) ...
+update-initramfs: Generating /boot/initrd.img-6.8.0-71-generic
+Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+Processing triggers for rsyslog (8.2312.0-3ubuntu9.1) ...
+Processing triggers for ufw (0.36.2-6) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for dbus (1.14.10-4ubuntu4.1) ...
+Processing triggers for install-info (7.1-3build2) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+
+Running kernel seems to be up-to-date.
+
+Restarting services...
+ systemctl restart atd.service cron.service fail2ban.service multipathd.service nginx.service packagekit.service polkit.service ssh.service
+
+Service restarts being deferred:
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart serial-getty@ttyS0.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ root @ session #1: login[961]
+ root @ session #17: sshd[5799]
+ root @ user manager service: systemd[1210]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+[0;32m[2025-10-30 02:40:20][0m Installing additional security tools...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+unattended-upgrades is already the newest version (2.9.1+nmu4ubuntu1).
+The following additional packages will be installed:
+  bsd-mailx file fonts-lato liblockfile-bin liblockfile1 libnsl2 libruby
+  libruby3.2 postfix rake ruby ruby-net-telnet ruby-rubygems ruby-sdbm
+  ruby-webrick ruby-xmlrpc ruby3.2 rubygems-integration ssl-cert unhide
+  unhide.rb unzip zip
+Suggested packages:
+  postfix-cdb postfix-doc postfix-ldap postfix-lmdb postfix-mta-sts-resolver
+  postfix-mysql postfix-pcre postfix-pgsql postfix-sqlite procmail sasl2-bin
+  | dovecot-common liburi-perl libwww-perl ri ruby-dev bundler
+The following NEW packages will be installed:
+  bsd-mailx chkrootkit file fonts-lato liblockfile-bin liblockfile1 libnsl2
+  libruby libruby3.2 postfix rake rkhunter ruby ruby-net-telnet ruby-rubygems
+  ruby-sdbm ruby-webrick ruby-xmlrpc ruby3.2 rubygems-integration ssl-cert
+  unhide unhide.rb unzip zip
+0 upgraded, 25 newly installed, 0 to remove and 1 not upgraded.
+Need to get 11.0 MB of archives.
+After this operation, 48.3 MB of additional disk space will be used.
+Get:1 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 fonts-lato all 2.015-1 [2,781 kB]
+Get:2 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 ssl-cert all 1.1.2ubuntu1 [17.8 kB]
+Get:3 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libnsl2 amd64 1.3.0-3build3 [41.4 kB]
+Get:4 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 postfix amd64 3.8.6-1build2 [1,254 kB]
+Get:5 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 file amd64 1:5.45-3build1 [22.0 kB]
+Get:6 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 rkhunter all 1.4.6-12 [219 kB]
+Get:7 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 liblockfile-bin amd64 1.17-1build3 [11.2 kB]
+Get:8 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 liblockfile1 amd64 1.17-1build3 [6,840 B]
+Get:9 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 bsd-mailx amd64 8.1.2-0.20220412cvs-1build1 [67.2 kB]
+Get:10 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 chkrootkit amd64 0.58b-1 [353 kB]
+Get:11 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 rubygems-integration all 1.18 [5,336 B]
+Get:12 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 ruby3.2 amd64 3.2.3-1ubuntu0.24.04.6 [50.7 kB]
+Get:13 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 ruby-rubygems all 3.4.20-1 [238 kB]
+Get:14 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 ruby amd64 1:3.2~ubuntu1 [3,466 B]
+Get:15 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 rake all 13.0.6-3 [61.6 kB]
+Get:16 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 ruby-net-telnet all 0.2.0-1 [13.3 kB]
+Get:17 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 ruby-webrick all 1.8.1-1ubuntu0.2 [53.0 kB]
+Get:18 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 ruby-xmlrpc all 0.3.2-2 [24.8 kB]
+Get:19 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 ruby-sdbm amd64 1.0.0-5build4 [16.2 kB]
+Get:20 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libruby3.2 amd64 3.2.3-1ubuntu0.24.04.6 [5,341 kB]
+Get:21 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libruby amd64 1:3.2~ubuntu1 [4,694 B]
+Get:22 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 unzip amd64 6.0-28ubuntu4.1 [174 kB]
+Get:23 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 zip amd64 3.0-13ubuntu0.2 [176 kB]
+Get:24 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 unhide amd64 20220611-1ubuntu1 [51.1 kB]
+Get:25 https://mirror.hetzner.com/ubuntu/packages noble/universe amd64 unhide.rb all 22-6 [8,942 B]
+Preconfiguring packages ...
+Fetched 11.0 MB in 0s (38.9 MB/s)
+Selecting previously unselected package fonts-lato.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 47223 files and directories currently installed.)
+Preparing to unpack .../00-fonts-lato_2.015-1_all.deb ...
+Unpacking fonts-lato (2.015-1) ...
+Selecting previously unselected package ssl-cert.
+Preparing to unpack .../01-ssl-cert_1.1.2ubuntu1_all.deb ...
+Unpacking ssl-cert (1.1.2ubuntu1) ...
+Selecting previously unselected package libnsl2:amd64.
+Preparing to unpack .../02-libnsl2_1.3.0-3build3_amd64.deb ...
+Unpacking libnsl2:amd64 (1.3.0-3build3) ...
+Selecting previously unselected package postfix.
+Preparing to unpack .../03-postfix_3.8.6-1build2_amd64.deb ...
+Unpacking postfix (3.8.6-1build2) ...
+Selecting previously unselected package file.
+Preparing to unpack .../04-file_1%3a5.45-3build1_amd64.deb ...
+Unpacking file (1:5.45-3build1) ...
+Selecting previously unselected package rkhunter.
+Preparing to unpack .../05-rkhunter_1.4.6-12_all.deb ...
+Unpacking rkhunter (1.4.6-12) ...
+Selecting previously unselected package liblockfile-bin.
+Preparing to unpack .../06-liblockfile-bin_1.17-1build3_amd64.deb ...
+Unpacking liblockfile-bin (1.17-1build3) ...
+Selecting previously unselected package liblockfile1:amd64.
+Preparing to unpack .../07-liblockfile1_1.17-1build3_amd64.deb ...
+Unpacking liblockfile1:amd64 (1.17-1build3) ...
+Selecting previously unselected package bsd-mailx.
+Preparing to unpack .../08-bsd-mailx_8.1.2-0.20220412cvs-1build1_amd64.deb ...
+Unpacking bsd-mailx (8.1.2-0.20220412cvs-1build1) ...
+Selecting previously unselected package chkrootkit.
+Preparing to unpack .../09-chkrootkit_0.58b-1_amd64.deb ...
+Unpacking chkrootkit (0.58b-1) ...
+Selecting previously unselected package rubygems-integration.
+Preparing to unpack .../10-rubygems-integration_1.18_all.deb ...
+Unpacking rubygems-integration (1.18) ...
+Selecting previously unselected package ruby3.2.
+Preparing to unpack .../11-ruby3.2_3.2.3-1ubuntu0.24.04.6_amd64.deb ...
+Unpacking ruby3.2 (3.2.3-1ubuntu0.24.04.6) ...
+Selecting previously unselected package ruby-rubygems.
+Preparing to unpack .../12-ruby-rubygems_3.4.20-1_all.deb ...
+Unpacking ruby-rubygems (3.4.20-1) ...
+Selecting previously unselected package ruby.
+Preparing to unpack .../13-ruby_1%3a3.2~ubuntu1_amd64.deb ...
+Unpacking ruby (1:3.2~ubuntu1) ...
+Selecting previously unselected package rake.
+Preparing to unpack .../14-rake_13.0.6-3_all.deb ...
+Unpacking rake (13.0.6-3) ...
+Selecting previously unselected package ruby-net-telnet.
+Preparing to unpack .../15-ruby-net-telnet_0.2.0-1_all.deb ...
+Unpacking ruby-net-telnet (0.2.0-1) ...
+Selecting previously unselected package ruby-webrick.
+Preparing to unpack .../16-ruby-webrick_1.8.1-1ubuntu0.2_all.deb ...
+Unpacking ruby-webrick (1.8.1-1ubuntu0.2) ...
+Selecting previously unselected package ruby-xmlrpc.
+Preparing to unpack .../17-ruby-xmlrpc_0.3.2-2_all.deb ...
+Unpacking ruby-xmlrpc (0.3.2-2) ...
+Selecting previously unselected package ruby-sdbm:amd64.
+Preparing to unpack .../18-ruby-sdbm_1.0.0-5build4_amd64.deb ...
+Unpacking ruby-sdbm:amd64 (1.0.0-5build4) ...
+Selecting previously unselected package libruby3.2:amd64.
+Preparing to unpack .../19-libruby3.2_3.2.3-1ubuntu0.24.04.6_amd64.deb ...
+Unpacking libruby3.2:amd64 (3.2.3-1ubuntu0.24.04.6) ...
+Selecting previously unselected package libruby:amd64.
+Preparing to unpack .../20-libruby_1%3a3.2~ubuntu1_amd64.deb ...
+Unpacking libruby:amd64 (1:3.2~ubuntu1) ...
+Selecting previously unselected package unzip.
+Preparing to unpack .../21-unzip_6.0-28ubuntu4.1_amd64.deb ...
+Unpacking unzip (6.0-28ubuntu4.1) ...
+Selecting previously unselected package zip.
+Preparing to unpack .../22-zip_3.0-13ubuntu0.2_amd64.deb ...
+Unpacking zip (3.0-13ubuntu0.2) ...
+Selecting previously unselected package unhide.
+Preparing to unpack .../23-unhide_20220611-1ubuntu1_amd64.deb ...
+Unpacking unhide (20220611-1ubuntu1) ...
+Selecting previously unselected package unhide.rb.
+Preparing to unpack .../24-unhide.rb_22-6_all.deb ...
+Unpacking unhide.rb (22-6) ...
+Setting up fonts-lato (2.015-1) ...
+Setting up liblockfile-bin (1.17-1build3) ...
+Setting up unzip (6.0-28ubuntu4.1) ...
+Setting up rubygems-integration (1.18) ...
+Setting up file (1:5.45-3build1) ...
+Setting up unhide (20220611-1ubuntu1) ...
+Setting up zip (3.0-13ubuntu0.2) ...
+Setting up chkrootkit (0.58b-1) ...
+Created symlink /etc/systemd/system/timers.target.wants/chkrootkit.timer → /usr/lib/systemd/system/chkrootkit.timer.
+Setting up ssl-cert (1.1.2ubuntu1) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/ssl-cert.service → /usr/lib/systemd/system/ssl-cert.service.
+Setting up ruby-net-telnet (0.2.0-1) ...
+Setting up ruby-webrick (1.8.1-1ubuntu0.2) ...
+Setting up libnsl2:amd64 (1.3.0-3build3) ...
+Setting up liblockfile1:amd64 (1.17-1build3) ...
+Setting up ruby-xmlrpc (0.3.2-2) ...
+Setting up rkhunter (1.4.6-12) ...
+
+Creating config file /etc/default/rkhunter with new version
+[ Rootkit Hunter version 1.4.6 ]
+File created: searched for 179 files, found 140
+Setting up postfix (3.8.6-1build2) ...
+info: Selecting GID from range 100 to 999 ...
+info: Adding group `postfix' (GID 111) ...
+info: Selecting UID from range 100 to 999 ...
+
+info: Adding system user `postfix' (UID 108) ...
+info: Adding new user `postfix' (UID 108) with group `postfix' ...
+info: Not creating home directory `/var/spool/postfix'.
+Creating /etc/postfix/dynamicmaps.cf
+info: Selecting GID from range 100 to 999 ...
+info: Adding group `postdrop' (GID 112) ...
+setting myhostname: TestNet-Zion
+setting alias maps
+setting alias database
+mailname is not a fully qualified domain name.  Not changing /etc/mailname.
+setting destinations: $myhostname, TestNet-Zion, localhost.localdomain, , localhost
+setting relayhost: 
+setting mynetworks: 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+setting mailbox_size_limit: 0
+setting recipient_delimiter: +
+setting inet_interfaces: all
+setting inet_protocols: all
+/etc/aliases does not exist, creating it.
+WARNING: /etc/aliases exists, but does not have a root alias.
+
+Postfix (main.cf) is now set up with a default configuration.  If you need to 
+make changes, edit /etc/postfix/main.cf (and others) as needed.  To view 
+Postfix configuration values, see postconf(1).
+
+After modifying main.cf, be sure to run 'systemctl reload postfix'.
+
+Running newaliases
+Created symlink /etc/systemd/system/multi-user.target.wants/postfix.service → /usr/lib/systemd/system/postfix.service.
+Setting up bsd-mailx (8.1.2-0.20220412cvs-1build1) ...
+update-alternatives: using /usr/bin/bsd-mailx to provide /usr/bin/mailx (mailx) in auto mode
+Setting up rake (13.0.6-3) ...
+Setting up libruby3.2:amd64 (3.2.3-1ubuntu0.24.04.6) ...
+Setting up ruby3.2 (3.2.3-1ubuntu0.24.04.6) ...
+Setting up libruby:amd64 (1:3.2~ubuntu1) ...
+Setting up ruby (1:3.2~ubuntu1) ...
+Setting up unhide.rb (22-6) ...
+Setting up ruby-sdbm:amd64 (1.0.0-5build4) ...
+Setting up ruby-rubygems (3.4.20-1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+Processing triggers for rsyslog (8.2312.0-3ubuntu9.1) ...
+Processing triggers for ufw (0.36.2-6) ...
+Processing triggers for rkhunter (1.4.6-12) ...
+[ Rootkit Hunter version 1.4.6 ]
+File updated: searched for 180 files, found 142
+
+Running kernel seems to be up-to-date.
+
+Restarting services...
+ systemctl restart ssh.service
+
+Service restarts being deferred:
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart serial-getty@ttyS0.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ root @ session #1: login[961]
+ root @ session #17: sshd[5799]
+ root @ user manager service: systemd[1210]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+[0;32m[2025-10-30 02:40:52][0m Securing shared memory...
+[0;34m[2025-10-30 02:40:52] INFO:[0m Added secure shared memory to fstab
+[0;32m[2025-10-30 02:40:52][0m Checking for unnecessary services...
+UNIT FILE                              STATE   PRESET
+apparmor.service                       enabled enabled
+apport.service                         enabled enabled
+atd.service                            enabled enabled
+blk-availability.service               enabled enabled
+cloud-config.service                   enabled enabled
+cloud-final.service                    enabled enabled
+cloud-init-local.service               enabled enabled
+cloud-init.service                     enabled enabled
+console-setup.service                  enabled enabled
+cron.service                           enabled enabled
+dmesg.service                          enabled enabled
+e2scrub_reap.service                   enabled enabled
+fail2ban.service                       enabled enabled
+finalrd.service                        enabled enabled
+getty@.service                         enabled enabled
+gpu-manager.service                    enabled enabled
+grub-common.service                    enabled enabled
+grub-initrd-fallback.service           enabled enabled
+hc-net-scan.service                    enabled enabled
+keyboard-setup.service                 enabled enabled
+lvm2-monitor.service                   enabled enabled
+multipathd.service                     enabled enabled
+networkd-dispatcher.service            enabled enabled
+nginx.service                          enabled enabled
+open-iscsi.service                     enabled enabled
+open-vm-tools.service                  enabled enabled
+pollinate.service                      enabled enabled
+postfix.service                        enabled enabled
+rsyslog.service                        enabled enabled
+secureboot-db.service                  enabled enabled
+setvtrgb.service                       enabled enabled
+snapd.apparmor.service                 enabled enabled
+snapd.autoimport.service               enabled enabled
+snapd.core-fixup.service               enabled enabled
+snapd.recovery-chooser-trigger.service enabled enabled
+snapd.seeded.service                   enabled enabled
+snapd.service                          enabled enabled
+snapd.system-shutdown.service          enabled enabled
+ssl-cert.service                       enabled enabled
+sysstat.service                        enabled enabled
+systemd-networkd-wait-online.service   enabled enabled
+systemd-networkd.service               enabled enabled
+systemd-pstore.service                 enabled enabled
+systemd-resolved.service               enabled enabled
+systemd-timesyncd.service              enabled enabled
+ua-reboot-cmds.service                 enabled enabled
+ubuntu-advantage.service               enabled enabled
+ufw.service                            enabled enabled
+unattended-upgrades.service            enabled enabled
+vgauth.service                         enabled enabled
+zion-node.service                      enabled enabled
+
+51 unit files listed.
+[0;32m[2025-10-30 02:40:52][0m Setting secure file permissions...
+[0;32m[2025-10-30 02:40:52][0m Configuring password policy...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  cracklib-runtime libcrack2 libpwquality-common libpwquality1 wamerican
+The following NEW packages will be installed:
+  cracklib-runtime libcrack2 libpam-pwquality libpwquality-common
+  libpwquality1 wamerican
+0 upgraded, 6 newly installed, 0 to remove and 1 not upgraded.
+Need to get 446 kB of archives.
+After this operation, 1,932 kB of additional disk space will be used.
+Get:1 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libcrack2 amd64 2.9.6-5.1build2 [29.0 kB]
+Get:2 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 cracklib-runtime amd64 2.9.6-5.1build2 [147 kB]
+Get:3 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libpwquality-common all 1.4.5-3build1 [7,748 B]
+Get:4 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libpwquality1 amd64 1.4.5-3build1 [13.5 kB]
+Get:5 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 libpam-pwquality amd64 1.4.5-3build1 [11.7 kB]
+Get:6 https://mirror.hetzner.com/ubuntu/packages noble/main amd64 wamerican all 2020.12.07-2 [236 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 446 kB in 0s (7,253 kB/s)
+Selecting previously unselected package libcrack2:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 50681 files and directories currently installed.)
+Preparing to unpack .../0-libcrack2_2.9.6-5.1build2_amd64.deb ...
+Unpacking libcrack2:amd64 (2.9.6-5.1build2) ...
+Selecting previously unselected package cracklib-runtime.
+Preparing to unpack .../1-cracklib-runtime_2.9.6-5.1build2_amd64.deb ...
+Unpacking cracklib-runtime (2.9.6-5.1build2) ...
+Selecting previously unselected package libpwquality-common.
+Preparing to unpack .../2-libpwquality-common_1.4.5-3build1_all.deb ...
+Unpacking libpwquality-common (1.4.5-3build1) ...
+Selecting previously unselected package libpwquality1:amd64.
+Preparing to unpack .../3-libpwquality1_1.4.5-3build1_amd64.deb ...
+Unpacking libpwquality1:amd64 (1.4.5-3build1) ...
+Selecting previously unselected package libpam-pwquality:amd64.
+Preparing to unpack .../4-libpam-pwquality_1.4.5-3build1_amd64.deb ...
+Unpacking libpam-pwquality:amd64 (1.4.5-3build1) ...
+Selecting previously unselected package wamerican.
+Preparing to unpack .../5-wamerican_2020.12.07-2_all.deb ...
+Unpacking wamerican (2020.12.07-2) ...
+Setting up libpwquality-common (1.4.5-3build1) ...
+Setting up wamerican (2020.12.07-2) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Setting up libcrack2:amd64 (2.9.6-5.1build2) ...
+Setting up cracklib-runtime (2.9.6-5.1build2) ...
+Setting up libpwquality1:amd64 (1.4.5-3build1) ...
+Setting up libpam-pwquality:amd64 (1.4.5-3build1) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+
+Running kernel seems to be up-to-date.
+
+Restarting services...
+ systemctl restart ssh.service
+
+Service restarts being deferred:
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart serial-getty@ttyS0.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ root @ session #1: login[961]
+ root @ session #17: sshd[5799]
+ root @ user manager service: systemd[1210]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+[0;32m[2025-10-30 02:40:55][0m Configuring audit logging...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libauparse0t64
+Suggested packages:
+  audispd-plugins
+The following NEW packages will be installed:
+  auditd libauparse0t64
+0 upgraded, 2 newly installed, 0 to remove and 1 not upgraded.
+Need to get 274 kB of archives.
+After this operation, 893 kB of additional disk space will be used.
+Get:1 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 libauparse0t64 amd64 1:3.1.2-2.1build1.1 [58.9 kB]
+Get:2 https://mirror.hetzner.com/ubuntu/packages noble-updates/main amd64 auditd amd64 1:3.1.2-2.1build1.1 [215 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 274 kB in 0s (4,226 kB/s)
+Selecting previously unselected package libauparse0t64:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 50745 files and directories currently installed.)
+Preparing to unpack .../libauparse0t64_1%3a3.1.2-2.1build1.1_amd64.deb ...
+Adding 'diversion of /lib/x86_64-linux-gnu/libauparse.so.0 to /lib/x86_64-linux-gnu/libauparse.so.0.usr-is-merged by libauparse0t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libauparse.so.0.0.0 to /lib/x86_64-linux-gnu/libauparse.so.0.0.0.usr-is-merged by libauparse0t64'
+Unpacking libauparse0t64:amd64 (1:3.1.2-2.1build1.1) ...
+Selecting previously unselected package auditd.
+Preparing to unpack .../auditd_1%3a3.1.2-2.1build1.1_amd64.deb ...
+Unpacking auditd (1:3.1.2-2.1build1.1) ...
+Setting up libauparse0t64:amd64 (1:3.1.2-2.1build1.1) ...
+Setting up auditd (1:3.1.2-2.1build1.1) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/auditd.service → /usr/lib/systemd/system/auditd.service.
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+
+Running kernel seems to be up-to-date.
+
+Restarting services...
+ systemctl restart ssh.service
+
+Service restarts being deferred:
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart serial-getty@ttyS0.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ root @ session #1: login[961]
+ root @ session #17: sshd[5799]
+ root @ user manager service: systemd[1210]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+Synchronizing state of auditd.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable auditd
+
+[0;32m[2025-10-30 02:41:00][0m =========================================
+[0;32m[2025-10-30 02:41:00][0m Security Hardening Complete!
+[0;32m[2025-10-30 02:41:00][0m =========================================
+[0;32m[2025-10-30 02:41:00][0m ✅ UFW firewall configured
+[0;32m[2025-10-30 02:41:00][0m ✅ fail2ban installed and configured
+[0;32m[2025-10-30 02:41:00][0m ✅ SSH hardened
+[0;32m[2025-10-30 02:41:00][0m ✅ System updated
+[0;32m[2025-10-30 02:41:00][0m ✅ Security tools installed
+[0;32m[2025-10-30 02:41:00][0m ✅ Shared memory secured
+[0;32m[2025-10-30 02:41:00][0m ✅ Password policy configured
+[0;32m[2025-10-30 02:41:00][0m ✅ Audit logging enabled
+[0;32m[2025-10-30 02:41:00][0m =========================================
+
+[1;33m[2025-10-30 02:41:00] WARNING:[0m IMPORTANT: Review the following:
+[1;33m[2025-10-30 02:41:00] WARNING:[0m 1. Test SSH connection before logging out
+[1;33m[2025-10-30 02:41:00] WARNING:[0m 2. Configure SSH key-based auth if not done
+[1;33m[2025-10-30 02:41:00] WARNING:[0m 3. Change default SSH port if desired
+[1;33m[2025-10-30 02:41:00] WARNING:[0m 4. Review fail2ban logs: journalctl -u fail2ban
+[1;33m[2025-10-30 02:41:00] WARNING:[0m 5. Review firewall rules: ufw status verbose
+
+[0;32m[2025-10-30 02:41:00][0m Security hardening script completed successfully!
+[0;32m[2025-10-30 03:41:00][0m ✓ Security hardening applied
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36mStep 12/12: Starting ZION Node[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 02:41:01 AM UTC 2025
+
+  System load:  0.92              Processes:             157
+  Usage of /:   5.6% of 37.23GB   Users logged in:       1
+  Memory usage: 11%               IPv4 address for eth0: 91.98.122.165
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:e5ce::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+3 updates can be applied immediately.
+3 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+Starting ZION node service...
+Waiting for node to start...
+✗ ZION node failed to start
+Oct 30 02:41:01 TestNet-Zion systemd[1]: Started zion-node.service - ZION Blockchain Node (Regtest).
+Oct 30 02:41:01 TestNet-Zion (python)[32271]: zion-node.service: Failed to determine user credentials: No such process
+Oct 30 02:41:01 TestNet-Zion systemd[1]: zion-node.service: Main process exited, code=exited, status=217/USER
+Oct 30 02:41:01 TestNet-Zion systemd[1]: zion-node.service: Failed with result 'exit-code'.

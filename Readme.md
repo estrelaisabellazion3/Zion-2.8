@@ -1,4 +1,4 @@
-# ZION 2.8.3 "Milky Way" Testnet
+# ZION 2.8.3 "Terra Nova" Testnet
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-2.8.3-blue.svg)](https://github.com/estrelaisabellazion3/Zion-2.8/releases)
@@ -9,9 +9,9 @@
 
 ZION Testnet is a live testing environment for next-generation blockchain technology featuring **Cosmic Harmony** GPU mining, **WARP Engine** consensus, and a revolutionary **humanitarian tithe system** allocating 10% of mining rewards to verified charitable causes.
 
-🌐 **Testnet RPC:** [api.zionterranova.com](https://api.zionterranova.com)  
+🌐 **Testnet RPC:** [zionterranova.com](https://zionterranova.com)  
 ⛏️ **Mining Pool:** pool.zionterranova.com:3333  
-� **Explorer:** [explorer.zionterranova.com](https://explorer.zionterranova.com)  
+📊 **Dashboard:** [zionterranova.com/dashboard](https://zionterranova.com/dashboard)  
 📖 **Documentation:** [docs/](./docs/)  
 💬 **Support:** admin@zionterranova.com
 
@@ -128,13 +128,16 @@ python new_zion_blockchain.py
 
 ## 🌐 Network Information
 
-### Testnet (Current)
-- **Launch Date:** November 15, 2025
+### Testnet (Current - LIVE)
+- **Launch Date:** October 30, 2025
 - **Network ID:** testnet-2.8.3
-- **RPC Endpoint:** https://api.zionterranova.com
+- **RPC Endpoint:** https://zionterranova.com
+- **Dashboard:** https://zionterranova.com/dashboard
+- **API Stats:** https://zionterranova.com/api/stats
+- **Metrics:** https://zionterranova.com/metrics
 - **Mining Pool:** pool.zionterranova.com:3333
-- **Explorer:** https://explorer.zionterranova.com
-- **Seed Nodes:** 91.98.122.165:8333
+- **Seed Nodes:** 91.98.122.165:8332
+- **SSL Certificate:** Let's Encrypt (expires 2026-01-28)
 
 ### Mainnet (Planned)
 - **Launch:** Q1 2026
@@ -410,14 +413,17 @@ This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE
 
 ## 📈 Statistics
 
-### Testnet Stats (Live)
-- **Block Height:** 1 (Genesis)
-- **Total Transactions:** 0
-- **Network Hashrate:** 0 H/s
-- **Active Nodes:** 1
-- **Total Supply:** 0 ZION (premine pending distribution)
+### Testnet Stats (Live - October 30, 2025)
+- **Block Height:** 21
+- **Total Transactions:** 21 (block creation)
+- **Network Hashrate:** CPU mining active
+- **Active Nodes:** 1 (zionterranova.com)
+- **Total Supply:** 1,000 ZION (50 ZION/block reward)
+- **Uptime:** 24+ hours
+- **SSL Status:** ✅ Valid Let's Encrypt certificate
 
-**Live Stats:** [explorer.zionterranova.com](https://explorer.zionterranova.com)
+**Live Dashboard:** [zionterranova.com/dashboard](https://zionterranova.com/dashboard)
+**API Stats:** [zionterranova.com/api/stats](https://zionterranova.com/api/stats)
 
 ---
 
@@ -446,4 +452,4 @@ Special thanks to:
 
 **Built with ❤️ for a better world through blockchain technology**
 
-*ZION 2.8.3 "Milky Way" - October 2025*
+*ZION 2.8.3 "Terra Nova" - October 30, 2025*
