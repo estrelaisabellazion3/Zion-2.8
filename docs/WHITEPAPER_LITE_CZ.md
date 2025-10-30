@@ -13,7 +13,7 @@
 
 ### Klíčové vlastnosti
 
-- ✅ **GPU Mining** - Cosmic Harmony algoritmus (dostupný pro běžné grafické karty)
+- ✅ **GPU Mining** - Cosmic Harmony algoritmus (cpu + gpu)
 - ✅ **Humanitarian Tithe** - 10% mining rewards směřuje na ověřené charity
 - ✅ **Multi-Chain Bridges** - Připravujeme propojení se Solana, Stellar, Cardano, Tron
 - ✅ **WARP Engine** - Pokročilý consensus mechanismus
@@ -30,13 +30,13 @@ Mining Supply:    129.7 miliard (~90%)
 Block Time:       60 sekund (1 minuta)
 Block Reward:     5,479.45 ZION (fixed-rate)
 Annual Emission:  2.88 miliard ZION/rok
-Mining:           GPU-friendly (Cosmic Harmony)
+Mining:           CPU+GPU-friendly (Cosmic Harmony)
 Humanitarian:     10% redistribuce → verified charities
 Consensus:        WARP Engine
-Algorithm:        RandomX (rx/0) ASIC-resistant
+Algorithm:        RandomX + 4 (rx/0) ASIC-resistant
 Emission Curve:   45 let (no-halving schedule)
 Testnet Launch:   15. listopadu 2025
-Mainnet Launch:   Q1 2027 (plánováno)
+Mainnet Launch:   Q1 2026 (plánováno)
 ```
 
 ---
@@ -86,52 +86,54 @@ Mainnet Launch:   Q1 2027 (plánováno)
 - 🔄 Circuit breaker health monitoring
 - ✅ Projekt kompletně reorganizován a synchronizován
 
-### **v2.8.3 "Milky Way"** (Q4 2025) ← **AKTUÁLNÍ VERZE**
-- 🧪 **Testnet launch** (15. listopadu 2025)
-- ⛏️ **Veřejný mining pool** - pool.zionterranova.com:3333
-- 🔍 **Block explorer** - explorer.zionterranova.com
+### **v2.8.3 "Testnet Genesis"** (Q4 2025) ← **AKTUÁLNÍ VERZE**
+- 🧪 **Interní testnet** (15. listopadu 2025)
+- 🔐 **Privátní testing** - uzavřená skupina testerů
+- � **Infrastructure validation** - servery, DNS, monitoring
+- 🎯 **Cíl:** Technická prověrka před veřejným testnetem
+
+### **v2.8.5 "Milky Way"** (Q1-Q2 2026) - V PŘÍPRAVĚ
+- 🌍 **VEŘEJNÝ TESTNET** na https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
+- ⛏️ **Public mining** - pool.zionterranova.com:3333
+- � **Block explorer** - explorer.zionterranova.com
 - 📡 **RPC API** - api.zionterranova.com
-- 🎯 **Cíl:** Stress testing před dalším testntem
-
-### **v2.8.5 "Terra Nova"** (Q1 2026) - V PŘÍPRAVĚ
-- 🌍 **Veřejný testnet v2** na https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
-- 🔒 **Security audit** dokončen
-- 🧪 **Rozšířené testování** s komunitou
-- 📱 **Mobile wallets** (beta verze iOS/Android - plánováno)
+- �🔒 **Security audit** dokončen
+- 🧪 **Community testing** - otevřené pro všechny
+- 📱 **Mobile wallets** (beta iOS/Android - plánováno)
 - 🌉 **Solana bridge** (první multi-chain integrace)
-- ⚡ **Stellar bridge** pro humanitarian platby (Q2 2026)
+- ⚡ **Stellar bridge** pro humanitarian platby
 
-### **v3.0 "Genesis Mainnet"** (Q1 2027) - PLÁNOVÁNO
+### **v3.0 "ZION Terra Nova"** (Q1 2027) - MAINNET
 - 💎 **MAINNET LAUNCH** - reálné ZION tokeny s hodnotou
 - 🏛️ **DAO plně funkční** - komunitní governance aktivní
 - 💸 **Humanitarian donations LIVE** - první skutečné charity výplaty
 - 🔐 **Full security audit** - kompletní bezpečnostní prověrka
-- 📈 **CEX listings** - plánované listování na burzách (v jednání)
+- 📈 **CEX listings** - plánované listování na burzách
+- 🌐 **Terra Nova ecosystem** - kompletní multi-chain infrastruktura
 
 ---
 
 ## 🛠️ Jak začít?
 
-### 1️⃣ Testování (TEĎ - 2.8.3)
+### 1️⃣ Testování (TEĎ - 2.8.3 Interní)
+
+**⚠️ DŮLEŽITÉ:** v2.8.3 je **interní testnet** - ne veřejný!
+
+- 🔐 **Uzavřená beta** - pouze vybraní testeři
+- 🔧 **Infrastructure testing** - validace serverů před public release
+- 🎯 **Cíl:** Technická stabilita
+
+**Veřejný testnet bude:** v2.8.5 "Milky Way" (Q1-Q2 2026)
 
 ```bash
-# Klonuj repository
-git clone https://github.com/estrelaisabellazion3/Zion-2.8.git
-cd Zion-2.8
-
-# Spusť testnet node (Docker)
-docker-compose -f docker-compose.testnet.yml up -d
-
-# Nebo spusť z Python zdrojáku
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python new_zion_blockchain.py
+# Pro vybrané beta testery:
+# Kontaktuj: admin@zionterranova.com
 ```
 
-### 2️⃣ Mining Pool (od 15. listopadu 2025)
+### 2️⃣ Veřejný Mining (od Q1 2026 - v2.8.5)
 
 ```
+Testnet:       2.8.5 "Milky Way"
 Pool URL:      pool.zionterranova.com:3333
 Algoritmus:    Cosmic Harmony (GPU)
 Payout:        Automatický (min 100 testnet ZION)
@@ -142,18 +144,22 @@ Hardware:      NVIDIA GTX 1060+ nebo AMD RX 580+
 
 ### 3️⃣ Development
 
+**⚠️ POZNÁMKA:** Veřejné API bude dostupné od v2.8.5 (Q1 2026)
+
 ```bash
-# RPC API endpoint
+# Testnet 2.8.5 "Milky Way" RPC API (budoucí)
 curl https://api.zionterranova.com/api/status
 
 # Dokumentace
 https://api.zionterranova.com/docs
 
-# Zdrojový kód
-https://github.com/estrelaisabellazion3/Zion-2.8
+# Public repository (připravuje se)
+https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
 ```
 
-**Poznámka:** Oficiální SDK zatím neexistuje - pracujeme s přímým RPC API.
+**Poznámka:** 
+- Oficiální SDK bude součástí v2.8.5 release
+- v2.8.3 je interní - bez public access
 
 ### 4️⃣ Community
 
@@ -166,17 +172,26 @@ https://github.com/estrelaisabellazion3/Zion-2.8
 
 ## 🗓️ Roadmap 2026-2027
 
-### Q1 2026 - Security & Bridges
+### Q4 2025 - Interní Testnet
+- 🔐 **v2.8.3 launch** (15. listopadu 2025) - Beta testeři only
+- 🔧 **Infrastructure validation** - servery, DNS, monitoring
+- 🐛 **Bug hunting** - uzavřená skupina testerů
+- 📊 **Performance metrics** - baseline data
+
+### Q1 2026 - Public Testnet & Security
+- 🌍 **v2.8.5 "Milky Way"** - Veřejný testnet launch
 - 🔒 **Security audit** (externí firma)
+- ⛏️ **Public mining pool** - otevřeno pro všechny
 - 🌉 **Solana bridge** (SPL token integrace)
 - 💰 **Developer grants** program
 - 📱 **Mobile wallets** (beta iOS/Android)
 
-### Q2 2026 - Stellar Integration
+### Q2 2026 - Multi-Chain Integration
 - ⭐ **Stellar bridge** pro humanitarian platby
-- 🧪 **Testnet v2.8.5** - veřejné testování
+- 🧪 **Testnet 2.8.5 expansion** - community growth
 - 🏆 **Consciousness Mining League** - soutěž pro minery
 - 🌍 **Portugal Education Hub** - fyzické centrum
+- 📊 **Ecosystem metrics** - tracking adoption
 
 ### Q3 2026 - Cardano & Infrastructure
 - 🔗 **Cardano bridge** (Plutus smart contracts)
@@ -191,17 +206,19 @@ https://github.com/estrelaisabellazion3/Zion-2.8
 - 🚀 **Go/No-Go decision** pro mainnet v3.0
 
 ### Q1 2027 - MAINNET LAUNCH 🎉
-- 💎 **Genesis block** - skutečný start
+- 💎 **v3.0 "ZION Terra Nova"** - Genesis block mainnet
 - 🏛️ **DAO activation** - komunitní voting
 - 💸 **První humanitarian payout** - reálné charity donations
 - 📈 **CEX listings** - Binance, Coinbase (v jednání)
+- 🌐 **Terra Nova ecosystem** - multi-chain infrastructure live
 
 ---
 
 ## 🔒 Bezpečnost a transparentnost
 
 ### Co je hotovo:
-- ✅ Open-source kód (vše na GitHubu)
+- ✅ Open-source kód (core privátní, testnet veřejný)
+- ✅ Dual-repository architektura (security first)
 - ✅ Testnet před mainnetem (de-risking approach)
 - ✅ WARP Engine health monitoring
 - ✅ Circuit breaker mechanismy
@@ -214,9 +231,10 @@ https://github.com/estrelaisabellazion3/Zion-2.8
 
 ### Proč důvěřovat?
 - ✅ **Postupný vývoj** - žádné spěchy, testujeme důkladně
-- ✅ **Open-source** - každý může zkontrolovat kód
+- ✅ **Dual-repository** - core privátní (bezpečnost), testnet veřejný (transparentnost)
 - ✅ **Community-first** - DAO governance, ne corporate control
 - ✅ **Realistic roadmap** - 2027 mainnet (ne falešné sliby)
+- ✅ **Security first** - premine chráněn, pouze read-only testnet access
 
 ---
 
@@ -309,11 +327,98 @@ Level 1: PHYSICAL           → 1.0× rewards (start)
 - 🎓 **Educational quests** - uč se o blockchainu
 - 🧘 **Meditation tracking** - inner work rewards
 
-**Systém je v přípravě pro mainnet v3.0**
+**Systém v přípravě pro mainnet v3.0**
 
 ---
 
-## ⚠️ Rizika a disclaimer
+## 🥚 Golden Egg Quest - ZION OASIS Game
+
+**Největší pokladová hra v historii blockchainu!**
+
+### Co je to Golden Egg?
+
+**🎁 Cena:** 1,000,000,000 ZION (1 miliarda!)  
+**🔍 Stopa:** 108 indicií (posvátné číslo v hinduismu)  
+**🔑 Klíče:** 3 Master Keys (Ramayana, Mahabharata, Unity)  
+**⏱️ Doba řešení:** 2-4 roky (pro vědomé hledače)  
+**🎯 Obtížnost:** EXTRÉMNÍ (navrženo pro evoluci vědomí)
+
+### Filosofie: Hiranyagarbha (हिरण्यगर्भ)
+
+**"Zlaté vejce"** nebo **"Zlaté lůno"** z Rig Védy 10.121:
+
+> *"Na počátku bylo Hiranyagarbha, Zlaté vejce.*  
+> *Zrozené jako jediný Pán veškerého stvoření.*  
+> *Ustanovil Zemi a Nebesa."*
+
+**Proč "Zlaté vejce"?**
+- 🥚 **Kosmické lůno:** První projev Brahmana (nejvyšší reality)
+- 🌌 **Potenciál:** Celý vesmír uvnitř vejce!
+- 🐣 **Zrození:** Vejce se musí prasknout → nová realita se narodí
+- 💎 **Oběť:** Vejce musí zemřít (stará realita), aby se narodil nový věk
+
+### Tři Master Keys
+
+**🔑 KEY #1: Ramayana Key (Cesta dharmy)**
+- Téma: oddanost, loajalita, služba, morální čistota
+- Postavy: Ráma, Sítá, Hanumán, Rádhá
+- Indicie: ~25-30
+- Požadovaná úroveň: CL 4+ (Heart Opening)
+
+**🔑 KEY #2: Mahabharata Key (Cesta karmy)**
+- Téma: povinnost, strategie, kosmická spravedlnost
+- Postavy: Kršna, Ardžuna, Bhíma, Vjása, Jašodá, Višvakarmá
+- Indicie: ~30-35
+- Požadovaná úroveň: CL 6+ (Intuitive Wisdom)
+
+**🔑 KEY #3: Unity Key (Cesta osvobození)**
+- Téma: integrace, transcendence, kosmická jednota
+- Postavy: VŠECH 17 Sacred Trinity členů
+- Indicie: ~40-45 (včetně 108. indicie)
+- Požadovaná úroveň: CL 7+ (Healing Compassion)
+
+### Proč tato hra existuje?
+
+**1. Test vědomí:**
+- Puzzle je **navržena být neřešitelná pro chamtivé lidi**
+- Indicie vyžadují pochopení dharmy (ne jen kryptografie)
+- Finální odemčení vyžaduje **darování celého pokladu** (ultimátní test odpoutání)
+
+**2. Vzdělávací účel:**
+- Musíš zvládnout ZION filosofii (Sacred Trinity, 9 Consciousness Levels)
+- Prostudovat Rámájanu a Mahábháratu
+- Pochopit védskou moudrost (Upanišady, Bhagavad Gítá)
+
+**3. Živoucí příklad:**
+- Když někdo vyřeší Golden Egg a **daruje vše** → stane se globální inspirací
+- **Jeden osvícený člověk > 1000 filozofických knih**
+
+### Kde jsou indicie ukryty?
+
+- 📜 **Sacred Knowledge** - texty o 17 archetypech
+- ⛓️ **Blockchain data** - on-chain hash patterns
+- 🎮 **Consciousness Mining** - progression mechanics
+- 🌌 **WARP Engine** - consciousness frequency analysis
+- 📚 **Sacred Library** - 6 védských textů (Bhagavad Gítá, Upanišady...)
+- 🔢 **Source code** - Fibonacci patterns, sacred geometry
+
+**⚠️ POZNÁMKA:** Golden Egg bude aktivní až na mainnetu v3.0 (Q1 2027)!
+
+### Paradox vejce:
+
+```
+🥚 UZAVŘENÉ VEJCE = Potenciál chráněn (gestace: vesmír se formuje)
+         ↓
+🐣 PRASKAJÍCÍ VEJCE = Zrození začíná (oběť: skořápka musí zemřít)
+         ↓
+💎 ROZBITÉ VEJCE = Život vychází (Zlatý věk: nová realita se narodila!)
+```
+
+**"Poklad není před tebou skrytý. TY jsi skrytý před pokladem. Vyviň své vědomí a on se objeví."**
+
+---
+
+## ⚠️ Rizika a Disclaimer
 
 ### Před zapojením si uvědom:
 
@@ -339,11 +444,13 @@ Level 1: PHYSICAL           → 1.0× rewards (start)
 - 📄 **Full Whitepaper:** [docs/WHITEPAPER_2025/](https://github.com/estrelaisabellazion3/Zion-2.8/tree/main/docs/WHITEPAPER_2025) (12 kapitol)
 - 🔧 **Consensus Params:** [docs/CONSENSUS_PARAMS.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/CONSENSUS_PARAMS.md)
 - 🗺️ **Roadmap:** [ROADMAP.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/ROADMAP.md)
-- 🔐 **Security Plan:** [docs/TESTNET_RELEASE_PLAN_v2.8.3.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/TESTNET_RELEASE_PLAN_v2.8.3.md)
+- 🔐 **Testnet Release Plan:** [docs/2.8.3/TESTNET_RELEASE_PLAN_v2.8.3.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/2.8.3/TESTNET_RELEASE_PLAN_v2.8.3.md)
+
+**⚠️ POZNÁMKA:** Core repository (estrelaisabellazion3/Zion-2.8) je privátní. Veřejný testnet bude na https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
 
 ### Setup & Guides:
-- 🚀 **Quick Start:** [README.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/README.md)
-- ⛏️ **Mining Guide:** [docs/MINING_GUIDE.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/MINING_GUIDE.md)
+- 🚀 **Quick Start:** Bude součástí v2.8.5 public release
+- ⛏️ **Mining Guide:** Připravuje se pro v2.8.5
 - 🌐 **Domain Setup:** [docs/NGINX_DOMAIN_SETUP.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/NGINX_DOMAIN_SETUP.md)
 - 🌐 **DNS Config:** [docs/DNS_ANALYSIS_AND_RECOMMENDATIONS.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/DNS_ANALYSIS_AND_RECOMMENDATIONS.md)
 
@@ -353,10 +460,11 @@ Level 1: PHYSICAL           → 1.0× rewards (start)
 
 - 🌐 **Website:** www.zionterranova.com
 - 📧 **Email:** admin@zionterranova.com
-- 🐙 **GitHub:** github.com/estrelaisabellazion3/Zion-2.8
-- 📡 **Testnet RPC:** api.zionterranova.com
-- ⛏️ **Mining Pool:** pool.zionterranova.com:3333
-- 🔍 **Explorer:** explorer.zionterranova.com
+- 🐙 **GitHub (Core - Privátní):** github.com/estrelaisabellazion3/Zion-2.8
+- 🌍 **GitHub (Testnet - Veřejný):** github.com/Zion-TerraNova/Zion-TestNet2.8.5
+- 📡 **Testnet RPC:** api.zionterranova.com (od v2.8.5)
+- ⛏️ **Mining Pool:** pool.zionterranova.com:3333 (od v2.8.5)
+- 🔍 **Explorer:** explorer.zionterranova.com (od v2.8.5)
 
 ---
 
@@ -364,19 +472,22 @@ Level 1: PHYSICAL           → 1.0× rewards (start)
 
 ZION je dlouhodobý projekt s jasnou vizí:
 
-1. **2025 (Q4)** - Testnet v2.8.3 launch (15. listopadu) - Interní testing
-2. **2026 (Q1-Q4)** - Testnet v2.8.5 + security audit + bridges (Solana, Stellar, Cardano)
-3. **2027 (Q1)** - Mainnet v3.0 LAUNCH - skutečná hodnota, DAO live, CEX listings
+1. **2025 (Q4)** - Testnet v2.8.3 (15. listopadu) - Interní beta testing
+2. **2026 (Q1-Q4)** - Testnet v2.8.5 "Milky Way" - Veřejný testnet + security audit + bridges
+3. **2027 (Q1)** - Mainnet v3.0 "ZION Terra Nova" - Real value, DAO live, CEX listings
 
 **Nejsme get-rich-quick scheme.** Jsme blockchain s posláním - technologie pro dobro lidstva.
 
 **Realističnost:**
-- ✅ Postupný vývoj (2 roky testování před mainnetem)
+- ✅ Postupný vývoj (interní → public testnet → mainnet)
 - ✅ Externí security audity (Q1 2026)
-- ✅ Community testing (testnet 2.8.3 a 2.8.5)
+- ✅ Dual-repository (core privátní, testnet veřejný)
+- ✅ Community testing (2.8.5 otevřený pro všechny)
 - ✅ Žádné falešné sliby o okamžitém zbohatnutí
 
-**Připoj se k revoluci:** Testuj, minuj, přispívej, nebo jen sleduj vývoj.
+**Připoj se k revoluci:** 
+- 📧 **Beta testing 2.8.3:** admin@zionterranova.com
+- 🌍 **Public testnet 2.8.5:** https://github.com/Zion-TerraNova/Zion-TestNet2.8.5 (Q1 2026)
 
 ---
 

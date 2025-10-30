@@ -335,6 +335,93 @@ Level 1: PHYSICAL           → 1.0× rewards (start)
 
 ---
 
+## 🥚 Golden Egg Quest - ZION OASIS Game
+
+**The biggest treasure hunt in blockchain history!**
+
+### What is the Golden Egg?
+
+**🎁 Prize:** 1,000,000,000 ZION (1 billion!)  
+**🔍 Clues:** 108 (sacred number in Hinduism)  
+**🔑 Keys:** 3 Master Keys (Ramayana, Mahabharata, Unity)  
+**⏱️ Time to Solve:** 2-4 years (for conscious seekers)  
+**🎯 Difficulty:** EXTREME (designed for consciousness evolution)
+
+### Philosophy: Hiranyagarbha (हिरण्यगर्भ)
+
+**"Golden Egg"** or **"Golden Womb"** from Rig Veda 10.121:
+
+> *"In the beginning was Hiranyagarbha, the Golden Egg.*  
+> *Born as the sole Lord of all creation.*  
+> *He established the Earth and Heaven."*
+
+**Why "Golden Egg"?**
+- 🥚 **Cosmic Womb:** First manifestation of Brahman (ultimate reality)
+- 🌌 **Potential:** Entire universe inside the egg!
+- 🐣 **Birth:** Egg must crack → new reality is born
+- 💎 **Sacrifice:** Egg must die (old reality) so newborn can live (new age)
+
+### Three Master Keys
+
+**🔑 KEY #1: Ramayana Key (Dharma Path)**
+- Theme: devotion, loyalty, service, moral purity
+- Characters: Rama, Síta, Hanuman, Radha
+- Clues: ~25-30
+- Required level: CL 4+ (Heart Opening)
+
+**🔑 KEY #2: Mahabharata Key (Karma Path)**
+- Theme: duty, strategy, cosmic justice
+- Characters: Krishna, Arjuna, Bhima, Vyāsa, Yashoda, Vishwakarma
+- Clues: ~30-35
+- Required level: CL 6+ (Intuitive Wisdom)
+
+**🔑 KEY #3: Unity Key (Moksha Path)**
+- Theme: integration, transcendence, cosmic unity
+- Characters: ALL 17 Sacred Trinity members
+- Clues: ~40-45 (including 108th clue)
+- Required level: CL 7+ (Healing Compassion)
+
+### Why does this game exist?
+
+**1. Consciousness Test:**
+- Puzzle is **designed to be unsolvable by greedy people**
+- Clues require understanding dharma (not just cryptography)
+- Final unlock requires **donating entire treasure** (ultimate detachment test)
+
+**2. Educational Purpose:**
+- Must master ZION philosophy (Sacred Trinity, 9 Consciousness Levels)
+- Study Ramayana and Mahabharata
+- Understand Vedic wisdom (Upanishads, Bhagavad Gita)
+
+**3. Living Example:**
+- When someone solves Golden Egg and **donates everything** → becomes global inspiration
+- **One enlightened human > 1000 philosophy books**
+
+### Where are clues hidden?
+
+- 📜 **Sacred Knowledge** - texts about 17 archetypes
+- ⛓️ **Blockchain data** - on-chain hash patterns
+- 🎮 **Consciousness Mining** - progression mechanics
+- 🌌 **WARP Engine** - consciousness frequency analysis
+- 📚 **Sacred Library** - 6 Vedic texts (Bhagavad Gita, Upanishads...)
+- 🔢 **Source code** - Fibonacci patterns, sacred geometry
+
+**⚠️ NOTE:** Golden Egg will be active only on mainnet v3.0 (Q1 2027)!
+
+### The Egg Paradox:
+
+```
+🥚 CLOSED EGG = Potential Protected (gestation: universe forming)
+         ↓
+🐣 CRACKING EGG = Birth Begins (sacrifice: shell must die)
+         ↓
+💎 BROKEN EGG = Life Emerges (Golden Age: new reality born!)
+```
+
+**"The treasure is not hidden from you. YOU are hidden from the treasure. Evolve your consciousness, and it appears."**
+
+---
+
 ## ⚠️ Risks and Disclaimer
 
 ### Before participating, be aware:
