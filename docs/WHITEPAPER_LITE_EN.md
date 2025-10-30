@@ -87,52 +87,54 @@ Mainnet Launch:   Q1 2027 (planned)
 - 🔄 Circuit breaker health monitoring
 - ✅ Project completely reorganized and synchronized
 
-### **v2.8.3 "Milky Way"** (Q4 2025) ← **CURRENT VERSION**
-- 🧪 **Testnet launch** (November 15, 2025)
-- ⛏️ **Public mining pool** - pool.zionterranova.com:3333
-- 🔍 **Block explorer** - explorer.zionterranova.com
-- 📡 **RPC API** - api.zionterranova.com
-- 🎯 **Goal:** Stress testing before next testnet
+### **v2.8.3 "Testnet Genesis"** (Q4 2025) ← **CURRENT VERSION**
+- 🧪 **Internal testnet** (November 15, 2025)
+- 🔐 **Private testing** - closed beta group
+- � **Infrastructure validation** - servers, DNS, monitoring
+- 🎯 **Goal:** Technical validation before public testnet
 
-### **v2.8.5 "Terra Nova"** (Q1 2026) - IN PREPARATION
-- 🌍 **Public testnet v2** at https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
-- 🔒 **Security audit** completed
-- 🧪 **Extended testing** with community
+### **v2.8.5 "Milky Way"** (Q1-Q2 2026) - IN PREPARATION
+- 🌍 **PUBLIC TESTNET** at https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
+- ⛏️ **Public mining** - pool.zionterranova.com:3333
+- � **Block explorer** - explorer.zionterranova.com
+- 📡 **RPC API** - api.zionterranova.com
+- �🔒 **Security audit** completed
+- 🧪 **Community testing** - open for everyone
 - 📱 **Mobile wallets** (beta iOS/Android - planned)
 - 🌉 **Solana bridge** (first multi-chain integration)
-- ⚡ **Stellar bridge** for humanitarian payments (Q2 2026)
+- ⚡ **Stellar bridge** for humanitarian payments
 
-### **v3.0 "Genesis Mainnet"** (Q1 2027) - PLANNED
+### **v3.0 "ZION Terra Nova"** (Q1 2027) - MAINNET
 - 💎 **MAINNET LAUNCH** - real ZION tokens with value
 - 🏛️ **DAO fully operational** - community governance active
 - 💸 **Humanitarian donations LIVE** - first actual charity payouts
 - 🔐 **Full security audit** - complete security review
-- 📈 **CEX listings** - planned exchange listings (in negotiation)
+- 📈 **CEX listings** - planned exchange listings
+- 🌐 **Terra Nova ecosystem** - complete multi-chain infrastructure
 
 ---
 
 ## 🛠️ How to Get Started?
 
-### 1️⃣ Testing (NOW - 2.8.3)
+### 1️⃣ Testing (NOW - 2.8.3 Internal)
+
+**⚠️ IMPORTANT:** v2.8.3 is **internal testnet** - not public!
+
+- 🔐 **Closed beta** - selected testers only
+- 🔧 **Infrastructure testing** - server validation before public release
+- 🎯 **Goal:** Technical stability
+
+**Public testnet will be:** v2.8.5 "Milky Way" (Q1-Q2 2026)
 
 ```bash
-# Clone repository
-git clone https://github.com/estrelaisabellazion3/Zion-2.8.git
-cd Zion-2.8
-
-# Run testnet node (Docker)
-docker-compose -f docker-compose.testnet.yml up -d
-
-# Or run from Python source
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python new_zion_blockchain.py
+# For selected beta testers:
+# Contact: admin@zionterranova.com
 ```
 
-### 2️⃣ Mining Pool (from November 15, 2025)
+### 2️⃣ Public Mining (from Q1 2026 - v2.8.5)
 
 ```
+Testnet:       2.8.5 "Milky Way"
 Pool URL:      pool.zionterranova.com:3333
 Algorithm:     Cosmic Harmony (GPU)
 Payout:        Automatic (min 100 testnet ZION)
@@ -143,15 +145,20 @@ Hardware:      NVIDIA GTX 1060+ or AMD RX 580+
 
 ### 3️⃣ Development
 
+**⚠️ Public access from v2.8.5 "Milky Way" (Q1-Q2 2026)!**
+
 ```bash
-# RPC API endpoint
+# RPC API endpoint (from v2.8.5)
 curl https://api.zionterranova.com/api/status
 
-# Documentation
+# Documentation (from v2.8.5)
 https://api.zionterranova.com/docs
 
-# Source code
-https://github.com/estrelaisabellazion3/Zion-2.8
+# Public testnet source code (from v2.8.5)
+https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
+
+# WebSocket real-time (from v2.8.5)
+wss://api.zionterranova.com/ws
 ```
 
 **Note:** Official SDK doesn't exist yet - we work with direct RPC API.
@@ -159,13 +166,20 @@ https://github.com/estrelaisabellazion3/Zion-2.8
 ### 4️⃣ Community
 
 - 📧 **Email:** admin@zionterranova.com
-- 🐙 **GitHub:** github.com/estrelaisabellazion3/Zion-2.8
+- 🐙 **GitHub (public testnet):** https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
+- 🐙 **GitHub (private core):** github.com/estrelaisabellazion3/Zion-2.8
 - 🐦 **Twitter:** @zionterranova (coming soon)
+- 💬 **Discord:** Coming soon
 - 💬 **Discord:** Coming soon
 
 ---
 
 ## 🗓️ Roadmap 2026-2027
+
+### Q4 2025 - Internal Testing
+- 🧪 **v2.8.3 "Testnet Genesis"** - closed beta for selected testers
+- 🔧 **Infrastructure validation** - server stability testing
+- 🎯 **Technical preparation** for public release
 
 ### Q1 2026 - Security & Bridges
 - 🔒 **Security audit** (external firm)
@@ -173,11 +187,12 @@ https://github.com/estrelaisabellazion3/Zion-2.8
 - 💰 **Developer grants** program
 - 📱 **Mobile wallets** (beta iOS/Android)
 
-### Q2 2026 - Stellar Integration
+### Q2 2026 - Public Testnet & Stellar Integration
+- 🌌 **v2.8.5 "Milky Way"** - PUBLIC testnet launch!
 - ⭐ **Stellar bridge** for humanitarian payments
-- 🧪 **Testnet v2.8.5** - public testing
 - 🏆 **Consciousness Mining League** - miner competition
 - 🌍 **Portugal Education Hub** - physical center
+- 🌐 **Public GitHub:** https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
 
 ### Q3 2026 - Cardano & Infrastructure
 - 🔗 **Cardano bridge** (Plutus smart contracts)
@@ -191,8 +206,8 @@ https://github.com/estrelaisabellazion3/Zion-2.8
 - 👥 **Community expansion** (target: 10,000+ members)
 - 🚀 **Go/No-Go decision** for mainnet v3.0
 
-### Q1 2027 - MAINNET LAUNCH 🎉
-- 💎 **Genesis block** - actual start
+### Q1 2027 - v3.0 "ZION Terra Nova" MAINNET LAUNCH 🎉
+- 💎 **Genesis block** - actual start with REAL value!
 - 🏛️ **DAO activation** - community voting
 - 💸 **First humanitarian payout** - real charity donations
 - 📈 **CEX listings** - Binance, Coinbase (in negotiation)
@@ -201,9 +216,14 @@ https://github.com/estrelaisabellazion3/Zion-2.8
 
 ## 🔒 Security and Transparency
 
+### Dual-Repository Model:
+- 🔐 **Private core:** Full source code with premine genesis logic (github.com/estrelaisabellazion3/Zion-2.8)
+- 🌍 **Public testnet:** Binaries and documentation for testing (https://github.com/Zion-TerraNova/Zion-TestNet2.8.5)
+- 🎯 **Why?** Can't expose premine addresses (14.3B ZION) before mainnet!
+
 ### What's done:
-- ✅ Open-source code (everything on GitHub)
-- ✅ Testnet before mainnet (de-risking approach)
+- ✅ Open-source code (public testnet repository from v2.8.5)
+- ✅ Testnet before mainnet (de-risking approach: 2.8.3 internal → 2.8.5 public → 3.0 mainnet)
 - ✅ WARP Engine health monitoring
 - ✅ Circuit breaker mechanisms
 
@@ -214,8 +234,9 @@ https://github.com/estrelaisabellazion3/Zion-2.8
 - 🔄 Disaster recovery procedures (Q3 2026)
 
 ### Why trust?
-- ✅ **Gradual development** - no rush, thorough testing
-- ✅ **Open-source** - anyone can review code
+- ✅ **Gradual development** - no rush, thorough testing (2.8.3 → 2.8.5 → 3.0)
+- ✅ **Open-source** - anyone can review public testnet code
+- ✅ **Responsible security** - protecting genesis before mainnet launch
 - ✅ **Community-first** - DAO governance, not corporate control
 - ✅ **Realistic roadmap** - 2027 mainnet (no false promises)
 
@@ -337,16 +358,17 @@ Level 1: PHYSICAL           → 1.0× rewards (start)
 ## 📚 Further Documentation
 
 ### Technical Documents:
-- 📄 **Full Whitepaper:** [docs/WHITEPAPER_2025/](https://github.com/estrelaisabellazion3/Zion-2.8/tree/main/docs/WHITEPAPER_2025) (12 chapters)
-- 🔧 **Consensus Params:** [docs/CONSENSUS_PARAMS.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/CONSENSUS_PARAMS.md)
-- 🗺️ **Roadmap:** [ROADMAP.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/ROADMAP.md)
-- 🔐 **Security Plan:** [docs/TESTNET_RELEASE_PLAN_v2.8.3.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/TESTNET_RELEASE_PLAN_v2.8.3.md)
+**⚠️ SECURITY NOTE:** Full core repository is private (contains premine genesis). Public testnet repository available from v2.8.5.
 
-### Setup & Guides:
-- 🚀 **Quick Start:** [README.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/README.md)
-- ⛏️ **Mining Guide:** [docs/MINING_GUIDE.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/MINING_GUIDE.md)
-- 🌐 **Domain Setup:** [docs/NGINX_DOMAIN_SETUP.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/NGINX_DOMAIN_SETUP.md)
-- 🌐 **DNS Config:** [docs/DNS_ANALYSIS_AND_RECOMMENDATIONS.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/DNS_ANALYSIS_AND_RECOMMENDATIONS.md)
+- 📄 **Full Whitepaper:** [docs/WHITEPAPER_2025/](https://github.com/estrelaisabellazion3/Zion-2.8/tree/main/docs/WHITEPAPER_2025) (12 chapters) - Private core repo
+- 🔧 **Consensus Params:** [docs/CONSENSUS_PARAMS.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/CONSENSUS_PARAMS.md) - Private core repo
+- 🗺️ **Roadmap:** [ROADMAP.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/ROADMAP.md) - Private core repo
+- 🔐 **Security Plan:** [docs/TESTNET_RELEASE_PLAN_v2.8.3.md](https://github.com/estrelaisabellazion3/Zion-2.8/blob/main/docs/TESTNET_RELEASE_PLAN_v2.8.3.md) - Private core repo
+
+### Public Testnet (from Q1 2026):
+- 🌌 **v2.8.5 "Milky Way":** https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
+- ⛏️ **Mining Guide:** Available in public testnet repo
+- 🚀 **Quick Start:** Available in public testnet repo
 
 ---
 
@@ -354,7 +376,8 @@ Level 1: PHYSICAL           → 1.0× rewards (start)
 
 - 🌐 **Website:** www.zionterranova.com
 - 📧 **Email:** admin@zionterranova.com
-- 🐙 **GitHub:** github.com/estrelaisabellazion3/Zion-2.8
+- 🐙 **GitHub (public testnet):** https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
+- 🐙 **GitHub (private core):** github.com/estrelaisabellazion3/Zion-2.8
 - 📡 **Testnet RPC:** api.zionterranova.com
 - ⛏️ **Mining Pool:** pool.zionterranova.com:3333
 - 🔍 **Explorer:** explorer.zionterranova.com
@@ -365,19 +388,22 @@ Level 1: PHYSICAL           → 1.0× rewards (start)
 
 ZION is a long-term project with a clear vision:
 
-1. **2025 (Q4)** - Testnet v2.8.3 launch (November 15) - Internal testing
-2. **2026 (Q1-Q4)** - Testnet v2.8.5 + security audit + bridges (Solana, Stellar, Cardano)
-3. **2027 (Q1)** - Mainnet v3.0 LAUNCH - real value, DAO live, CEX listings
+1. **2025 (Q4)** - v2.8.3 "Testnet Genesis" (November 15) - Internal closed beta testing
+2. **2026 (Q1-Q4)** - v2.8.5 "Milky Way" PUBLIC testnet + security audit + multi-chain bridges (Solana, Stellar, Cardano, Tron)
+3. **2027 (Q1)** - v3.0 "ZION Terra Nova" MAINNET LAUNCH - real value, DAO live, CEX listings
 
 **We are not a get-rich-quick scheme.** We are a blockchain with a mission - technology for the good of humanity.
 
 **Realism:**
-- ✅ Gradual development (2 years testing before mainnet)
+- ✅ Gradual development (2.8.3 internal → 2.8.5 public → 3.0 mainnet - 2 years testing!)
 - ✅ External security audits (Q1 2026)
-- ✅ Community testing (testnet 2.8.3 and 2.8.5)
+- ✅ Community testing (internal 2.8.3 then public 2.8.5)
 - ✅ No false promises about instant wealth
+- ✅ Dual-repository security model (private core, public testnet)
 
-**Join the revolution:** Test, mine, contribute, or just follow development.
+**Join the revolution:** Test on public v2.8.5 (Q1-Q2 2026), mine, contribute, or just follow development.
+
+**Public testnet:** https://github.com/Zion-TerraNova/Zion-TestNet2.8.5
 
 ---
 
