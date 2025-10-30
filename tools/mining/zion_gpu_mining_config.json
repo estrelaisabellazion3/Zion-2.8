@@ -1,0 +1,44 @@
+{
+  "hardware": {
+    "gpu": {
+      "name": "AMD Radeon RX 5600 XT",
+      "architecture": "Navi 10",
+      "compute_units": 36,
+      "stream_processors": 2304,
+      "memory": "6GB GDDR6",
+      "memory_bandwidth": "336 GB/s",
+      "tdp": 150,
+      "boost_clock": 2600
+    },
+    "cpu_cores": 9
+  },
+  "mining": {
+    "mode": "hybrid",
+    "primary_algorithm": "cosmic_harmony",
+    "fallback_algorithm": "randomx",
+    "auto_switch": true,
+    "difficulty_adjustment": true
+  },
+  "pool": {
+    "primary": {
+      "host": "127.0.0.1",
+      "port": 3333,
+      "protocol": "stratum+tcp"
+    },
+    "backup": {
+      "host": "91.98.122.165",
+      "port": 3333,
+      "protocol": "stratum+tcp"
+    }
+  },
+  "performance": {
+    "gpu_power_limit": 200,
+    "cpu_threads": 4,
+    "memory_limit": 90
+  },
+  "monitoring": {
+    "update_interval": 10,
+    "log_file": "/home/zion/ZION/local_logs/gpu_mining.log",
+    "alert_threshold_temp": 80
+  }
+}

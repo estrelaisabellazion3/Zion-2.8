@@ -90,6 +90,19 @@ Thumbs.db
 # Logs
 *.log
 logs/
+node.log
+node_startup.log
+zion_test_node.log
+
+# Test artifacts
+tests/artifacts/
+htmlcov/
+.pytest_cache/
+.coverage
+coverage.xml
+
+# Archive directory
+archive/
 
 # Mining and pool data
 *.dat
