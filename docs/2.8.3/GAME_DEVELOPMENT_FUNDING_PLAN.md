@@ -11,8 +11,10 @@
 
 **Total Game Development Budget:** $65M USD (AAA MMORPG + Kids Version + VR)  
 **Funding Source:** ZION Blockchain Premine (14.3B ZION = ~10% of 144B total supply)  
-**ZION Price Assumption:** $1.00 USD per ZION (conservative launch estimate)  
-**Required ZION Tokens:** **65,000,000 ZION** (~0.45% of total supply, ~4.5% of premine)
+**ZION Price Assumption:** $0.05 USD per ZION (realistic launch estimate - 5 cents)  
+**Required ZION Tokens:** **1,300,000,000 ZION** (~0.90% of total supply, ~9.1% of premine)
+
+**Note:** At launch price of $0.05/ZION, we need 1.3B tokens to secure $65M budget. This is conservative and accounts for early-stage valuation.
 
 ---
 
@@ -24,27 +26,27 @@
 **Timeline:** 3 years (2026-2029)  
 **Team Size:** 250 people at peak  
 
-**Required ZION Allocation:** **50,000,000 ZION**
+**Required ZION Allocation:** **1,000,000,000 ZION** (1 billion)
 
-**Yearly Breakdown:**
+**Yearly Breakdown (@ $0.05/ZION):**
 ```
-Year 1 (2026): $12,000,000 = 12M ZION
-Year 2 (2027): $20,000,000 = 20M ZION
-Year 3 (2028): $18,000,000 = 18M ZION
+Year 1 (2026): $12,000,000 = 240,000,000 ZION
+Year 2 (2027): $20,000,000 = 400,000,000 ZION
+Year 3 (2028): $18,000,000 = 360,000,000 ZION
 ```
 
 **Department Allocation:**
-| Department | 3-Year Total | ZION Tokens |
-|------------|-------------|-------------|
-| Engineering (70 people) | $15,750,000 | 15.75M ZION |
-| Art & Animation (80 people) | $14,400,000 | 14.40M ZION |
-| Game Design (40 people) | $7,200,000 | 7.20M ZION |
-| Audio & Music (15 people) | $2,250,000 | 2.25M ZION |
-| QA & Testing (20 people) | $2,400,000 | 2.40M ZION |
-| Marketing & Community (15 people) | $2,250,000 | 2.25M ZION |
-| Leadership (10 people) | $2,500,000 | 2.50M ZION |
-| Infrastructure & Tools | $3,250,000 | 3.25M ZION |
-| **TOTAL** | **$50,000,000** | **50M ZION** |
+| Department | 3-Year Total | ZION Tokens (@ $0.05) |
+|------------|-------------|----------------------|
+| Engineering (70 people) | $15,750,000 | 315,000,000 ZION |
+| Art & Animation (80 people) | $14,400,000 | 288,000,000 ZION |
+| Game Design (40 people) | $7,200,000 | 144,000,000 ZION |
+| Audio & Music (15 people) | $2,250,000 | 45,000,000 ZION |
+| QA & Testing (20 people) | $2,400,000 | 48,000,000 ZION |
+| Marketing & Community (15 people) | $2,250,000 | 45,000,000 ZION |
+| Leadership (10 people) | $2,500,000 | 50,000,000 ZION |
+| Infrastructure & Tools | $3,250,000 | 65,000,000 ZION |
+| **TOTAL** | **$50,000,000** | **1,000,000,000 ZION** |
 
 ---
 
@@ -54,23 +56,23 @@ Year 3 (2028): $18,000,000 = 18M ZION
 **Timeline:** 2 years (2027-2029)  
 **Team Size:** 50 people at peak  
 
-**Required ZION Allocation:** **10,000,000 ZION**
+**Required ZION Allocation:** **200,000,000 ZION** (200 million)
 
-**Yearly Breakdown:**
+**Yearly Breakdown (@ $0.05/ZION):**
 ```
-Year 1 (2027): $4,000,000 = 4M ZION
-Year 2 (2028): $6,000,000 = 6M ZION
+Year 1 (2027): $4,000,000 = 80,000,000 ZION
+Year 2 (2028): $6,000,000 = 120,000,000 ZION
 ```
 
 **Department Allocation:**
-| Department | 2-Year Total | ZION Tokens |
-|------------|-------------|-------------|
-| Engineering (20 people) | $3,600,000 | 3.60M ZION |
-| Art & Animation (15 people) | $2,700,000 | 2.70M ZION |
-| Educational Design (8 people) | $1,440,000 | 1.44M ZION |
-| Audio & Music (3 people) | $540,000 | 0.54M ZION |
-| QA & Testing (4 people) | $720,000 | 0.72M ZION |
-| **TOTAL** | **$10,000,000** | **10M ZION** |
+| Department | 2-Year Total | ZION Tokens (@ $0.05) |
+|------------|-------------|----------------------|
+| Engineering (20 people) | $3,600,000 | 72,000,000 ZION |
+| Art & Animation (15 people) | $2,700,000 | 54,000,000 ZION |
+| Educational Design (8 people) | $1,440,000 | 28,800,000 ZION |
+| Audio & Music (3 people) | $540,000 | 10,800,000 ZION |
+| QA & Testing (4 people) | $720,000 | 14,400,000 ZION |
+| **TOTAL** | **$10,000,000** | **200,000,000 ZION** |
 
 ---
 
@@ -80,24 +82,24 @@ Year 2 (2028): $6,000,000 = 6M ZION
 **Timeline:** 2 years (2028-2030)  
 **Team Size:** +50 VR specialists  
 
-**Required ZION Allocation:** **15,000,000 ZION**
+**Required ZION Allocation:** **300,000,000 ZION** (300 million)
 
-**Yearly Breakdown:**
+**Yearly Breakdown (@ $0.05/ZION):**
 ```
-Year 1 (2028): $7,000,000 = 7M ZION
-Year 2 (2029): $8,000,000 = 8M ZION
+Year 1 (2028): $7,000,000 = 140,000,000 ZION
+Year 2 (2029): $8,000,000 = 160,000,000 ZION
 ```
 
 **Department Allocation:**
-| Department | 2-Year Total | ZION Tokens |
-|------------|-------------|-------------|
-| VR Engineering (25 people) | $6,750,000 | 6.75M ZION |
-| VR UX/UI Design (10 people) | $2,700,000 | 2.70M ZION |
-| VR Content Adaptation (10 people) | $2,700,000 | 2.70M ZION |
-| Haptics Integration (5 people) | $1,350,000 | 1.35M ZION |
-| VR QA & Testing (5 people) | $900,000 | 0.90M ZION |
-| VR Hardware & Devices | $600,000 | 0.60M ZION |
-| **TOTAL** | **$15,000,000** | **15M ZION** |
+| Department | 2-Year Total | ZION Tokens (@ $0.05) |
+|------------|-------------|----------------------|
+| VR Engineering (25 people) | $6,750,000 | 135,000,000 ZION |
+| VR UX/UI Design (10 people) | $2,700,000 | 54,000,000 ZION |
+| VR Content Adaptation (10 people) | $2,700,000 | 54,000,000 ZION |
+| Haptics Integration (5 people) | $1,350,000 | 27,000,000 ZION |
+| VR QA & Testing (5 people) | $900,000 | 18,000,000 ZION |
+| VR Hardware & Devices | $600,000 | 12,000,000 ZION |
+| **TOTAL** | **$15,000,000** | **300,000,000 ZION** |
 
 ---
 
@@ -118,22 +120,24 @@ No Halving: Constant emission rate
 | Category | Allocation | ZION Tokens | % of Premine | % of Total Supply |
 |----------|------------|-------------|--------------|-------------------|
 | **Core Development** | 20% | 2,860,000,000 | 20.00% | 1.99% |
-| **Game Development** | 0.45% | **65,000,000** | **0.45%** | **0.045%** |
+| **Game Development** | 9.1% | **1,300,000,000** | **9.10%** | **0.90%** |
 | **Marketing & Ecosystem** | 15% | 2,145,000,000 | 15.00% | 1.49% |
 | **Liquidity Pools** | 10% | 1,430,000,000 | 10.00% | 0.99% |
 | **Team & Advisors** | 15% | 2,145,000,000 | 15.00% | 1.49% |
 | **Community Rewards** | 20% | 2,860,000,000 | 20.00% | 1.99% |
-| **DAO Treasury** | 10% | 1,430,000,000 | 10.00% | 0.99% |
-| **Strategic Reserve** | 9.55% | 1,365,000,000 | 9.55% | 0.95% |
+| **DAO Treasury** | 5% | 715,000,000 | 5.00% | 0.50% |
+| **Strategic Reserve** | 5.9% | 845,000,000 | 5.90% | 0.59% |
 | **TOTAL** | **100%** | **14,300,000,000** | **100%** | **9.93%** |
 
-**Game Development Detail:**
+**Game Development Detail (@ $0.05/ZION):**
 ```
-AAA MMORPG:     50,000,000 ZION (76.9% of game budget)
-Kids Version:   10,000,000 ZION (15.4% of game budget)
-VR Expansion:    5,000,000 ZION (7.7% of game budget)
-TOTAL:          65,000,000 ZION
+AAA MMORPG:      1,000,000,000 ZION (76.9% of game budget)
+Kids Version:      200,000,000 ZION (15.4% of game budget)
+VR Expansion:      100,000,000 ZION (7.7% of game budget)
+TOTAL:           1,300,000,000 ZION
 ```
+
+**Important Note:** At $0.05/ZION launch price, we allocate 1.3B tokens (~9.1% of premine). If ZION price rises to $0.10 (10 cents), we only need 650M tokens. If it reaches $1.00, we need just 65M tokens. The allocation adjusts based on market price to maintain $65M USD budget.
 
 ---
 
@@ -145,58 +149,94 @@ TOTAL:          65,000,000 ZION
 
 | Year | Quarter | Milestone | ZION Release | Cumulative | % of Game Budget |
 |------|---------|-----------|--------------|------------|------------------|
-| **2026** | Q1 | Team hiring, pre-production | 3,000,000 | 3,000,000 | 4.6% |
-| 2026 | Q2 | Vertical slice development | 3,000,000 | 6,000,000 | 9.2% |
-| 2026 | Q3 | Engine setup, tools pipeline | 3,000,000 | 9,000,000 | 13.8% |
-| 2026 | Q4 | First playable continent | 3,000,000 | 12,000,000 | 18.5% |
-| **2027** | Q1 | Full team ramp-up | 5,000,000 | 17,000,000 | 26.2% |
-| 2027 | Q2 | 4 continents complete | 5,000,000 | 22,000,000 | 33.8% |
-| 2027 | Q3 | All 51 avatars implemented | 5,000,000 | 27,000,000 | 41.5% |
-| 2027 | Q4 | Combat & multiplayer systems | 5,000,000 | 32,000,000 | 49.2% |
-| **2028** | Q1 | All 7 continents, Golden Egg | 4,500,000 | 36,500,000 | 56.2% |
-| 2028 | Q2 | Closed Beta launch | 4,500,000 | 41,000,000 | 63.1% |
-| 2028 | Q3 | Open Beta, polish phase | 4,500,000 | 45,500,000 | 70.0% |
-| 2028 | Q4 | **FULL LAUNCH** + VR Beta | 4,500,000 | 50,000,000 | 76.9% |
-| **2029** | Q1 | Post-launch support, VR dev | 3,750,000 | 53,750,000 | 82.7% |
-| 2029 | Q2 | VR Full Launch | 3,750,000 | 57,500,000 | 88.5% |
-| 2029 | Q3 | Expansion 1: Seven Heavens | 3,750,000 | 61,250,000 | 94.2% |
-| 2029 | Q4 | Kids version polish | 3,750,000 | 65,000,000 | 100.0% |
+| **2026** | Q1 | Team hiring, pre-production | 60,000,000 | 60,000,000 | 4.6% |
+| 2026 | Q2 | Vertical slice development | 60,000,000 | 120,000,000 | 9.2% |
+| 2026 | Q3 | Engine setup, tools pipeline | 60,000,000 | 180,000,000 | 13.8% |
+| 2026 | Q4 | First playable continent | 60,000,000 | 240,000,000 | 18.5% |
+| **2027** | Q1 | Full team ramp-up | 100,000,000 | 340,000,000 | 26.2% |
+| 2027 | Q2 | 4 continents complete | 100,000,000 | 440,000,000 | 33.8% |
+| 2027 | Q3 | All 51 avatars implemented | 100,000,000 | 540,000,000 | 41.5% |
+| 2027 | Q4 | Combat & multiplayer systems | 100,000,000 | 640,000,000 | 49.2% |
+| **2028** | Q1 | All 7 continents, Golden Egg | 90,000,000 | 730,000,000 | 56.2% |
+| 2028 | Q2 | Closed Beta launch | 90,000,000 | 820,000,000 | 63.1% |
+| 2028 | Q3 | Open Beta, polish phase | 90,000,000 | 910,000,000 | 70.0% |
+| 2028 | Q4 | **FULL LAUNCH** + VR Beta | 90,000,000 | 1,000,000,000 | 76.9% |
+| **2029** | Q1 | Post-launch support, VR dev | 75,000,000 | 1,075,000,000 | 82.7% |
+| 2029 | Q2 | VR Full Launch | 75,000,000 | 1,150,000,000 | 88.5% |
+| 2029 | Q3 | Expansion 1: Seven Heavens | 75,000,000 | 1,225,000,000 | 94.2% |
+| 2029 | Q4 | Kids version polish | 75,000,000 | 1,300,000,000 | 100.0% |
 
 **Cliff Period:** 6 months (no releases before Q1 2026)  
 **Vesting Duration:** 4 years (48 months)  
 **Release Frequency:** Quarterly (every 3 months)  
 
+**Note:** All amounts in ZION tokens assuming $0.05/ZION launch price. If price increases, token amounts decrease proportionally to maintain USD budget.  
+
 ---
 
 ## 💱 ZION PRICE SCENARIOS & IMPACT
 
-### **Conservative Scenario: $1.00 per ZION**
+### **Launch Scenario: $0.05 per ZION (BASE CASE)**
+```
+1,300,000,000 ZION × $0.05 = $65,000,000 USD
+✅ Full budget covered
+✅ Realistic launch price (5 cents)
+✅ 1.3B tokens = 9.1% of premine
+```
+
+### **Conservative Growth: $0.10 per ZION (+100%)**
+```
+650,000,000 ZION × $0.10 = $65,000,000 USD
+✅ Need only 650M tokens (50% less!)
+✅ 4.5% of premine
+✅ Remaining 650M ZION returned to treasury
+```
+
+### **Moderate Success: $0.50 per ZION (+900%)**
+```
+130,000,000 ZION × $0.50 = $65,000,000 USD
+✅ Need only 130M tokens (90% less!)
+✅ 0.9% of premine
+✅ Remaining 1.17B ZION returned to treasury
+```
+
+### **Bull Market: $1.00 per ZION (+1,900%)**
 ```
 65,000,000 ZION × $1.00 = $65,000,000 USD
-✅ Full budget covered
-✅ No additional funding needed
+🚀 Need only 65M tokens (95% less!)
+� 0.45% of premine
+🚀 Remaining 1.235B ZION returned to treasury
 ```
 
-### **Bear Market Scenario: $0.50 per ZION**
+### **Moon Scenario: $5.00 per ZION (+9,900%)**
 ```
-65,000,000 ZION × $0.50 = $32,500,000 USD
-⚠️ 50% budget shortfall (-$32.5M)
-📌 Mitigation: Reduce scope or seek VC funding
-```
-
-### **Bull Market Scenario: $5.00 per ZION**
-```
-65,000,000 ZION × $5.00 = $325,000,000 USD
-🚀 5× over-funded (+$260M surplus)
-📌 Strategy: Expand team, accelerate timeline, add features
+13,000,000 ZION × $5.00 = $65,000,000 USD
+🌙 Need only 13M tokens (99% less!)
+🌙 0.09% of premine
+🌙 Remaining 1.287B ZION returned to treasury
 ```
 
-### **Moon Scenario: $10.00 per ZION**
+### **DYNAMIC ALLOCATION STRATEGY:**
+
+**Smart Contract Auto-Adjustment:**
+```javascript
+function calculateQuarterlyRelease(usdBudget, zionPrice) {
+  const tokensNeeded = usdBudget / zionPrice;
+  return tokensNeeded;
+}
+
+// Example Q1 2026 ($3M budget):
+$0.05/ZION: 60,000,000 tokens released
+$0.10/ZION: 30,000,000 tokens released
+$0.50/ZION:  6,000,000 tokens released
+$1.00/ZION:  3,000,000 tokens released
 ```
-65,000,000 ZION × $10.00 = $650,000,000 USD
-🌙 10× over-funded (+$585M surplus)
-📌 Strategy: AAA+ quality, Hollywood talent, global marketing
-```
+
+**Benefits:**
+- ✅ **Price protection:** Higher ZION = fewer tokens sold
+- ✅ **Treasury preservation:** Unused tokens returned
+- ✅ **No fixed allocation:** Adapts to market conditions
+- ✅ **Deflationary bonus:** If ZION moons, 90%+ tokens stay locked
 
 ---
 
@@ -231,21 +271,29 @@ TOTAL:          65,000,000 ZION
 
 ### **Sell Pressure Analysis:**
 
-**Worst Case (Immediate Liquidation):**
+**Worst Case (Immediate Liquidation @ $0.05):**
 ```
-Quarterly Release: 3-5M ZION
-Daily Average: ~40,000 ZION/day (90 days)
-Current Daily Volume (projected): 10M ZION/day (v2.8.5 launch)
+Quarterly Release: 60-100M ZION
+Daily Average: ~800,000 ZION/day (90 days)
+Current Daily Volume (projected): 200M ZION/day (v2.8.5 launch)
 Impact: 0.4% of daily volume
 Verdict: ✅ NEGLIGIBLE - Easily absorbed
 ```
 
-**Best Case (Hold & Stake):**
+**Best Case (Hold & Stake @ $0.05):**
 ```
-Team holds 50% of tokens: 32.5M ZION staked
-Selling only fiat needs: ~20,000 ZION/day
+Team holds 50% of tokens: 650M ZION staked
+Selling only fiat needs: ~400,000 ZION/day
 Impact: 0.2% of daily volume
 Verdict: ✅ MINIMAL - Bullish signal
+```
+
+**Price Increase Scenario ($0.05 → $0.50):**
+```
+At $0.50/ZION, need 90% FEWER tokens
+Daily selling: 80,000 ZION/day (vs 800K)
+Impact: 0.04% of daily volume
+Verdict: ✅ ULTRA MINIMAL - Price rise = less pressure
 ```
 
 **Mitigation Strategies:**
@@ -253,6 +301,7 @@ Verdict: ✅ MINIMAL - Bullish signal
 2. **Stablecoins:** Convert quarterly to USDC immediately (limit exposure)
 3. **Locked Staking:** Team stakes 50% for 12 months (earn 8% APY)
 4. **Revenue Buybacks:** Game revenue buys ZION back (deflationary)
+5. **Dynamic Adjustment:** Higher ZION price = fewer tokens released
 
 ---
 
@@ -332,61 +381,77 @@ Benefit: Employees get equity upside, studio reduces cash burn
 
 ## 🚨 RISK MANAGEMENT
 
-### **Risk 1: ZION Price Crash (<$0.50)**
+### **Risk 1: ZION Price Stays Below $0.05 (Launch Failure)**
 
-**Impact:** Insufficient funding (50%+ shortfall)
+**Impact:** Insufficient funding even with 1.3B tokens
 
 **Mitigation:**
-- **Hedge Strategy:** Convert 50% of each release to stablecoins immediately
-- **VC Backstop:** Secure $20M VC commitment (conditional on ZION < $0.50)
+- **Pre-launch Marketing:** Build hype (target 10K Discord members by Q4 2025)
+- **Exchange Listings:** Secure tier-1 exchanges (Binance, Coinbase) before launch
+- **Market Making:** $2M liquidity pool ensures price floor at $0.03
+- **VC Backstop:** Secure $20M VC commitment (conditional on ZION < $0.03)
 - **Scope Reduction:** Launch with 5 continents (not 7), delay VR
-- **Revenue Acceleration:** Early Access at higher price ($80 vs. $60)
 
-**Contingency Fund:** 10M ZION reserved (not in vesting schedule)
+**Contingency Fund:** 200M ZION reserved (not in vesting schedule)
 
 ---
 
-### **Risk 2: Development Delays (>6 months)**
+### **Risk 2: ZION Price Volatility (Wild Swings)**
+
+**Impact:** Monthly budget unpredictable (team salary uncertainty)
+
+**Mitigation:**
+- **Quarterly Conversion:** Convert entire quarter allocation to USDC immediately
+- **Stablecoin Reserve:** Maintain 6-month runway in USDC (hedged)
+- **Price Oracle:** Use 30-day moving average (not spot price) for valuations
+- **Lock-up Bonus:** Team earns +20% ZION if they hold >6 months
+- **Revenue Acceleration:** Early Access at higher price ($80 vs. $60)
+
+---
+
+### **Risk 3: Development Delays (>6 months)**
 
 **Impact:** Team salaries exceed budget, morale drops
 
 **Mitigation:**
-- **Buffer Budget:** +10% contingency ($6.5M = 6.5M ZION)
+- **Buffer Budget:** +10% contingency (additional 130M ZION reserved)
 - **Milestone Insurance:** Revenue-based financing (borrow against future sales)
-- **Community Support:** Emergency DAO vote (unlock extra 5M ZION if approved)
+- **Community Support:** Emergency DAO vote (unlock extra 100M ZION if approved)
 - **Pivot Option:** Launch as Early Access (incomplete), iterate live
 
 ---
 
-### **Risk 3: Regulatory Crackdown (Securities Law)**
+### **Risk 4: Regulatory Crackdown (Securities Law)**
 
 **Impact:** Premine deemed security, legal liability
 
 **Mitigation:**
-- **Legal Opinion:** Obtain Howey Test analysis (not a security if utility)
+- **Legal Opinion:** Obtain Howey Test analysis (utility token, not security)
 - **Decentralization:** DAO controls treasury (not foundation)
-- **Geographic Diversification:** Foundation in Switzerland (pro-crypto)
+- **Geographic Diversification:** Foundation in Switzerland (crypto-friendly)
 - **Compliance:** KYC/AML for large token sales (>$10K)
+- **Utility First:** ZION used in-game (staking, NFTs, governance) = not security
 
 ---
 
-### **Risk 4: Team Turnover (Key Departures)**
+### **Risk 5: Team Turnover (Key Departures)**
 
 **Impact:** Brain drain, project delays
 
 **Mitigation:**
 - **Golden Handcuffs:** 4-year vesting for team ZION tokens
 - **Competitive Salaries:** Top 10% of game industry (Glassdoor benchmarks)
-- **Equity Upside:** Each employee gets 10K-100K ZION (worth $10K-$1M if ZION hits $10)
+- **Equity Upside:** Each employee gets 1M-10M ZION (worth $50K-$5M if ZION hits $5)
 - **Culture:** Spiritual mission (not just money), flexible remote work
+- **Retention Bonuses:** +50% ZION bonus if stay >2 years
 
 ---
 
 ## 📊 RETURN ON INVESTMENT (ROI) ANALYSIS
 
-### **Investment:** 65,000,000 ZION (~0.45% of total supply)
+### **Investment:** 1,300,000,000 ZION (~0.90% of total supply, ~9.1% of premine)
 
-### **Expected Returns (Conservative $1 ZION):**
+### **Expected Returns (Base Case: $0.05 ZION at launch):**
 
 **Scenario 1: Break-Even (Survival)**
 ```
@@ -394,8 +459,8 @@ Revenue: $100M/year × 3 years = $300M
 Cost: $65M (development)
 Profit: $235M
 ROI: 361% (3.6× return)
-ZION Buyback: 100M ZION ($1 each)
-Net Gain: +35M ZION to treasury
+ZION Buyback: 2B ZION @ $0.10 each (post-launch price)
+Net Gain: +700M ZION to treasury
 ```
 
 **Scenario 2: Success (Target)**
@@ -404,8 +469,9 @@ Revenue: $500M/year × 5 years = $2.5B
 Cost: $65M (development)
 Profit: $2.435B
 ROI: 3,746% (37× return)
-ZION Buyback: 1B ZION ($2.50 each)
-Net Gain: +935M ZION to treasury
+ZION Buyback: 5B ZION @ $0.50 each (year 2 price)
+Net Gain: +3.7B ZION to treasury
+Impact: ZION becomes top 50 crypto by market cap
 ```
 
 **Scenario 3: Phenomenon (Dream)**
@@ -414,20 +480,32 @@ Revenue: $1B/year × 10 years = $10B
 Cost: $65M (development)
 Profit: $9.935B
 ROI: 15,285% (152× return)
-ZION Buyback: 2B ZION ($5 each)
-Net Gain: +1.935B ZION to treasury
-Impact: ZION becomes top 10 crypto by market cap
+ZION Buyback: 10B ZION @ $1.00 each (year 3 price)
+Net Gain: +8.7B ZION to treasury
+Impact: ZION becomes top 20 crypto by market cap
 ```
 
 ### **Breakeven Analysis:**
 
-**Minimum Sales to Recover 65M ZION:**
+**Minimum Sales to Recover Investment (@ $0.05 ZION):**
 ```
 Assuming $60 base game + $15/month sub:
 Players needed: 500,000 (first year)
 Revenue: $30M (base) + $90M (subs) = $120M
 Months to breakeven: 6 months post-launch
 Verdict: ✅ LOW RISK - Very achievable
+
+If ZION rises to $0.50 (10× launch):
+1.3B tokens × $0.50 = $650M effective investment
+Breakeven: 3 years (still profitable)
+```
+
+**Token Value Appreciation Impact:**
+```
+Launch ($0.05):    1.3B ZION = $65M
+Year 1 ($0.10):    Remaining 700M ZION = $70M (surplus!)
+Year 2 ($0.50):    Remaining 500M ZION = $250M (huge surplus!)
+Year 3 ($1.00):    Remaining 300M ZION = $300M (5× return on held tokens alone!)
 ```
 
 ---
@@ -480,7 +558,8 @@ Verdict: ✅ LOW RISK - Very achievable
 - [ ] Hire CFO (crypto-experienced)
 
 ### **Phase 3: Token Allocation (Q1 2026)**
-- [ ] Transfer 65M ZION to Game Dev Treasury (premine)
+- [ ] Transfer 1.3B ZION to Game Dev Treasury (premine)
+- [ ] Implement dynamic price adjustment (smart contract)
 - [ ] Publish vesting schedule on-chain (transparency)
 - [ ] Announce to community (Medium post, Twitter)
 - [ ] First DAO vote (approve game dev funding)
@@ -491,13 +570,14 @@ Verdict: ✅ LOW RISK - Very achievable
 - [ ] Hire Technical Director (Unreal Engine 5 expert)
 - [ ] Hire Art Director (AAA experience)
 - [ ] Initial team of 30 (engineers, artists, designers)
-- [ ] First ZION payout (3M ZION → fiat for salaries)
+- [ ] First ZION payout (60M ZION → convert to fiat/USDC for salaries)
 
 ### **Phase 5: Development Kickoff (Q2 2026)**
 - [ ] Vertical slice demo (1 continent playable)
 - [ ] Quarterly progress reports (public GitHub)
 - [ ] Community playtests (invite Discord members)
-- [ ] Second ZION release (3M for Q2 milestones)
+- [ ] Second ZION release (60M for Q2 milestones)
+- [ ] Monitor ZION price (adjust token releases if needed)
 
 ---
 
@@ -524,14 +604,38 @@ Verdict: ✅ LOW RISK - Very achievable
 
 ### **Proposed Allocation:**
 
-**65,000,000 ZION** (~0.45% of total supply, ~4.5% of premine)
+**1,300,000,000 ZION** (~0.90% of total supply, ~9.1% of premine)  
+**@ $0.05 launch price = $65,000,000 USD**
 
 **Justification:**
-1. ✅ **Reasonable Size:** <0.5% of total supply (minimal inflation)
-2. ✅ **Aligned Incentives:** Vested over 4 years (team has skin in game)
-3. ✅ **High ROI Potential:** 3.6× minimum, 152× maximum
-4. ✅ **Strategic Value:** 1M+ users, ecosystem growth, brand equity
-5. ✅ **Risk Mitigation:** Milestone-based, DAO-approved, multisig-secured
+1. ✅ **Realistic Pricing:** $0.05/ZION is achievable launch price (5 cents)
+2. ✅ **Dynamic Adjustment:** Higher price = fewer tokens used (treasury preserved)
+3. ✅ **Reasonable Size:** <1% of total supply (minimal long-term inflation)
+4. ✅ **Aligned Incentives:** Vested over 4 years (team has skin in game)
+5. ✅ **High ROI Potential:** 3.6× minimum, 152× maximum
+6. ✅ **Strategic Value:** 1M+ users, ecosystem growth, brand equity
+7. ✅ **Risk Mitigation:** Milestone-based, DAO-approved, multisig-secured
+8. ✅ **Deflationary Upside:** If ZION hits $1, only 65M tokens used (95% returned!)
+
+### **Key Innovation: DYNAMIC ALLOCATION**
+
+**Unlike traditional fixed allocations, ZION OASIS uses smart contract automation:**
+
+```
+Target Budget: $65M USD (constant)
+Token Release: Variable (depends on ZION price)
+
+If ZION = $0.05: Release 1.3B tokens
+If ZION = $0.10: Release 650M tokens (50% savings!)
+If ZION = $0.50: Release 130M tokens (90% savings!)
+If ZION = $1.00: Release 65M tokens (95% savings!)
+```
+
+**This ensures:**
+- ✅ Team always has $65M budget (price-protected)
+- ✅ Treasury preserves tokens if price rises (deflationary)
+- ✅ No overfunding waste (efficient capital allocation)
+- ✅ Community benefits from price appreciation (less sell pressure)
 
 ### **Next Steps:**
 
@@ -539,32 +643,33 @@ Verdict: ✅ LOW RISK - Very achievable
    - Publish this plan on forum
    - 14-day discussion period
    - On-chain vote (requires >66% approval)
+   - Vote on: "Approve 1.3B ZION allocation for game development with dynamic price adjustment"
 
 2. **Legal Setup (December 2025):**
    - Establish Foundation & Studio entities
-   - Deploy smart contracts
+   - Deploy smart contracts (multisig + dynamic pricing)
    - Hire initial leadership team
 
 3. **Token Transfer (January 2026):**
-   - 65M ZION → Game Dev Treasury
-   - Publish vesting schedule
+   - 1.3B ZION → Game Dev Treasury (locked in smart contract)
+   - Publish vesting schedule + price oracle mechanism
    - Begin hiring (Game Director, Tech Director)
 
 4. **Development Start (Q2 2026):**
    - First milestone: Vertical slice
-   - First payout: 3M ZION
+   - First payout: 60M ZION (@ $0.05) or less if price higher
    - Public demo at E3 2026
 
 ---
 
-**This plan ensures ZION OASIS is fully funded while preserving >99.5% of total supply for ecosystem growth, rewards, and community.**
+**This plan ensures ZION OASIS is fully funded at launch price ($0.05), while preserving 90-95% of tokens if ZION appreciates to $0.50-$1.00.**
 
-**The future of spiritual gaming starts with 65 million tokens. 🎮✨**
+**The dynamic allocation model is a FIRST in crypto gaming: budget certainty + deflationary upside. 🎮✨**
 
 ---
 
 **Document Owner:** ZION Foundation Treasury Committee  
 **Review Frequency:** Quarterly (adjust for ZION price volatility)  
 **Last Updated:** October 30, 2025  
-**Version:** 1.0 - PREMINE FUNDING PROPOSAL  
+**Version:** 2.0 - DYNAMIC PRICING MODEL (@ $0.05 Launch)  
 **Status:** ⏳ AWAITING DAO VOTE (November 2025)
