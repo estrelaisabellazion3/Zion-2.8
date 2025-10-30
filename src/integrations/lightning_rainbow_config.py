@@ -5,6 +5,7 @@ ZION 2.7.5 - Lightning Network & Rainbow Bridge Configuration
 🌟 JAI RAM SITA HANUMAN - ON THE STAR 🕉️
 """
 
+import os
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
@@ -33,10 +34,10 @@ LIGHTNING_NETWORK_CONFIG = {
         'zion_lightning_port': 9735,  # Standard Lightning port
         'zion_rest_port': 8080,      # REST API port
         'zion_grpc_port': 10009,     # gRPC port
-        'bitcoin_rpc_host': 'localhost',
-        'bitcoin_rpc_port': 8332,
-        'bitcoin_rpc_user': 'zion_lightning',
-        'bitcoin_rpc_password': 'sacred_lightning_2025',
+        'bitcoin_rpc_host': os.getenv('BTC_RPC_HOST', 'localhost'),
+        'bitcoin_rpc_port': int(os.getenv('BTC_RPC_PORT', '8332')),
+        'bitcoin_rpc_user': os.getenv('BTC_RPC_USER', 'zion_lightning'),
+        'bitcoin_rpc_password': os.getenv('BTC_RPC_PASSWORD'),  # MUST be set in environment
         'channel_config': LightningChannelConfig(),
         'autopilot_enabled': True,
         'autopilot_max_channels': 10,
@@ -52,10 +53,10 @@ LIGHTNING_NETWORK_CONFIG = {
         'zion_lightning_port': 9736,
         'zion_rest_port': 8081,
         'zion_grpc_port': 10010,
-        'bitcoin_rpc_host': 'localhost',
-        'bitcoin_rpc_port': 18332,  # Bitcoin testnet RPC
-        'bitcoin_rpc_user': 'zion_lightning_test',
-        'bitcoin_rpc_password': 'sacred_lightning_test_2025',
+        'bitcoin_rpc_host': os.getenv('BTC_RPC_HOST', 'localhost'),
+        'bitcoin_rpc_port': int(os.getenv('BTC_RPC_PORT_TESTNET', '18332')),  # Bitcoin testnet RPC
+        'bitcoin_rpc_user': os.getenv('BTC_RPC_USER_TESTNET', 'zion_lightning_test'),
+        'bitcoin_rpc_password': os.getenv('BTC_RPC_PASSWORD_TESTNET'),  # MUST be set in environment
         'channel_config': LightningChannelConfig(
             min_channel_capacity=100_000,   # Lower amounts for testnet
             default_channel_capacity=1_000_000
@@ -102,7 +103,7 @@ RAINBOW_BRIDGE_CONFIG = {
     'mainnet': {
         SupportedChain.ZION: ChainBridgeConfig(
             chain_name="ZION Mainnet",
-            rpc_url="http://91.98.122.165:8332",
+            rpc_url=os.getenv('ZION_RPC_URL', 'http://localhost:8332'),
             network_id="zion-mainnet",
             confirmations_required=6,
             min_bridge_amount=100.0,  # 100 ZION minimum
@@ -163,7 +164,7 @@ RAINBOW_BRIDGE_CONFIG = {
     'testnet': {
         SupportedChain.ZION: ChainBridgeConfig(
             chain_name="ZION Testnet",
-            rpc_url="http://91.98.122.165:8335",  # Testnet RPC
+            rpc_url=os.getenv('ZION_TESTNET_RPC_URL', 'http://localhost:8335'),  # Testnet RPC
             network_id="zion-testnet",
             confirmations_required=3,
             min_bridge_amount=1.0,  # 1 ZION minimum for testing

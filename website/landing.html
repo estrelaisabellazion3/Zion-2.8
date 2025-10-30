@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ZION Terra Nova - World's First Consciousness Blockchain | Live Testnet">
+    <meta name="keywords" content="ZION, blockchain, consciousness mining, testnet, cryptocurrency, sacred technology">
+    <title>ZION Terra Nova | Consciousness Blockchain Testnet</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --matrix-green: #00ff00;
+            --matrix-dark: #000000;
+            --matrix-green-alpha: rgba(0, 255, 0, 0.1);
+            --sacred-gold: #ffd700;
+            --consciousness-blue: #00ffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--matrix-dark);
+            color: var(--matrix-green);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Matrix Rain Background */
+        #matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            border-bottom: 2px solid var(--matrix-green);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            width: 180px;
+            height: 180px;
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.6);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 40px rgba(0, 255, 0, 0.6); }
+            50% { box-shadow: 0 0 60px rgba(0, 255, 0, 0.9); }
+        }
+
+        .title-section {
+            text-align: left;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 900;
+            color: var(--matrix-green);
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+            letter-spacing: 4px;
+            margin-bottom: 0.5rem;
+            animation: glitch 5s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 0, 0.8); }
+            25% { text-shadow: -2px 0 20px rgba(0, 255, 0, 0.8), 2px 0 20px rgba(0, 255, 255, 0.5); }
+            75% { text-shadow: 2px 0 20px rgba(0, 255, 0, 0.8), -2px 0 20px rgba(255, 215, 0, 0.5); }
+        }
+
+        .subtitle {
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: rgba(0, 255, 0, 0.7);
+            margin-bottom: 0.5rem;
+        }
+
+        .network-status {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid var(--matrix-green);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--matrix-green);
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Live Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 3rem 0;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--matrix-green);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
+            border-color: var(--consciousness-blue);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.5));
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--matrix-green);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(0, 255, 0, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            color: var(--consciousness-blue);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 3rem 0;
+            background: rgba(0, 20, 0, 0.5);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--sacred-gold);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--matrix-green);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--sacred-gold);
+            transform: scale(1.05);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: var(--matrix-green);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .feature-card p {
+            color: rgba(0, 255, 0, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Recent Blocks */
+        .blocks-section {
+            padding: 3rem 0;
+        }
+
+        .blocks-table {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--matrix-green);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .blocks-table th {
+            background: rgba(0, 255, 0, 0.1);
+            padding: 1rem;
+            text-align: left;
+            color: var(--matrix-green);
+            font-weight: 700;
+            border-bottom: 2px solid var(--matrix-green);
+        }
+
+        .blocks-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+            color: rgba(0, 255, 0, 0.8);
+        }
+
+        .blocks-table tr:hover {
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .hash-cell {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--consciousness-blue);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(180deg, rgba(0, 20, 0, 0.5), rgba(0, 0, 0, 0.9));
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 3rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--matrix-green);
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--matrix-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn:hover {
+            background: var(--matrix-green);
+            color: var(--matrix-dark);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .btn-primary {
+            background: var(--matrix-green);
+            color: var(--matrix-dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--sacred-gold);
+            border-color: var(--sacred-gold);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 2px solid var(--matrix-green);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--matrix-green);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--sacred-gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        }
+
+        .copyright {
+            color: rgba(0, 255, 0, 0.5);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Loading State */
+        .loading {
+            color: rgba(0, 255, 0, 0.5);
+            animation: pulse-text 1.5s infinite;
+        }
+
+        @keyframes pulse-text {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .title-section {
+                text-align: center;
+            }
+
+            .logo {
+                width: 120px;
+                height: 120px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .blocks-table {
+                font-size: 0.8rem;
+            }
+
+            .blocks-table th,
+            .blocks-table td {
+                padding: 0.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrix-rain"></canvas>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-section">
+                <img src="/assets/z.gif" alt="ZION Logo" class="logo">
+                <div class="title-section">
+                    <h1>ZION TERRA NOVA</h1>
+                    <div class="subtitle">World's First Consciousness Blockchain</div>
+                    <div class="network-status">
+                        <span class="status-dot"></span>
+                        <strong>TESTNET LIVE</strong> | v2.8.3 "Testnet Genesis"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Live Statistics -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-value" id="block-height">
+                        <span class="loading">Loading...</span>
+                    </div>
+                    <div class="stat-label">Block Height</div>
+                    <div class="stat-change" id="block-change"></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⛏️</div>
+                    <div class="stat-value" id="hashrate">
+                        <span class="loading">Loading...</span>
+                    </div>
+                    <div class="stat-label">Network Hashrate</div>
+                    <div class="stat-change">Real-time</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-value" id="difficulty">
+                        <span class="loading">Loading...</span>
+                    </div>
+                    <div class="stat-label">Difficulty</div>
+                    <div class="stat-change">Auto-adjusted</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="peers">
+                        <span class="loading">Loading...</span>
+                    </div>
+                    <div class="stat-label">Connected Peers</div>
+                    <div class="stat-change">Global network</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value">5,479.45</div>
+                    <div class="stat-label">Block Reward</div>
+                    <div class="stat-change">ZION per block</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🌍</div>
+                    <div class="stat-value">144B</div>
+                    <div class="stat-label">Total Supply</div>
+                    <div class="stat-change">50-year emission</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">🌟 Why ZION?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧘</div>
+                    <h3>Consciousness Mining</h3>
+                    <p>Earn up to 15x rewards through spiritual development. 9 consciousness levels from Physical to ON_THE_STAR.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🏛️</div>
+                    <h3>DAO Governance</h3>
+                    <p>20-year transition from centralized spiritual leadership to full community governance (2025-2045).</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🥚</div>
+                    <h3>Golden Egg Quest</h3>
+                    <p>Find HIRANYAGARBHA cosmic egg and win 1B ZION + DAO governance seat. The ultimate treasure hunt!</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💝</div>
+                    <h3>Humanitarian Focus</h3>
+                    <p>10% of all rewards support children's education globally through the Children Future Fund.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Production Security</h3>
+                    <p>SSL/TLS encryption, UFW firewall, fail2ban intrusion detection, daily backups. Enterprise-grade.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Advanced Mining</h3>
+                    <p>Yescrypt + Argon2 hybrid PoW. CPU and GPU friendly. Fair distribution for all miners.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Blocks -->
+    <section class="blocks-section">
+        <div class="container">
+            <h2 class="section-title">📜 Recent Blocks</h2>
+            <div style="overflow-x: auto;">
+                <table class="blocks-table">
+                    <thead>
+                        <tr>
+                            <th>Height</th>
+                            <th>Hash</th>
+                            <th>Timestamp</th>
+                            <th>Transactions</th>
+                            <th>Miner</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blocks-tbody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem;">
+                                <span class="loading">Loading recent blocks...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="section-title">🚀 Join the Testnet</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; color: rgba(0, 255, 0, 0.8);">
+                Experience the future of consciousness-based blockchain technology
+            </p>
+            <div class="cta-buttons">
+                <a href="/dashboard.html" class="btn btn-primary">📊 Live Dashboard</a>
+                <a href="/api/" class="btn">📡 API Stats</a>
+                <a href="https://docs.zionterranova.com" class="btn">📚 Documentation</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="/health">Health Check</a>
+                <a href="/metrics">Prometheus Metrics</a>
+                <a href="/api/stats">API Documentation</a>
+                <a href="https://t.me/zionblockchain" target="_blank">Telegram</a>
+                <a href="https://twitter.com/zionterranova" target="_blank">Twitter</a>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 ZION Blockchain Foundation</p>
+                <p style="margin-top: 0.5rem; color: var(--sacred-gold);">
+                    "Technology in service of consciousness, consciousness in service of all beings"
+                </p>
+                <p style="margin-top: 1rem; font-size: 0.8rem;">
+                    JAI RAM SITA HANUMAN 🙏
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Matrix Rain Script -->
+    <script>
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const matrix = "ZION01";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrix[Math.floor(Math.random() * matrix.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 35);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+    <!-- Stats Updater Script -->
+    <script>
+        const API_BASE = window.location.origin;
+
+        async function fetchStats() {
+            try {
+                // Fetch from /metrics for detailed stats
+                const metricsResponse = await fetch(`${API_BASE}/metrics`);
+                const metrics = await metricsResponse.json();
+
+                // Fetch from /api/ for blockchain info
+                const apiResponse = await fetch(`${API_BASE}/api/`);
+                const apiData = await apiResponse.json();
+                
+                // Update stats with real data
+                document.getElementById('block-height').textContent = 
+                    (metrics.zion_blocks_total || 0).toLocaleString();
+                
+                // Calculate approximate hashrate from difficulty
+                const hashrate = (metrics.zion_difficulty || 0) * 1000000; // Approximate
+                document.getElementById('hashrate').textContent = 
+                    formatHashrate(hashrate);
+                
+                document.getElementById('difficulty').textContent = 
+                    (metrics.zion_difficulty || 0).toLocaleString();
+                
+                // Use addresses count as proxy for peers
+                document.getElementById('peers').textContent = 
+                    (metrics.zion_addresses_count || 0).toLocaleString();
+                
+                // Show block change with timestamp
+                const blockChange = document.getElementById('block-change');
+                if (blockChange) {
+                    blockChange.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+                }
+                
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+                // Keep loading state or show error
+                document.querySelectorAll('.stat-value .loading').forEach(el => {
+                    el.textContent = 'Error';
+                    el.style.color = '#ff0000';
+                });
+            }
+        }
+
+        async function fetchRecentBlocks() {
+            try {
+                // Since we don't have /api/blocks/recent, show current block info
+                const apiResponse = await fetch(`${API_BASE}/api/`);
+                const data = await apiResponse.json();
+                
+                const tbody = document.getElementById('blocks-tbody');
+                if (!tbody) return; // Element might not exist
+                
+                // Display current block information
+                tbody.innerHTML = `
+                    <tr>
+                        <td style="color: var(--sacred-gold); font-weight: 700;">${data.blocks || 0}</td>
+                        <td class="hash-cell">${data.bestblockhash ? data.bestblockhash.substring(0, 16) + '...' : 'N/A'}</td>
+                        <td>${data.mediantime ? new Date(data.mediantime * 1000).toLocaleString() : 'N/A'}</td>
+                        <td>-</td>
+                        <td style="font-size: 0.8rem;">ZION Network</td>
+                    </tr>
+                `;
+                
+            } catch (error) {
+                console.error('Error fetching blocks:', error);
+                const tbody = document.getElementById('blocks-tbody');
+                if (tbody) {
+                    tbody.innerHTML = 
+                        '<tr><td colspan="5" style="text-align: center; padding: 2rem;">Network syncing...</td></tr>';
+                }
+            }
+        }
+
+        function formatHashrate(hashrate) {
+            if (hashrate >= 1e12) return (hashrate / 1e12).toFixed(2) + ' TH/s';
+            if (hashrate >= 1e9) return (hashrate / 1e9).toFixed(2) + ' GH/s';
+            if (hashrate >= 1e6) return (hashrate / 1e6).toFixed(2) + ' MH/s';
+            if (hashrate >= 1e3) return (hashrate / 1e3).toFixed(2) + ' KH/s';
+            return hashrate.toFixed(2) + ' H/s';
+        }
+
+        // Initial fetch
+        fetchStats();
+        fetchRecentBlocks();
+
+        // Update every 10 seconds
+        setInterval(fetchStats, 10000);
+        setInterval(fetchRecentBlocks, 30000);
+    </script>
+</body>
+</html>

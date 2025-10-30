@@ -191,6 +191,12 @@ backups/
 *.p12
 *.pfx
 
+# SSH configs with private keys (CRITICAL!)
+config/ssh_config.json
+config/ssh_config.json.BACKUP*
+**/ssh_config.json
+!config/ssh_config.json.example
+
 # Deployment-specific configs
 deployment/seednodes.py
 deployment/*_production.py
