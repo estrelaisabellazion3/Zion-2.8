@@ -1,0 +1,53 @@
+# Prometheus Configuration for ZION Blockchain Monitoring
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'zion-blockchain'
+    environment: 'production'
+
+# Alertmanager configuration (optional)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+          # - alertmanager:9093
+
+# Rule files
+rule_files:
+  # - "alerts.yml"
+
+# Scrape configurations
+scrape_configs:
+  # ZION Node metrics (if you add Prometheus exporter)
+  - job_name: 'zion_node'
+    static_configs:
+      - targets: ['localhost:9101']
+        labels:
+          instance: 'zion-main'
+          service: 'blockchain'
+
+  # Node Exporter (system metrics)
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['localhost:9100']
+        labels:
+          instance: 'zion-server'
+          service: 'system'
+
+  # Nginx metrics
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['localhost:9113']
+        labels:
+          instance: 'zion-proxy'
+          service: 'nginx'
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          instance: 'prometheus'
+          service: 'monitoring'

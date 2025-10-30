@@ -1,0 +1,271 @@
+{
+  "dashboard": {
+    "title": "ZION Blockchain Monitoring",
+    "tags": ["blockchain", "zion", "cryptocurrency"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "refresh": "10s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Block Height",
+        "type": "graph",
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "zion_block_height",
+            "legendFormat": "Block Height",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "short", "label": "Blocks" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Network Hashrate",
+        "type": "graph",
+        "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "zion_network_hashrate",
+            "legendFormat": "Hashrate",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "Hs", "label": "Hash/s" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Transaction Pool",
+        "type": "graph",
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "zion_mempool_size",
+            "legendFormat": "Mempool Size",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "short", "label": "Transactions" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Peer Connections",
+        "type": "graph",
+        "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "zion_peer_connections",
+            "legendFormat": "Peers",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "short", "label": "Peers" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "RPC Requests/sec",
+        "type": "graph",
+        "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "rate(zion_rpc_requests_total[1m])",
+            "legendFormat": "{{method}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "reqps", "label": "Requests/sec" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "RPC Response Time",
+        "type": "graph",
+        "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(zion_rpc_duration_seconds_bucket[1m]))",
+            "legendFormat": "p95",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(zion_rpc_duration_seconds_bucket[1m]))",
+            "legendFormat": "p99",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "s", "label": "Duration" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "System CPU Usage",
+        "type": "graph",
+        "gridPos": { "x": 0, "y": 24, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "legendFormat": "CPU %",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "percent", "label": "CPU %", "max": 100, "min": 0 },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "System Memory Usage",
+        "type": "graph",
+        "gridPos": { "x": 12, "y": 24, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "100 - ((node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100)",
+            "legendFormat": "Memory %",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "percent", "label": "Memory %", "max": 100, "min": 0 },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Disk I/O",
+        "type": "graph",
+        "gridPos": { "x": 0, "y": 32, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "rate(node_disk_read_bytes_total[1m])",
+            "legendFormat": "Read",
+            "refId": "A"
+          },
+          {
+            "expr": "rate(node_disk_written_bytes_total[1m])",
+            "legendFormat": "Write",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "Bps", "label": "Bytes/sec" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Network Traffic",
+        "type": "graph",
+        "gridPos": { "x": 12, "y": 32, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "rate(node_network_receive_bytes_total[1m])",
+            "legendFormat": "Receive",
+            "refId": "A"
+          },
+          {
+            "expr": "rate(node_network_transmit_bytes_total[1m])",
+            "legendFormat": "Transmit",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "Bps", "label": "Bytes/sec" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Database Size",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 40, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "zion_database_size_bytes",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes"
+          }
+        }
+      },
+      {
+        "id": 12,
+        "title": "Total Transactions",
+        "type": "stat",
+        "gridPos": { "x": 6, "y": 40, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "zion_total_transactions",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value"
+        }
+      },
+      {
+        "id": 13,
+        "title": "Mining Difficulty",
+        "type": "stat",
+        "gridPos": { "x": 12, "y": 40, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "zion_difficulty",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "graphMode": "area",
+          "colorMode": "value"
+        }
+      },
+      {
+        "id": 14,
+        "title": "Uptime",
+        "type": "stat",
+        "gridPos": { "x": 18, "y": 40, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "time() - node_boot_time_seconds",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "graphMode": "none",
+          "colorMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s"
+          }
+        }
+      }
+    ]
+  }
+}

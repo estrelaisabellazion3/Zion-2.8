@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# ZION Blockchain - Systemd Service
+# Auto-start ZION node on boot with proper security and restart policies
+#
+
+[Unit]
+Description=ZION Blockchain Node (Regtest)
+Documentation=https://github.com/estrelaisabellazion3/Zion-2.8
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=zion
+Group=zion
+WorkingDirectory=/home/zion/ZION
+Environment="PATH=/home/zion/ZION/venv_testing/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONPATH=/home/zion/ZION"
+
+# Start ZION RPC server
+ExecStart=/home/zion/ZION/venv_testing/bin/python src/core/zion_rpc_server.py \
+    --network regtest \
+    --port 8332 \
+    --datadir /home/zion/.zion
+
+# Restart policy
+Restart=always
+RestartSec=10
+StartLimitInterval=300
+StartLimitBurst=5
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/zion/.zion /home/zion/ZION
+
+# Resource limits
+MemoryMax=4G
+CPUQuota=400%
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=zion-node
+
+[Install]
+WantedBy=multi-user.target
