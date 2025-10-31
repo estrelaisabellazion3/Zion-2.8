@@ -703,8 +703,9 @@ class ZionUniversalPool:
         api_port = pool_config['api_port']
         self.api_server = ZIONPoolAPIServer(self, port=api_port)
 
-        # Initialize RandomX engine for share validation (optional)
-        self.randomx_engine = None  # Using pure SHA256 validation for now
+        # Initialize algorithm validation engines
+        # ⚠️ DEPRECATED in v2.8.4: Use src/core/algorithms.py instead
+        self.randomx_engine = None  # Use unified algorithms registry for validation
         
         # Start Prometheus metrics server on port 9090
         try:

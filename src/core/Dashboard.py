@@ -40,10 +40,10 @@ class ZionDashboard:
         # Processes
         self.miner_process = None
         
-        # Mining state
+        # Mining state (v2.8.4: ASIC-only)
         self.mining_active = False
         self.mining_mode = "hybrid"  # cpu, gpu, hybrid
-        self.mining_algorithm = "autolykos2"
+        self.mining_algorithm = "cosmic_harmony"  # v2.8.4: default changed from autolykos2
         
         # Wallet
         self.wallet_balance = 0.0
@@ -169,13 +169,13 @@ class ZionDashboard:
         )
         mode_combo.grid(row=0, column=1, sticky=tk.W, pady=5)
         
-        # Algorithm
+        # Algorithm (v2.8.4: ASIC-only, default cosmic_harmony)
         ttk.Label(mining_frame, text="Algorithm:").grid(row=1, column=0, sticky=tk.W, pady=5)
-        self.algo_var = tk.StringVar(value="autolykos2")
+        self.algo_var = tk.StringVar(value="cosmic_harmony")
         algo_combo = ttk.Combobox(
             mining_frame,
             textvariable=self.algo_var,
-            values=["autolykos2", "randomx", "yescrypt", "kawpow"],
+            values=["cosmic_harmony", "autolykos2", "randomx", "yescrypt"],
             state="readonly",
             width=15
         )

@@ -1,0 +1,208 @@
+version: '3.8'
+
+# ZION v2.8.4 "Cosmic Harmony" Production Deployment
+# Unified blockchain backend with ASIC-resistant algorithms
+
+services:
+  # Blockchain Node - Unified backend (replaces multiple services)
+  zion-node:
+    image: python:3.11-slim
+    container_name: zion-2.8.4-node
+    working_dir: /app
+    volumes:
+      - ./src/core:/app/src/core
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./zion:/app/zion
+    ports:
+      - "8545:8545"   # RPC JSON-RPC 2.0
+      - "8333:8333"   # P2P network
+      - "8080:8080"   # WebSocket
+    environment:
+      - ZION_ENV=production
+      - ZION_VERSION=2.8.4
+      - ZION_LOG_LEVEL=info
+      - ZION_RPC_PORT=8545
+      - ZION_P2P_PORT=8333
+      - ZION_WS_PORT=8080
+      - ZION_DEFAULT_ALGO=cosmic_harmony
+      - ZION_ASIC_RESISTANT=true
+    command: python src/core/new_zion_blockchain.py
+    restart: unless-stopped
+    networks:
+      - zion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8545"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.zion.version=2.8.4"
+      - "com.zion.component=blockchain-node"
+      - "com.zion.algorithm=cosmic_harmony"
+
+  # Mining Pool - Stratum protocol with multi-algo support
+  mining-pool:
+    image: python:3.11-slim
+    container_name: zion-2.8.4-pool
+    working_dir: /app
+    volumes:
+      - ./src/core:/app/src/core
+      - ./data/pool:/app/data
+      - ./logs:/app/logs
+    ports:
+      - "3333:3333"   # Stratum
+      - "8181:8181"   # Admin API
+    environment:
+      - ZION_ENV=production
+      - ZION_VERSION=2.8.4
+      - ZION_LOG_LEVEL=info
+      - POOL_PORT=3333
+      - POOL_ADMIN_PORT=8181
+      - POOL_DEFAULT_ALGO=cosmic_harmony
+      - POOL_SUPPORTED_ALGOS=cosmic_harmony,randomx,yescrypt,autolykos_v2
+      - POOL_ASIC_RESISTANT_ONLY=true
+    command: python src/core/zion_universal_pool_v2.py
+    restart: unless-stopped
+    networks:
+      - zion-network
+    depends_on:
+      - zion-node
+    labels:
+      - "com.zion.version=2.8.4"
+      - "com.zion.component=mining-pool"
+
+  # API Server - REST API for external services
+  api-server:
+    image: python:3.11-slim
+    container_name: zion-2.8.4-api
+    working_dir: /app
+    volumes:
+      - ./api:/app/api
+      - ./src:/app/src
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"   # FastAPI
+    environment:
+      - ZION_ENV=production
+      - ZION_VERSION=2.8.4
+      - ZION_LOG_LEVEL=info
+      - API_PORT=8000
+      - RPC_URL=http://zion-node:8545
+    command: uvicorn api:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
+    networks:
+      - zion-network
+    depends_on:
+      - zion-node
+    labels:
+      - "com.zion.version=2.8.4"
+      - "com.zion.component=api-server"
+
+  # Dashboard - Web UI
+  dashboard:
+    image: python:3.11-slim
+    container_name: zion-2.8.4-dashboard
+    working_dir: /app
+    volumes:
+      - ./src/core/Dashboard.py:/app/dashboard.py
+      - ./static:/app/static
+      - ./templates:/app/templates
+    ports:
+      - "5000:5000"   # Flask
+    environment:
+      - ZION_ENV=production
+      - ZION_VERSION=2.8.4
+      - DASHBOARD_PORT=5000
+      - RPC_URL=http://zion-node:8545
+    command: python dashboard.py
+    restart: unless-stopped
+    networks:
+      - zion-network
+    depends_on:
+      - zion-node
+    labels:
+      - "com.zion.version=2.8.4"
+      - "com.zion.component=dashboard"
+
+  # Prometheus - Metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: zion-2.8.4-prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    restart: unless-stopped
+    networks:
+      - zion-network
+    labels:
+      - "com.zion.version=2.8.4"
+      - "com.zion.component=monitoring"
+
+  # Grafana - Metrics visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: zion-2.8.4-grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana-dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=zion_admin_2.8.4
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
+    restart: unless-stopped
+    networks:
+      - zion-network
+    depends_on:
+      - prometheus
+    labels:
+      - "com.zion.version=2.8.4"
+      - "com.zion.component=monitoring"
+
+networks:
+  zion-network:
+    driver: bridge
+    labels:
+      - "com.zion.version=2.8.4"
+      - "com.zion.network=production"
+
+volumes:
+  prometheus-data:
+    labels:
+      - "com.zion.version=2.8.4"
+      - "com.zion.volume=prometheus"
+  grafana-data:
+    labels:
+      - "com.zion.version=2.8.4"
+      - "com.zion.volume=grafana"
+
+# Deployment instructions:
+# 
+# 1. Start all services:
+#    docker-compose -f deployment/docker-compose.2.8.4-production.yml up -d
+# 
+# 2. Check status:
+#    docker-compose -f deployment/docker-compose.2.8.4-production.yml ps
+# 
+# 3. View logs:
+#    docker-compose -f deployment/docker-compose.2.8.4-production.yml logs -f zion-node
+# 
+# 4. Stop all services:
+#    docker-compose -f deployment/docker-compose.2.8.4-production.yml down
+# 
+# 5. Restart specific service:
+#    docker-compose -f deployment/docker-compose.2.8.4-production.yml restart zion-node
+# 
+# Environment variables can be overridden in .env file:
+#   ZION_ENV=production
+#   ZION_VERSION=2.8.4
+#   ZION_DEFAULT_ALGO=cosmic_harmony
+#   ZION_LOG_LEVEL=info

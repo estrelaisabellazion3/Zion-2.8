@@ -3,12 +3,18 @@
 ZION NiceHash Miner v2.6.75
 Profesionální mining client optimalizovaný pro NiceHash
 
+⚠️ DEPRECATED in v2.8.4: Use unified src/core/algorithms.py instead
+
 Features:
 - NiceHash Stratum protokol 
 - Auto-detection algoritmů
-- RandomX + SHA256 fallback
+- RandomX + ASIC-resistant fallbacks (SHA3-256, not SHA256)
 - Real-time statistiky
 - Temperature monitoring
+
+For v2.8.4+:
+    from src.core.algorithms import get_hash
+    hash_result = get_hash('randomx', data, nonce)
 """
 import socket
 import json
@@ -186,10 +192,10 @@ class NiceHashMiner:
                     else:
                         print(f"  ⚠️ Engine {i+1}: Fallback mode")
                 else:
-                    # Pure SHA256 engine as fallback
+                    # ASIC-resistant fallback (SHA3-256, not SHA256)
                     self.engines[i] = "fallback"
                     success_count += 1
-                    print(f"  ⚠️ Engine {i+1}: SHA256 fallback")
+                    print(f"  ⚠️ Engine {i+1}: SHA3-256 fallback (DEPRECATED: use algorithms.py)")
                     
             except Exception as e:
                 print(f"  ❌ Engine {i+1}: {e}")
@@ -214,9 +220,10 @@ class NiceHashMiner:
                 
                 # Create block data
                 if engine == "fallback":
-                    # SHA256 fallback mining
+                    # ASIC-resistant fallback (SHA3-256, not SHA256)
+                    # ⚠️ DEPRECATED: Use src/core/algorithms.py in v2.8.4+
                     block_data = f"{self.job_id}_{nonce}_{thread_id}".encode()
-                    hash_result = hashlib.sha256(block_data).digest()
+                    hash_result = hashlib.sha3_256(block_data).digest()
                 else:
                     # RandomX mining
                     block_data = f"NH_{self.job_id}_{nonce}".encode()

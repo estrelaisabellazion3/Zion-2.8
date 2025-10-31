@@ -1,9 +1,24 @@
 #!/usr/bin/env python3
 """
-ZION 2.7.5 Real Blockchain Implementation
+ZION 2.7.5 Real Blockchain Implementation (DEPRECATED in v2.8.4)
 Production-Ready Blockchain Core with No Simulations
 🌟 JAI RAM SITA HANUMAN - ON THE STAR
+
+⚠️ DEPRECATION WARNING (v2.8.4):
+   This module is deprecated and will be removed in v2.8.5.
+   Please migrate to: src.core.new_zion_blockchain.ZionRealBlockchain
+   
+   Migration guide: docs/2.8.4/NODE_MIGRATION_GUIDE_v2.8.4.md
 """
+
+import warnings
+warnings.warn(
+    "core.real_blockchain is deprecated and will be removed in v2.8.5. "
+    "Use src.core.new_zion_blockchain.ZionRealBlockchain instead. "
+    "See docs/2.8.4/NODE_MIGRATION_GUIDE_v2.8.4.md for migration guide.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
 import json
 import time
@@ -551,14 +566,17 @@ class ZionRealBlockchain:
         return hash_result.hex()
     
     def _create_genesis_block(self):
-        """Create genesis block with pre-mine addresses from seednodes.py"""
-        # Import premine addresses from seednodes
-        from seednodes import ZION_PREMINE_ADDRESSES
+        """Create genesis block with pre-mine addresses from premine.py"""
+        # Import premine addresses from premine module
+        from premine import get_premine_addresses
         
-        # Genesis reward distribution using CORRECT addresses from seednodes.py
+        # Get all premine addresses
+        ZION_PREMINE_ADDRESSES = get_premine_addresses()
+        
+        # Genesis reward distribution using CORRECT addresses from premine.py
         genesis_transactions = []
         
-        # Add all premine addresses from seednodes.py
+        # Add all premine addresses from premine.py (15.78B ZION)
         for address, info in ZION_PREMINE_ADDRESSES.items():
             genesis_transactions.append({
                 'type': info.get('type', 'premine'),
@@ -567,7 +585,7 @@ class ZionRealBlockchain:
                 'purpose': info['purpose']
             })
         
-        print(f"✨ Creating genesis block with {len(genesis_transactions)} premine addresses from seednodes.py")
+        print(f"✨ Creating genesis block with {len(genesis_transactions)} premine addresses (15.78B ZION)")
         
         # Calculate total pre-mine supply
         total_premine = sum(tx['amount'] for tx in genesis_transactions)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ZION 2.7.5 - REST API with SECURITY
+ZION 2.8.4 - REST API with SECURITY
 FastAPI endpoints for blockchain interaction with rate limiting and input validation
 """
 
@@ -19,7 +19,9 @@ from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
-from core.real_blockchain import ZionRealBlockchain
+# v2.8.4: Migrated to unified blockchain backend
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src', 'core'))
+from new_zion_blockchain import ZionRealBlockchain
 from wallet import get_wallet
 from mining.config import get_mining_config
 from network import get_network
@@ -66,8 +68,8 @@ rate_limiter = RateLimiter(requests_per_minute=60)
 
 app = FastAPI(
     title="ZION Blockchain API",
-    description="ZION 2.7.5 Real Blockchain REST API with Security",
-    version="2.7.5"
+    description="ZION 2.8.4 Real Blockchain REST API with ASIC-Resistant Algorithms",
+    version="2.8.4"
 )
 
 # SECURITY: Rate limiting middleware
@@ -222,8 +224,9 @@ async def root():
     """API root endpoint"""
     return {
         "name": "ZION Blockchain API",
-        "version": "2.7.1",
+        "version": "2.8.4",
         "status": "operational",
+        "algorithms": ["cosmic_harmony", "randomx", "yescrypt", "autolykos_v2"],
         "endpoints": [
             "/blockchain/stats",
             "/blockchain/blocks",

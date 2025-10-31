@@ -95,33 +95,38 @@ $65,000,000 ÷ $0.05 = 1,300,000,000 ZION (1.3B)
 ## 📅 RELEASE SCHEDULE - GAME DEVELOPMENT FUND
 
 **Total:** 1,440,000,000 ZION  
-**Vesting:** 4 years (2026-2029)  
+**Development Period:** 3 years (2026-2028) - **ACCELERATED TIMELINE**  
+**Launch Target:** Q4 2028 (36 months)  
 **Method:** Quarterly milestone-based releases  
 
-### **Quarterly Distribution Plan:**
+### **3-Year Accelerated Distribution Plan:**
 
 | Year | Quarter | Milestone | ZION Release | Cumulative | % of Fund |
 |------|---------|-----------|--------------|------------|-----------|
-| **2026** | Q1 | Team hiring, pre-production | 90,000,000 | 90,000,000 | 6.3% |
-| 2026 | Q2 | Vertical slice demo | 90,000,000 | 180,000,000 | 12.5% |
-| 2026 | Q3 | Engine setup, tools pipeline | 90,000,000 | 270,000,000 | 18.8% |
-| 2026 | Q4 | First playable continent | 90,000,000 | 360,000,000 | 25.0% |
-| **2027** | Q1 | Full team ramp (250 people) | 120,000,000 | 480,000,000 | 33.3% |
-| 2027 | Q2 | 4 continents complete | 120,000,000 | 600,000,000 | 41.7% |
-| 2027 | Q3 | All 51 avatars implemented | 120,000,000 | 720,000,000 | 50.0% |
-| 2027 | Q4 | Combat & multiplayer | 120,000,000 | 840,000,000 | 58.3% |
-| **2028** | Q1 | All 7 continents, Golden Egg | 100,000,000 | 940,000,000 | 65.3% |
-| 2028 | Q2 | Closed Beta launch | 100,000,000 | 1,040,000,000 | 72.2% |
-| 2028 | Q3 | Open Beta, polish | 100,000,000 | 1,140,000,000 | 79.2% |
-| 2028 | Q4 | **FULL LAUNCH** + VR Beta | 100,000,000 | 1,240,000,000 | 86.1% |
-| **2029** | Q1 | Post-launch, VR dev | 50,000,000 | 1,290,000,000 | 89.6% |
-| 2029 | Q2 | VR Full Launch | 50,000,000 | 1,340,000,000 | 93.1% |
-| 2029 | Q3 | Expansion 1 (Seven Heavens) | 50,000,000 | 1,390,000,000 | 96.5% |
-| 2029 | Q4 | Kids version final polish | 50,000,000 | 1,440,000,000 | 100.0% |
+| **2026** | Q1 | Team hiring (50 people), studio setup | 90,000,000 | 90,000,000 | 6.3% |
+| 2026 | Q2 | Scale to 150 people, vertical slice | 90,000,000 | 180,000,000 | 12.5% |
+| 2026 | Q3 | Scale to 200 people, engine pipeline | 90,000,000 | 270,000,000 | 18.8% |
+| 2026 | Q4 | Full team 250 people, first continent | 90,000,000 | 360,000,000 | 25.0% |
+| **2027** | Q1 | 3 continents complete + 20 avatars | 144,000,000 | 504,000,000 | 35.0% |
+| 2027 | Q2 | 5 continents + 35 avatars | 144,000,000 | 648,000,000 | 45.0% |
+| 2027 | Q3 | All 7 continents + all 51 avatars | 144,000,000 | 792,000,000 | 55.0% |
+| 2027 | Q4 | Combat system + multiplayer core | 144,000,000 | 936,000,000 | 65.0% |
+| **2028** | Q1 | Alpha testing, Golden Egg mechanic | 126,000,000 | 1,062,000,000 | 73.8% |
+| 2028 | Q2 | Closed Beta (10K players) | 126,000,000 | 1,188,000,000 | 82.5% |
+| 2028 | Q3 | Open Beta (100K players), polish | 126,000,000 | 1,314,000,000 | 91.3% |
+| 2028 | Q4 | **🚀 FULL LAUNCH** + VR version | 126,000,000 | 1,440,000,000 | 100.0% |
 
 **Release Frequency:** Quarterly (every 3 months)  
-**Average per Quarter:** 90M ZION (varies by phase)  
+**Total Quarters:** 12 (Q1 2026 → Q4 2028)  
+**Average per Quarter:** 120M ZION  
 **Cliff Period:** None (immediate start Q1 2026)  
+**Post-Launch:** All funds distributed by Q4 2028, game revenue self-sustaining  
+
+### **Key Difference from Original Plan:**
+- ❌ **OLD:** 4 years (2026-2029), slow ramp, 16 quarters
+- ✅ **NEW:** 3 years (2026-2028), aggressive timeline, 12 quarters
+- ✅ **Benefit:** Faster market entry, lower burn rate, competitive advantage
+- ✅ **Risk:** Requires experienced leadership (hire ex-AAA directors)  
 
 ---
 

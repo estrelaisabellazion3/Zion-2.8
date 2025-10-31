@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 """
-ZION 2.7.4 - Nový Blockchain s Novými Premine Adresami
-Implementace blockchainu s čerstvě vygenerovanými adresami
+ZION 2.8.4 - Real Blockchain with ZION OASIS Game Fund
+Implementation with 15.78B ZION premine (includes 1.44B ZION OASIS)
+
+Genesis Distribution:
+- Mining Operators: 8.25B ZION (52.3%)
+- DAO Winners: 1.75B ZION (11.1%)
+- ZION OASIS (Game Development): 1.44B ZION (9.1%) - 3-year unlock (2026-2028)
+- Infrastructure: 4.34B ZION (27.5%)
+Total: 15.78B ZION (10.96% of 144B max supply)
 """
 
 import hashlib
@@ -20,15 +27,11 @@ import math
 # Setup logging first
 logger = logging.getLogger(__name__)
 
-# 🌟 Cosmic Harmony Integration
+# 🌟 PoW Algorithms Integration (ASIC-resistant only)
 try:
-    import sys
-    import os
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'zion', 'mining'))
-    from cosmic_harmony_wrapper import get_hasher
-    COSMIC_HARMONY_AVAILABLE = True
+    from .algorithms import get_hash as algo_hash, is_available as algo_available, list_supported as list_algos
 except ImportError:
-    COSMIC_HARMONY_AVAILABLE = False
+    from algorithms import get_hash as algo_hash, is_available as algo_available, list_supported as list_algos
 
 # Add P2P network import - with fallback for relative/absolute imports
 try:
@@ -47,7 +50,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 class NewZionBlockchain:
-    """Nový ZION blockchain s novými premine adresami a persistent storage"""
+    """ZION Real Blockchain with 15.78B ZION Genesis (v2.8.4)
+    
+    Features:
+    - Full consensus rules & transaction validation
+    - 15.78B ZION premine (up from 14.34B in v2.8.3)
+    - ZION OASIS: 1.44B ZION game development fund (3-year unlock 2026-2028)
+    - P2P network with multi-node synchronization
+    - Persistent SQLite storage with journaling
+    - Complete RPC API for mining integration
+    """
     
     def __init__(self, db_file=None, enable_p2p=True, p2p_port=None, enable_rpc=True, rpc_port=None, network="mainnet"):
         # Use centralized configuration based on network
@@ -357,31 +369,31 @@ class NewZionBlockchain:
     def _calculate_hash(self, block: Dict) -> str:
         """Bez-mutační výpočet hash bloku (nonce už musí být nastaven).
         
-        Supports multiple algorithms:
-        - cosmic_harmony: 🌟 Native ZION (Blake3 + Keccak + SHA3 + Golden Ratio)
-        - sha256: Standard fallback
+        ASIC-resistant algorithms only:
+        - cosmic_harmony: 🌟 Native ZION (default)
+        - randomx, yescrypt, autolykos_v2 (if requested and available)
         """
         # Exclude non-consensus fields from hash
         block_clone = {k: block[k] for k in block if k not in ('hash', 'cumulative_work')}
         block_string = json.dumps(block_clone, sort_keys=True, separators=(',', ':'))
-        
-        # Check algorithm
-        algorithm = block.get('algorithm', 'sha256')
-        
-        if algorithm == 'cosmic_harmony' and COSMIC_HARMONY_AVAILABLE:
-            try:
-                # Use native Cosmic Harmony
-                hasher = get_hasher()
-                nonce = block.get('nonce', 0)
-                hash_result = hasher.hash(block_string.encode(), int(nonce))
-                logger.debug(f"🌟 Cosmic Harmony hash computed: {hash_result.hex()[:16]}...")
-                return hash_result.hex()
-            except Exception as e:
-                logger.warning(f"⚠️ Cosmic Harmony failed ({e}), falling back to SHA256")
-                return hashlib.sha256(block_string.encode()).hexdigest()
-        else:
-            # Fallback to SHA256
-            return hashlib.sha256(block_string.encode()).hexdigest()
+
+        # Select algorithm (default to cosmic_harmony)
+        algorithm = block.get('algorithm', 'cosmic_harmony')
+
+        # Compute hash using unified algorithms registry (no SHA256 fallback)
+        nonce = int(block.get('nonce', 0))
+        try:
+            result = algo_hash(algorithm, block_string.encode(), nonce)
+            if algorithm == 'cosmic_harmony':
+                logger.debug("🌟 Cosmic Harmony hash computed")
+            return result.hex()
+        except Exception as e:
+            # If requested algo unavailable, try cosmic_harmony as a safe default
+            if algorithm != 'cosmic_harmony' and algo_available('cosmic_harmony'):
+                logger.warning(f"⚠️ Algorithm '{algorithm}' unavailable ({e}), using cosmic_harmony")
+                return algo_hash('cosmic_harmony', block_string.encode(), nonce).hex()
+            # No allowed fallback
+            raise
 
     def _mine_block(self, block: Dict) -> str:
         """Těží blok pomocí Proof of Work – mění pouze nonce dokud hash nesplní target."""
@@ -1026,22 +1038,55 @@ class NewZionBlockchain:
     
     def print_status(self):
         """Zobrazí status blockchainu"""
-        print("\n🚀 NOVÝ ZION BLOCKCHAIN STATUS")
-        print("=" * 50)
+        print("\n🚀 ZION REAL BLOCKCHAIN STATUS (v2.8.4)")
+        print("=" * 60)
         print(f"📊 Počet bloků: {len(self.blocks)}")
         print(f"💰 Celková nabídka: {self.get_total_supply():,.0f} ZION")
         print(f"⚖️  Validní řetězec: {'✅ ANO' if self.validate_chain() else '❌ NE'}")
         print(f"📋 Čekající transakce: {len(self.pending_transactions)}")
         
-        print(f"\n🏦 PREMINE DISTRIBUCE:")
+        print(f"\n🏦 GENESIS PREMINE DISTRIBUTION (15.78B ZION):")
         total_premine = 0
+        categories = {
+            'mining': {'total': 0, 'name': 'Mining Operators'},
+            'dao_governance': {'total': 0, 'name': 'DAO Winners'},
+            'oasis': {'total': 0, 'name': 'ZION OASIS (Game Development)'},
+            'infrastructure': {'total': 0, 'name': 'Infrastructure'},
+            'development': {'total': 0, 'name': 'Development'},
+            'charity': {'total': 0, 'name': 'Charity'},
+            'admin': {'total': 0, 'name': 'DAO Admin'},
+            'genesis': {'total': 0, 'name': 'Genesis Creator'}
+        }
+        
         for address, info in self.premine_addresses.items():
             balance = self.get_balance(address)
             total_premine += balance
-            print(f"   {info['purpose']}: {balance:,.0f} ZION")
-            print(f"      └─ {address[:30]}...")
+            addr_type = info.get('type', 'other')
+            if addr_type in categories:
+                categories[addr_type]['total'] += balance
+        
+        # Print by category
+        for cat_type, cat_data in categories.items():
+            if cat_data['total'] > 0:
+                percent = (cat_data['total'] / total_premine * 100) if total_premine > 0 else 0
+                print(f"   {cat_data['name']}: {cat_data['total']:,.0f} ZION ({percent:.1f}%)")
         
         print(f"\n💎 Total Premine: {total_premine:,.0f} ZION")
+        print(f"   Expected: 15,782,857,143 ZION")
+        print(f"   Match: {'✅' if abs(total_premine - 15_782_857_143) < 1 else '❌'}")
+        
+        # ZION OASIS details
+        oasis_addresses = [addr for addr, info in self.premine_addresses.items() if info.get('type') == 'oasis']
+        if oasis_addresses:
+            print(f"\n🎮 ZION OASIS (Game Development Fund):")
+            for address in oasis_addresses:
+                info = self.premine_addresses[address]
+                balance = self.get_balance(address)
+                print(f"   Balance: {balance:,.0f} ZION")
+                print(f"   Purpose: {info['purpose']}")
+                if 'vesting_period' in info:
+                    print(f"   Vesting: {info['vesting_period']} (2026-2028)")
+                print(f"   Address: {address[:50]}...")
         print(f"🆔 Latest Block: {self.blocks[-1]['hash'][:32]}..." if self.blocks else "No blocks")
 
 def main():
@@ -1089,6 +1134,11 @@ def main():
     except Exception as e:
         print(f"❌ Critical error: {e}")
         blockchain.stop_rpc_server()
+
+# Backwards compatibility aliases for API/Wallet migration (v2.8.4)
+# TODO: Remove in v2.8.5 after full migration
+ZionRealBlockchain = NewZionBlockchain  # Alias for core/real_blockchain.py users
+RealTransaction = dict  # Simple compatibility (real_blockchain used dict-based txs)
 
 if __name__ == "__main__":
     main()

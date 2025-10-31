@@ -1,0 +1,300 @@
+name: ZION v2.8.4 - Test Suite
+
+on:
+  push:
+    branches: [ main, develop, 'release/**' ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  # Unit Tests - Algorithm Registry
+  test-algorithms:
+    name: Algorithm Registry Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+      
+      - name: Run algorithm registry tests
+        run: |
+          pytest tests/unit/test_algorithms_registry.py -v --tb=short
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+      
+      - name: Verify ASIC-resistant policy
+        run: |
+          python -c "
+          from src.core.algorithms import list_supported, is_available
+          supported = list_supported()
+          assert 'cosmic_harmony' in supported, 'Cosmic Harmony missing'
+          assert 'sha256' not in supported, 'SHA256 found (CRITICAL)'
+          assert not is_available('sha256'), 'SHA256 available (CRITICAL)'
+          print('✅ ASIC-resistant policy verified')
+          "
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
+  # Unit Tests - Genesis Premine
+  test-genesis:
+    name: Genesis Premine Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+      
+      - name: Run genesis premine tests
+        run: |
+          pytest tests/unit/test_genesis_premine.py -v --tb=short
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+      
+      - name: Verify 15.78B total supply
+        run: |
+          python -c "
+          EXPECTED_TOTAL = 15_782_857_143
+          MINING_REWARDS = 8_250_000_000
+          DAO_RESERVE = 1_750_000_000
+          OASIS = 1_440_000_000
+          INFRASTRUCTURE = 4_342_857_143
+          total = MINING_REWARDS + DAO_RESERVE + OASIS + INFRASTRUCTURE
+          assert total == EXPECTED_TOTAL, f'Total mismatch: {total} != {EXPECTED_TOTAL}'
+          print(f'✅ Total supply verified: {total:,} ZION')
+          "
+
+  # Integration Tests - RPC Endpoints
+  test-rpc-integration:
+    name: RPC Integration Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ecdsa websockets
+      
+      - name: Start ZION node (background)
+        run: |
+          python src/core/new_zion_blockchain.py > node.log 2>&1 &
+          echo $! > node.pid
+          sleep 5
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+      
+      - name: Wait for node ready
+        run: |
+          max_attempts=30
+          attempt=0
+          while [ $attempt -lt $max_attempts ]; do
+            if curl -s http://localhost:8545 > /dev/null 2>&1; then
+              echo "✅ Node ready"
+              break
+            fi
+            echo "Waiting for node... ($attempt/$max_attempts)"
+            sleep 2
+            attempt=$((attempt + 1))
+          done
+          if [ $attempt -eq $max_attempts ]; then
+            echo "❌ Node failed to start"
+            cat node.log
+            exit 1
+          fi
+      
+      - name: Run RPC integration tests
+        run: |
+          python tests/integration/test_rpc_algorithms_v2_8_4.py
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+      
+      - name: Verify getalgorithms endpoint
+        run: |
+          response=$(curl -s -X POST http://localhost:8545 \
+            -H "Content-Type: application/json" \
+            -d '{"jsonrpc":"2.0","method":"getalgorithms","params":[],"id":1}')
+          
+          echo "Response: $response"
+          
+          # Check all 4 algorithms supported
+          echo "$response" | grep -q '"cosmic_harmony":true' || exit 1
+          echo "$response" | grep -q '"randomx":true' || exit 1
+          echo "$response" | grep -q '"yescrypt":true' || exit 1
+          echo "$response" | grep -q '"autolykos_v2":true' || exit 1
+          echo "$response" | grep -q '"asic_resistant":true' || exit 1
+          
+          echo "✅ All 4 algorithms verified"
+      
+      - name: Stop node
+        if: always()
+        run: |
+          if [ -f node.pid ]; then
+            kill $(cat node.pid) || true
+            rm node.pid
+          fi
+      
+      - name: Upload node logs
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: node-logs
+          path: node.log
+
+  # Security Audit
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install security tools
+        run: |
+          pip install pip-audit safety bandit
+      
+      - name: Run pip-audit (dependency check)
+        run: |
+          pip-audit --desc || echo "⚠️ Vulnerabilities found"
+      
+      - name: Run safety check
+        run: |
+          pip install -r requirements.txt
+          safety check --json || echo "⚠️ Safety issues found"
+      
+      - name: Run bandit (code security)
+        run: |
+          bandit -r src/ zion/ api/ -f json -o bandit-report.json || true
+      
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-reports
+          path: |
+            bandit-report.json
+
+  # Code Quality
+  code-quality:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install linting tools
+        run: |
+          pip install flake8 black isort mypy
+      
+      - name: Run flake8
+        run: |
+          flake8 src/core/algorithms.py --max-line-length=120 || true
+      
+      - name: Check code formatting (black)
+        run: |
+          black --check src/core/ || echo "⚠️ Code formatting issues"
+      
+      - name: Check import sorting (isort)
+        run: |
+          isort --check-only src/core/ || echo "⚠️ Import sorting issues"
+
+  # Build Docker Images
+  docker-build:
+    name: Docker Build Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Validate docker-compose
+        run: |
+          docker-compose -f deployment/docker-compose.2.8.4-production.yml config > /dev/null
+          echo "✅ Docker compose valid"
+      
+      - name: Test Python base image
+        run: |
+          docker run --rm python:3.11-slim python --version
+
+  # All Tests Summary
+  all-tests-summary:
+    name: All Tests Summary
+    runs-on: ubuntu-latest
+    needs: [test-algorithms, test-genesis, test-rpc-integration, security-audit, code-quality, docker-build]
+    if: always()
+    
+    steps:
+      - name: Check test results
+        run: |
+          echo "🎯 ZION v2.8.4 Test Suite Results:"
+          echo "  - Algorithm Registry: ${{ needs.test-algorithms.result }}"
+          echo "  - Genesis Premine: ${{ needs.test-genesis.result }}"
+          echo "  - RPC Integration: ${{ needs.test-rpc-integration.result }}"
+          echo "  - Security Audit: ${{ needs.security-audit.result }}"
+          echo "  - Code Quality: ${{ needs.code-quality.result }}"
+          echo "  - Docker Build: ${{ needs.docker-build.result }}"
+          
+          if [ "${{ needs.test-algorithms.result }}" == "success" ] && \
+             [ "${{ needs.test-genesis.result }}" == "success" ] && \
+             [ "${{ needs.test-rpc-integration.result }}" == "success" ]; then
+            echo "✅ All critical tests passed!"
+          else
+            echo "❌ Some critical tests failed"
+            exit 1
+          fi

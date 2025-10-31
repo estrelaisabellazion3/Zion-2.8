@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ZION 2.7.1 - Wallet System
+ZION 2.8.4 - Wallet System
 Address management and transaction creation
 """
 
@@ -9,6 +9,7 @@ import json
 import hashlib
 import secrets
 import base64
+import sys
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 from datetime import datetime
@@ -16,7 +17,9 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-from core.real_blockchain import ZionRealBlockchain, RealTransaction
+# v2.8.4: Migrated to unified blockchain backend
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src', 'core'))
+from new_zion_blockchain import ZionRealBlockchain, RealTransaction
 
 
 @dataclass

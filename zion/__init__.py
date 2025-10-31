@@ -5,7 +5,7 @@ A high-performance blockchain implementation with integrated mining,
 multi-chain bridges, Stratum protocol, and consciousness-aligned gaming.
 """
 
-__version__ = "2.8.1"
+__version__ = "2.8.4"
 __author__ = "Maitreya ZionNet"
 __email__ = "maitreya@zionnet.org"
 

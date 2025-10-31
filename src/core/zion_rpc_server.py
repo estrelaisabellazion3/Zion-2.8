@@ -28,8 +28,13 @@ except ImportError:
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from new_zion_blockchain import NewZionBlockchain
-from .crypto_utils import generate_keypair, verify_transaction_signature, tx_hash
-from .seednodes import ZionNetworkConfig, get_rpc_port
+try:
+    from .crypto_utils import generate_keypair, verify_transaction_signature, tx_hash
+    from .seednodes import ZionNetworkConfig, get_rpc_port
+except ImportError:
+    # Fallback when running as a script (no package context)
+    from crypto_utils import generate_keypair, verify_transaction_signature, tx_hash
+    from seednodes import ZionNetworkConfig, get_rpc_port
 
 logger = logging.getLogger(__name__)
 
@@ -232,12 +237,19 @@ class ZIONRPCServer:
 
         # Start WebSocket server
         def run_websocket_server():
-            asyncio.run(self.start_websocket_server())
-            # Keep the event loop running
+            # Create a dedicated event loop for this thread (Python 3.10+)
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
             try:
-                asyncio.get_event_loop().run_forever()
+                loop.run_until_complete(self.start_websocket_server())
+                loop.run_forever()
             except KeyboardInterrupt:
                 pass
+            finally:
+                try:
+                    loop.stop()
+                finally:
+                    loop.close()
 
         self.websocket_thread = threading.Thread(target=run_websocket_server, daemon=True)
         self.websocket_thread.start()
@@ -401,6 +413,9 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
                 result = self.rpc_broadcast_event(params)
             elif method == 'get_websocket_status':
                 result = self.rpc_get_websocket_status(params)
+            elif method == 'getalgorithms':
+                # v2.8.4: Expose supported ASIC-only algorithms
+                result = self.rpc_get_algorithms(params)
             else:
                 self.send_json_response({
                     'error': {'code': -32601, 'message': 'Method not found'},
@@ -855,8 +870,54 @@ class ZIONRPCHandler(BaseHTTPRequestHandler):
             'websocket_host': getattr(self, 'websocket_host', 'N/A'),
             'websocket_port': getattr(self, 'websocket_port', 'N/A'),
             'connected_clients': len(getattr(self, 'websocket_clients', set())),
-            'server_running': getattr(self, 'websocket_server', None) is not None
+            'server_running': bool(getattr(self, 'websocket_server', None))
         }
+
+    def rpc_get_algorithms(self, params) -> Any:
+        """RPC: getalgorithms - Get supported ASIC-resistant mining algorithms (v2.8.4)
+        
+        Returns:
+            {
+                'supported': {'cosmic_harmony': true, 'randomx': false, ...},
+                'default': 'cosmic_harmony',
+                'active': 'cosmic_harmony',  # Current blockchain algo
+                'asic_resistant': true
+            }
+        """
+        try:
+            # Import algorithms registry (with fallback for both relative and absolute imports)
+            try:
+                from .algorithms import list_supported
+            except ImportError:
+                try:
+                    from algorithms import list_supported
+                except ImportError:
+                    # Last resort fallback
+                    list_supported = lambda: {'cosmic_harmony': True}
+            
+            supported = list_supported()
+            
+            # Get current algorithm from latest block
+            active_algo = 'cosmic_harmony'  # default
+            if hasattr(self.blockchain, 'blocks') and len(self.blockchain.blocks) > 0:
+                latest_block = self.blockchain.blocks[-1]
+                active_algo = latest_block.get('algorithm', 'cosmic_harmony')
+            
+            return {
+                'supported': supported,
+                'default': 'cosmic_harmony',
+                'active': active_algo,
+                'asic_resistant': True,
+                'note': 'SHA256 not supported (ASIC resistance policy)'
+            }
+        except Exception as e:
+            return {
+                'error': f'Failed to query algorithms: {e}',
+                'supported': {'cosmic_harmony': True},  # Safe fallback
+                'default': 'cosmic_harmony',
+                'asic_resistant': True
+            }
+        
 
     def log_message(self, format, *args):
         """Override to reduce noise"""

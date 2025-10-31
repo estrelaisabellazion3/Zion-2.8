@@ -1,8 +1,15 @@
 """
 ZION RandomX Mining Engine v2.6.75
 
+⚠️ DEPRECATED in v2.8.4: Use src/core/algorithms.py instead
+This file is kept for backward compatibility only.
+
 Enhanced RandomX wrapper with improved performance, monitoring,
 and real blockchain integration. Eliminates all mockups.
+
+For new code, import from:
+    from src.core.algorithms import get_hash
+    hash_result = get_hash('randomx', data, nonce)
 """
 from __future__ import annotations
 import ctypes
@@ -160,7 +167,8 @@ class RandomXEngine:
         # Try to load RandomX library
         if not self.try_load_library():
             if self.fallback_to_sha256:
-                logger.warning("RandomX unavailable, using SHA256 fallback")
+                logger.warning("⚠️ DEPRECATED: RandomX unavailable, using algorithms.py fallback instead")
+                logger.warning("   For v2.8.4+, use: from src.core.algorithms import get_hash")
                 self.use_fallback = True
                 self.initialized = True
                 self.monitor.init_time = time.time() - init_start
@@ -172,7 +180,8 @@ class RandomXEngine:
         # Validate library functions
         if not self.validate_library_functions():
             if self.fallback_to_sha256:
-                logger.warning("RandomX library invalid, using SHA256 fallback")
+                logger.warning("⚠️ DEPRECATED: RandomX library invalid, using algorithms.py fallback")
+                logger.warning("   For v2.8.4+, use: from src.core.algorithms import get_hash")
                 self.use_fallback = True
                 self.initialized = True
                 self.monitor.init_time = time.time() - init_start
@@ -281,7 +290,8 @@ class RandomXEngine:
         except Exception as e:
             logger.error(f"RandomX initialization failed: {e}")
             if self.fallback_to_sha256:
-                logger.warning("Falling back to SHA256")
+                logger.warning("⚠️ DEPRECATED: Falling back to algorithms.py")
+                logger.warning("   For v2.8.4+, use: from src.core.algorithms import get_hash")
                 self.use_fallback = True
                 self.initialized = True
                 self.monitor.init_time = time.time() - init_start
@@ -308,8 +318,9 @@ class RandomXEngine:
         
         try:
             if self.use_fallback:
-                # SHA256 fallback for compatibility
-                result = hashlib.sha256(data).digest()
+                # ⚠️ DEPRECATED: Use src/core/algorithms.py instead
+                # This SHA3-256 fallback maintains ASIC resistance
+                result = hashlib.sha3_256(data).digest()
             else:
                 # Real RandomX hash
                 output_buffer = ctypes.create_string_buffer(32)
