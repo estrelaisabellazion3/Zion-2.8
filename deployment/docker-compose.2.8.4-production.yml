@@ -6,11 +6,10 @@ version: '3.8'
 services:
   # Blockchain Node - Unified backend (replaces multiple services)
   zion-node:
-    image: python:3.11-slim
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.node
     container_name: zion-2.8.4-node
-    working_dir: /app
-    volumes:
-      - ./:/app
     ports:
       - "8545:8545"   # RPC JSON-RPC 2.0
       - "8333:8333"   # P2P network
@@ -24,8 +23,6 @@ services:
       - ZION_WS_PORT=8080
       - ZION_DEFAULT_ALGO=cosmic_harmony
       - ZION_ASIC_RESISTANT=true
-      - PYTHONPATH=/app
-    command: sh -c 'pip install -q "aiohttp>=3.8.0" "requests>=2.28.0" "python-dotenv>=1.0.0" "websockets>=11.0.0" "flask-socketio>=5.3.0" "eventlet>=0.33.0" "flask>=2.3.0" "flask-cors>=4.0.0" "psutil>=5.9.0" "pynvml>=11.5.0" && python /app/src/core/new_zion_blockchain.py'
     restart: unless-stopped
     networks:
       - zion-network
