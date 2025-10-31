@@ -1,4 +1,143 @@
-# ZION 2.8.3 "Terra Nova" Testnet
+# ZION 2.8.4 "Cosmic Harmony" · Testnet
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-2.8.4-blue.svg)](https://github.com/estrelaisabellazion3/Zion-2.8/releases/tag/v2.8.4)
+[![Build](https://img.shields.io/github/actions/workflow/status/estrelaisabellazion3/Zion-2.8/v2.8.4-tests.yml?label=CI%2FCD&logo=github)](./.github/workflows/v2.8.4-tests.yml)
+[![Python](https://img.shields.io/badge/python-3.10%E2%80%933.12-blue.svg)](https://www.python.org/)
+
+ZION je humanitárně zaměřený blockchain se zaměřením na odolnost vůči ASIC, transparentní ekonomiku a praktickou použitelnost. Verze 2.8.4 přináší sjednocený backend uzlu, více těžebních algoritmů s Python fallbacky, kompletní testy a nasazení přes Docker Compose.
+
+—
+
+## Co je nového ve v2.8.4
+
+- Sjednocený registr těžebních algoritmů (ASIC‑resistant):
+  - cosmic_harmony, randomx, yescrypt, autolykos_v2 (vše s Python fallbacky)
+- RPC `getalgorithms` vrací `asic_resistant: true` a stav podporovaných algoritmů
+- Oprava: Autolykos v2 vrací 32 bytové hashe (digest_size=32)
+- Kompletní CI/CD pipeline (testy, audit, kvalita kódu, docker build)
+- Produkční Docker Compose stack (node, pool, API, dashboard, prometheus, grafana)
+- Bezpečnostní audit publikován (LOW risk) – viz `docs/2.8.4/SECURITY_AUDIT_REPORT_v2.8.4.md`
+
+Poznámky k vydání: `docs/2.8.4/RELEASE_NOTES_v2.8.4.md`  ·  Tag: [v2.8.4](https://github.com/estrelaisabellazion3/Zion-2.8/releases/tag/v2.8.4)
+
+—
+
+## Rychlý start
+
+### Varianta A: Docker Compose (doporučeno)
+
+Požadavky: Docker + Docker Compose
+
+```bash
+git clone https://github.com/estrelaisabellazion3/Zion-2.8.git
+cd Zion-2.8
+docker compose -f deployment/docker-compose.2.8.4-production.yml up -d
+
+# Stav služeb
+docker compose -f deployment/docker-compose.2.8.4-production.yml ps
+
+# Základní healthcheck RPC
+curl -s http://localhost:8545/api/status | jq .
+```
+
+Služby: zion-node (RPC 8545, P2P 8333, WS 8080), mining-pool, api-server, dashboard, prometheus, grafana.
+
+### Varianta B: Spuštění ze zdroje (lokálně)
+
+Požadavky: Python 3.10–3.12
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Jednoduchý node (vývoj)
+python run_blockchain_simple.py
+
+# Produkční node (s nastavením)
+python run_blockchain_production.py
+```
+
+Rychlé ověření RPC:
+```bash
+curl -s http://localhost:8545/api/getalgorithms | jq .
+```
+
+—
+
+## Těžební algoritmy (ASIC‑resistant)
+
+Všechny algoritmy mají Python fallbacky (pro testnet a vývoj), native knihovny přinášejí 10–100× zrychlení.
+
+- cosmic_harmony – nativní PoW ZION
+- randomx – CPU‑friendly, fallback SHA3‑256
+- yescrypt – memory‑hard, fallback PBKDF2
+- autolykos_v2 – GPU‑friendly, fallback BLAKE2b (digest_size=32)
+
+Konfigurace výchozího algoritmu: env `ZION_DEFAULT_ALGO=cosmic_harmony` (viz docker compose).
+
+—
+
+## Ekonomika a síť
+
+- Celková zásoba: 15,782,857,143 ZION (neměnná)
+- Porty: RPC 8545 · P2P 8333 · WebSocket 8080
+- Databáze: SQLite (sloupec `algorithm` pro backward kompatibilitu)
+
+—
+
+## Testy a kvalita
+
+Spuštění testů:
+```bash
+pytest -q
+```
+
+Klíčové testy:
+- `tests/unit/test_algorithms_registry.py`
+- `tests/unit/test_genesis_premine.py`
+- `tests/integration/test_rpc_algorithms_v2_8_4.py`
+- `tests/integration/test_db_migration_v2_8_4.py`
+- `tests/performance/benchmark_algorithms_v2_8_4.py`
+
+CI/CD workflow: `.github/workflows/v2.8.4-tests.yml`
+
+—
+
+## Bezpečnost
+
+- Audit: `docs/2.8.4/SECURITY_AUDIT_REPORT_v2.8.4.md` (LOW risk)
+- Známé riziko: `ecdsa 0.19.0` (timing attack – akceptováno pro testnet)
+- Plán migrace: přechod na `cryptography` v další verzi
+
+Chyby bezpečnosti hlaste prosím neveřejně: security@zion.org (placeholder)
+
+—
+
+## Nasazení a monitoring
+
+- Docker Compose stack obsahuje Prometheus + Grafana
+- Předpřipravené dashboardy a metriky hashrate
+- Prometheus volume: `prometheus-data`, Grafana: `grafana-data`
+
+—
+
+## Vydání a roadmapa
+
+- Tag vydání: [v2.8.4](https://github.com/estrelaisabellazion3/Zion-2.8/releases/tag/v2.8.4)
+- Poznámky k vydání: `docs/2.8.4/RELEASE_NOTES_v2.8.4.md`
+- Roadmapa: `ROADMAP_v2.9.0.md`
+
+—
+
+## Licence
+
+MIT – viz soubor [LICENSE](./LICENSE)
+
+—
+
+Postaveno s ❤️ pro lepší svět skrze technologii blockchain.# ZION 2.8.3 "Terra Nova" Testnet
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-2.8.3-blue.svg)](https://github.com/estrelaisabellazion3/Zion-2.8/releases)
