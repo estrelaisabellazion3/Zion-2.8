@@ -27,10 +27,11 @@ services:
     networks:
       - zion-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8545"]
+      test: ["CMD", "curl", "-f", "http://localhost:8545/api/status"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 10s
     labels:
       - "com.zion.version=2.8.4"
       - "com.zion.component=blockchain-node"
