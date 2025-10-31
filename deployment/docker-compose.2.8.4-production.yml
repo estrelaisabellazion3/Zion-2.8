@@ -10,11 +10,7 @@ services:
     container_name: zion-2.8.4-node
     working_dir: /app
     volumes:
-      - ./src/core:/app/src/core
-      - ./data:/app/data
-      - ./logs:/app/logs
-      - ./zion:/app/zion
-      - ./requirements.txt:/app/requirements.txt
+      - ./:/app
     ports:
       - "8545:8545"   # RPC JSON-RPC 2.0
       - "8333:8333"   # P2P network
@@ -28,7 +24,7 @@ services:
       - ZION_WS_PORT=8080
       - ZION_DEFAULT_ALGO=cosmic_harmony
       - ZION_ASIC_RESISTANT=true
-  command: sh -c "pip install -r /app/requirements.txt && python src/core/new_zion_blockchain.py"
+    command: sh -c "pip install -r /app/requirements.txt && python src/core/new_zion_blockchain.py"
     restart: unless-stopped
     networks:
       - zion-network
@@ -48,10 +44,7 @@ services:
     container_name: zion-2.8.4-pool
     working_dir: /app
     volumes:
-      - ./src/core:/app/src/core
-      - ./data/pool:/app/data
-      - ./logs:/app/logs
-      - ./requirements.txt:/app/requirements.txt
+      - ./:/app
     ports:
       - "3333:3333"   # Stratum
       - "8181:8181"   # Admin API
@@ -64,7 +57,7 @@ services:
       - POOL_DEFAULT_ALGO=cosmic_harmony
       - POOL_SUPPORTED_ALGOS=cosmic_harmony,randomx,yescrypt,autolykos_v2
       - POOL_ASIC_RESISTANT_ONLY=true
-  command: sh -c "pip install -r /app/requirements.txt && python src/core/zion_universal_pool_v2.py"
+    command: sh -c "pip install -r /app/requirements.txt && python src/core/zion_universal_pool_v2.py"
     restart: unless-stopped
     networks:
       - zion-network
@@ -80,10 +73,7 @@ services:
     container_name: zion-2.8.4-api
     working_dir: /app
     volumes:
-      - ./api:/app/api
-      - ./src:/app/src
-      - ./logs:/app/logs
-      - ./requirements.txt:/app/requirements.txt
+      - ./:/app
     ports:
       - "8001:8000"   # FastAPI (host 8001 to avoid local conflicts)
     environment:
@@ -92,7 +82,7 @@ services:
       - ZION_LOG_LEVEL=info
       - API_PORT=8000
       - RPC_URL=http://zion-node:8545
-  command: sh -c "pip install -r /app/requirements.txt && uvicorn api:app --host 0.0.0.0 --port 8000"
+    command: sh -c "pip install -r /app/requirements.txt && uvicorn api:app --host 0.0.0.0 --port 8000"
     restart: unless-stopped
     networks:
       - zion-network
@@ -108,10 +98,7 @@ services:
     container_name: zion-2.8.4-dashboard
     working_dir: /app
     volumes:
-      - ./src/core/Dashboard.py:/app/dashboard.py
-      - ./static:/app/static
-      - ./templates:/app/templates
-      - ./requirements.txt:/app/requirements.txt
+      - ./:/app
     ports:
       - "5050:5000"   # Flask (host 5050 to avoid local conflicts)
     environment:
@@ -119,7 +106,7 @@ services:
       - ZION_VERSION=2.8.4
       - DASHBOARD_PORT=5000
       - RPC_URL=http://zion-node:8545
-  command: sh -c "pip install -r /app/requirements.txt && python dashboard.py"
+    command: sh -c "pip install -r /app/requirements.txt && python dashboard.py"
     restart: unless-stopped
     networks:
       - zion-network
