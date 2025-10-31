@@ -82,7 +82,7 @@ services:
       - ./src:/app/src
       - ./logs:/app/logs
     ports:
-      - "8000:8000"   # FastAPI
+      - "8001:8000"   # FastAPI (host 8001 to avoid local conflicts)
     environment:
       - ZION_ENV=production
       - ZION_VERSION=2.8.4
@@ -109,7 +109,7 @@ services:
       - ./static:/app/static
       - ./templates:/app/templates
     ports:
-      - "5000:5000"   # Flask
+      - "5050:5000"   # Flask (host 5050 to avoid local conflicts)
     environment:
       - ZION_ENV=production
       - ZION_VERSION=2.8.4
